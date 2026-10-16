@@ -1,10 +1,10 @@
-name: HAJAPRO Supabase Migration Check
+name: HAJAPRO Supabase Migration Dry Run
 
 on:
   workflow_dispatch:
 
 jobs:
-  migration-check:
+  migration-dry-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,11 +16,18 @@ jobs:
         with:
           version: latest
 
-      - name: Verify Supabase migration files
+      - name: Check migration file
         run: |
-          echo "Checking migration files..."
-          ls -la supabase/migrations
           test -f supabase/migrations/202610150001_foundation.sql
+          echo "Migration file found."
 
-      - name: Check Supabase CLI
-        run: supabase --version
+      - name: Validate Supabase credentials
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test -n "$SUPABASE_PROJECT_ID"
+          test -n "$SUPABASE_DB_PASSWORD"
+          echo "Required secrets are configured."
