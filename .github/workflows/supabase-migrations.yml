@@ -1,0 +1,26 @@
+name: HAJAPRO Supabase Migration Check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migration-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Verify Supabase migration files
+        run: |
+          echo "Checking migration files..."
+          ls -la supabase/migrations
+          test -f supabase/migrations/202610150001_foundation.sql
+
+      - name: Check Supabase CLI
+        run: supabase --version
