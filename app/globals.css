@@ -239,3 +239,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .planned-strip p { flex-basis: calc(100% - 92px); }
   .setup-customer h1 { font-size: 36px; }
 }
+
+/* Official HAJAPRO logo asset — preserve the supplied artwork without filters or recoloring. */
+.auth-logo-link { display: inline-flex; align-items: center; width: fit-content; }
+.auth-logo-image { display: block; width: 96px; height: 96px; object-fit: contain; background: #fff; }
+.workspace-logo-link { display: inline-flex; align-items: center; flex: 0 0 auto; }
+.workspace-logo-image { display: block; width: 58px; height: 58px; object-fit: contain; background: #fff; }
+@media (max-width: 800px) { .auth-logo-image { width: 82px; height: 82px; } }
