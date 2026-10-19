@@ -23,7 +23,7 @@ export function AuthForm({ mode, error, sent, intent }: AuthFormProps) {
   return (
     <main className="auth-layout">
       <section className="auth-story" aria-label="About HajaPro">
-        <Link href="/" className="wordmark auth-wordmark">HAJA<span>PRO</span></Link>
+        <Link href="/" className="auth-logo-link" aria-label="HAJAPRO home"><img className="auth-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" /></Link>
         <div className="auth-story-copy">
           <p className="eyebrow">Product by MK Company</p>
           <h1>Good work deserves a <em>better system.</em></h1>
