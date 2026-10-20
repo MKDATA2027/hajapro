@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, BriefcaseBusiness, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { DashboardHome } from "@/app/workspace/dashboard-home";
 import { signOutAction } from "@/app/auth/actions";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -21,33 +22,17 @@ export default async function WorkspacePage() {
     .order("created_at", { ascending: true });
   if (!businesses?.length) redirect("/setup");
 
+  const business = businesses[0];
+
   return (
-    <main className="workspace-page">
-      <header className="workspace-header">
-        <Link className="workspace-logo-link" href="/" aria-label="HAJAPRO home"><Image className="workspace-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={1536} height={1499} /></Link>
+    <main className="workspace-page dashboard-page">
+      <header className="workspace-header dashboard-mobile-header">
+        <Link className="workspace-logo-link" href="/" aria-label="HAJAPRO home"><Image className="workspace-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={1536} height={1499} priority /></Link>
         <form action={signOutAction}>
           <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
         </form>
       </header>
-      <section className="workspace-content">
-        <p className="eyebrow">Your HajaPro workspace</p>
-        <h1>Welcome to a smarter way to work.</h1>
-        <p className="workspace-lead">Your account is connected. Business operations are being built in the next milestones.</p>
-        <div className="workspace-list">
-          {businesses.map((business) => (
-            <article className="workspace-item" key={business.id}>
-              <div className="workspace-item-icon"><BriefcaseBusiness size={20} /></div>
-              <div><h2>{business.name}</h2><p>{business.business_type === "tailor" ? "Tailoring workspace" : "Trading & retail workspace"}</p></div>
-              <span className="workspace-status">Setup complete</span>
-            </article>
-          ))}
-        </div>
-        <div className="planned-strip">
-          <span>Next up</span>
-          <p>Customer and order management for your workspace</p>
-          <ArrowRight size={18} />
-        </div>
-      </section>
+      <DashboardHome businessName={business.name} businessType={business.business_type} />
     </main>
   );
 }
