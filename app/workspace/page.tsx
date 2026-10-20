@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, BriefcaseBusiness, LogOut } from "lucide-react";
@@ -23,7 +24,7 @@ export default async function WorkspacePage() {
   return (
     <main className="workspace-page">
       <header className="workspace-header">
-        <Link className="workspace-logo-link" href="/" aria-label="HAJAPRO home"><img className="workspace-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" /></Link>
+        <Link className="workspace-logo-link" href="/" aria-label="HAJAPRO home"><Image className="workspace-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={1536} height={1499} /></Link>
         <form action={signOutAction}>
           <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
         </form>
