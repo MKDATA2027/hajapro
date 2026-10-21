@@ -633,3 +633,80 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
   .haja-shortcut > strong { font-size: 13px; }
   .haja-shortcut > small { font-size: 9px; }
 }
+
+
+/* Compact mobile dashboard to match the approved reference. */
+.dashboard-page { background: #081426; }
+.dashboard-page > .dashboard-mobile-header { display: none !important; }
+.haja-dashboard { min-height: 100dvh; padding: 18px clamp(16px, 4vw, 44px) 104px; }
+.haja-header { margin-bottom: 22px; }
+.haja-brand-logo { width: 66px; height: 66px; }
+.haja-income-card { min-height: 174px; padding: 22px 26px; border-radius: 25px; }
+.haja-wallet-art { width: 88px; height: 88px; }
+.haja-wallet-art svg { width: 43px; height: 43px; }
+.haja-overdue-card { min-height: 94px; margin-top: 16px; padding: 13px 18px; gap: 16px; border-radius: 22px; }
+.haja-overdue-icon { width: 58px; height: 58px; }
+.haja-overdue-icon svg { width: 28px; height: 28px; }
+.haja-overdue-copy { gap: 4px; }
+.haja-overdue-copy strong { font-size: 15px; }
+.haja-overdue-copy small { font-size: 11px; }
+.haja-shortcuts { margin-top: 16px; gap: 12px 14px; }
+.haja-shortcut { min-height: 132px; padding: 13px 14px 12px; border-radius: 20px; }
+.haja-shortcut-icon { width: 48px; height: 48px; margin-bottom: 6px; border-radius: 15px; }
+.haja-shortcut-icon svg { width: 27px; height: 27px; }
+.haja-shortcut > .haja-card-chevron { top: 39px; right: 10px; width: 19px; }
+.haja-shortcut > strong { font-size: 14px; }
+.haja-shortcut > small { margin-top: 4px; font-size: 10px; line-height: 1.35; }
+.haja-ai-card { min-height: 76px; margin-top: 16px; padding: 11px 15px; gap: 13px; border-radius: 20px; }
+.haja-ai-icon { width: 50px; height: 50px; }
+.haja-ai-icon svg { width: 26px; height: 26px; }
+.haja-ai-copy { gap: 4px; }
+.haja-ai-copy strong { font-size: 14px; }
+.haja-ai-copy small { font-size: 10px; }
+.haja-bottom-nav { min-height: 72px; bottom: max(8px, env(safe-area-inset-bottom)); padding: 4px 7px; border-radius: 27px; }
+.haja-bottom-nav button { min-height: 56px; gap: 3px; }
+.haja-bottom-nav button.haja-add-button { width: 60px; height: 60px; min-height: 60px; margin-top: -19px; }
+.haja-settings-panel { width: 100%; max-width: 620px; margin: 0 auto; color: #f5f7fc; }
+.haja-settings-panel h1 { margin: 0 0 8px; font-size: 27px; }
+.haja-settings-panel p { margin: 0 0 20px; color: #aebbd0; font-size: 12px; line-height: 1.6; }
+.haja-settings-signout { width: 100%; min-height: 52px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border: 1px solid #49364a; border-radius: 12px; background: #211e32; color: #ffb5b5; font-size: 13px; font-weight: 750; text-align: left; cursor: pointer; }
+.haja-settings-signout:hover { border-color: #a65a69; background: #2b2034; }
+@media (max-width: 600px) {
+  .haja-dashboard { padding: 14px 13px 96px; }
+  .haja-header { margin-bottom: 15px; }
+  .haja-brand-logo { width: 49px; height: 49px; }
+  .haja-brand { gap: 9px; }
+  .haja-brand-copy strong { font-size: 20px; }
+  .haja-brand-copy span { font-size: 10px; }
+  .haja-notifications { width: 46px; height: 46px; border-radius: 16px; }
+  .haja-income-card { min-height: 145px; padding: 17px 15px; gap: 8px; border-radius: 20px; }
+  .haja-income-label { font-size: 14px; }
+  .haja-income-value { font-size: clamp(27px, 7.5vw, 34px); }
+  .haja-income-note { font-size: 10px; }
+  .haja-payment-label { font-size: 10px; }
+  .haja-wallet-art { width: 60px; height: 60px; }
+  .haja-wallet-art svg { width: 33px; height: 33px; }
+  .haja-overdue-card { min-height: 82px; margin-top: 13px; padding: 10px 11px; gap: 10px; border-radius: 18px; }
+  .haja-overdue-icon { width: 47px; height: 47px; }
+  .haja-overdue-icon svg { width: 24px; height: 24px; }
+  .haja-overdue-copy strong { font-size: 13px; }
+  .haja-overdue-copy small { font-size: 9px; }
+  .haja-shortcuts { margin-top: 13px; gap: 10px; }
+  .haja-shortcut { min-height: 119px; padding: 11px 10px 10px; border-radius: 17px; }
+  .haja-shortcut-icon { width: 43px; height: 43px; margin-bottom: 5px; border-radius: 13px; }
+  .haja-shortcut-icon svg { width: 24px; height: 24px; }
+  .haja-shortcut > .haja-card-chevron { top: 33px; right: 7px; width: 17px; }
+  .haja-shortcut > strong { font-size: 13px; }
+  .haja-shortcut > small { font-size: 9px; line-height: 1.3; }
+  .haja-ai-card { min-height: 68px; margin-top: 13px; padding: 9px 11px; gap: 10px; border-radius: 17px; }
+  .haja-ai-icon { width: 43px; height: 43px; }
+  .haja-ai-icon svg { width: 23px; height: 23px; }
+  .haja-ai-copy strong { font-size: 13px; }
+  .haja-ai-copy small { font-size: 9px; }
+  .haja-bottom-nav { width: calc(100% - 20px); min-height: 67px; bottom: max(6px, env(safe-area-inset-bottom)); padding: 3px 5px; }
+  .haja-bottom-nav button { min-height: 51px; gap: 2px; }
+  .haja-bottom-nav button svg { width: 19px; height: 19px; }
+  .haja-bottom-nav button span { font-size: 8px; }
+  .haja-bottom-nav button.haja-add-button { width: 53px; height: 53px; min-height: 53px; margin-top: -16px; }
+  .haja-bottom-nav button.haja-add-button svg { width: 27px; height: 27px; }
+}
