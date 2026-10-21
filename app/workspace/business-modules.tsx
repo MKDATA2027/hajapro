@@ -10,7 +10,7 @@ type Product = { id: string; name: string; sku: string | null; category: string 
 type Payment = { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string };
 function OrderStatusForm({businessId,order}:{businessId:string;order:Order}) { const [state,action,pending]=useActionState(updateOrderStatusAction,empty); return <form className="haja-order-status-form" action={action}><input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="order_id" value={order.id}/><select aria-label="Matakin oda" name="status" defaultValue={order.status}>{Object.entries(statusLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}</select><button type="submit" disabled={pending}>{pending?"…":"Sabunta"}</button>{state.error&&<small role="alert">{state.error}</small>}{state.success&&<small role="status">{state.success}</small>}</form> }
 function PaymentReviewForm({businessId,payment}:{businessId:string;payment:Payment}) { const [state,action,pending]=useActionState(reviewPaymentAction,empty); return <div className="haja-payment-review"><form action={action}><input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="payment_id" value={payment.id}/><input type="hidden" name="decision" value="verified"/><button type="submit" disabled={pending}>Tabbatar</button></form><form action={action}><input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="payment_id" value={payment.id}/><input type="hidden" name="decision" value="rejected"/><button type="submit" disabled={pending}>Ƙi</button></form>{state.error&&<small role="alert">{state.error}</small>}{state.success&&<small role="status">{state.success}</small>}</div> }
-type Props = { module: string; businessId: string; businessType: string; customers: Customer[]; orders: Order[]; products: Product[]; payments: Payment[] };
+type Props = { module: string; initialCreateOrder?: boolean; businessId: string; businessType: string; customers: Customer[]; orders: Order[]; products: Product[]; payments: Payment[] };
 
 const titles: Record<string,string> = { orders: "Umarni", products: "Kayayyaki", payments: "Wallet · Biyan Kuɗi", reports: "Rahotanni", overdue: "Ayyukan da suka makara", ai: "HAJAPRO AI", notifications: "Sanarwa" };
 const statusLabels: Record<string,string> = { new:"Sabon oda", measuring:"Auna jiki", cutting:"Yanke kaya", sewing:"Dinki", fitting:"Gwada kaya", ready:"A shirye", completed:"An kammala", cancelled:"An soke" };
@@ -20,8 +20,8 @@ const empty: ModuleActionState = {};
 
 function Feedback({state}:{state:ModuleActionState}) { return <>{state.error && <p className="dashboard-form-error" role="alert">{state.error}</p>}{state.success && <p className="dashboard-form-success" role="status">{state.success}</p>}</>; }
 
-export function BusinessModulePanel({module,businessId,businessType,customers,orders,products,payments}:Props) {
- const [showOrder,setShowOrder]=useState(false);
+export function BusinessModulePanel({module,initialCreateOrder=false,businessId,businessType,customers,orders,products,payments}:Props) {
+ const [showOrder,setShowOrder]=useState(initialCreateOrder);
  const [showProduct,setShowProduct]=useState(false);
  const [orderState,orderAction,orderPending]=useActionState(createOrderAction,empty);
  const [productState,productAction,productPending]=useActionState(createProductAction,empty);
