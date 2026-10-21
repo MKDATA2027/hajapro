@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { signOutAction } from "@/app/auth/actions";
 import { CustomersPanel, type CustomerRecord, type MeasurementRecord } from "@/app/workspace/customers-panel";
 import {
   Bell, Bot, Boxes, CalendarClock, ChartNoAxesCombined, ChevronRight,
@@ -84,12 +85,20 @@ export function DashboardHome({ businessName, businessType, businessId, customer
       ) : activeModule === "customers" ? (
         <div className="haja-subpage"><CustomersPanel businessId={businessId} initialCustomers={customers} initialMeasurements={measurements} /></div>
       ) : (
-        <main className="haja-subpage haja-module-placeholder">
+        {activeModule === "settings" ? (
+          <main className="haja-subpage haja-settings-panel">
+            <h1>Saituna</h1>
+            <p>Sarrafa saitunan asusunka da fita daga HAJAPRO.</p>
+            <form action={signOutAction}>
+              <button className="haja-settings-signout" type="submit"><CreditCard size={19} /> Sign out</button>
+            </form>
+          </main>
+        ) : <main className="haja-subpage haja-module-placeholder">
           <span className="haja-subpage-icon">{activeModule === "payments" ? <Wallet size={30} /> : activeModule === "orders" ? <ClipboardList size={30} /> : activeModule === "products" ? <Boxes size={30} /> : activeModule === "reports" ? <ChartNoAxesCombined size={30} /> : activeModule === "ai" ? <Bot size={30} /> : activeModule === "overdue" ? <CalendarClock size={30} /> : activeModule === "notifications" ? <Bell size={30} /> : <CreditCard size={30} />}</span>
           <h1>{moduleTitles[activeModule]}</h1>
           <p>Wannan sashe yana cikin tsarin HAJAPRO. Za a haɗa shi da bayanan kasuwanci masu inganci yayin kammala wannan module.</p>
           <button type="button" className="haja-back-home" onClick={() => go("overview")}>Komawa Home</button>
-        </main>
+        </main>}
       )}
 
       <nav className="haja-bottom-nav" aria-label="Babban menu">
