@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CustomersPanel, type CustomerRecord } from "@/app/workspace/customers-panel";
+import { CustomersPanel, type CustomerRecord, type MeasurementRecord } from "@/app/workspace/customers-panel";
 import {
   Bell,
   Bot,
@@ -60,7 +60,7 @@ const moduleTitles: Record<ModuleKey, string> = {
   settings: "Settings",
 };
 
-export function DashboardHome({ businessName, businessType, customers }: { businessName: string; businessType: string; customers: CustomerRecord[] }) {
+export function DashboardHome({ businessName, businessType, customers, measurements }: { businessName: string; businessType: string; customers: CustomerRecord[]; measurements: MeasurementRecord[] }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const [searchValue, setSearchValue] = useState("");
   const isTailor = businessType === "tailor";
@@ -132,7 +132,7 @@ export function DashboardHome({ businessName, businessType, customers }: { busin
             <p className="dashboard-integrity-note"><CircleHelp size={15} /> Business figures will appear after the relevant database modules are connected. No sample figures are being shown.</p>
           </section>
         ) : activeModule === "customers" ? (
-          <CustomersPanel initialCustomers={customers} />
+          <CustomersPanel initialCustomers={customers} initialMeasurements={measurements} />
         ) : (
           <section className="dashboard-content dashboard-module-empty">
             <span className="dashboard-empty-icon">{activeModule === "products" ? <Package size={24} /> : activeModule === "payments" ? <Wallet size={24} /> : activeModule === "customers" ? <Users size={24} /> : activeModule === "ai" ? <Bot size={24} /> : <ClipboardList size={24} />}</span>
