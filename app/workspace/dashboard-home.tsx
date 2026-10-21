@@ -33,7 +33,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
           <Image src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={58} height={58} priority unoptimized className="haja-brand-logo" />
           <div className="haja-brand-copy"><strong>HAJAPRO</strong><span>{isTailor ? "Tailor Business" : "Business"} · Dashboard</span></div>
         </div>
-        <button className="haja-notifications" type="button" onClick={() => go("notifications")} aria-label="Buɗe sanarwa"><Bell size={25} /><i /></button>
+        <button className="haja-notifications" type="button" onClick={() => go("notifications")} aria-label="Buɗe sanarwa"><Bell size={25} />{notifications.some((notification) => !notification.read_at) && <i />}</button>
       </header>
 
       {activeModule === "overview" ? (
