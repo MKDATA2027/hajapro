@@ -950,3 +950,14 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
 .haja-ai-insight ul { margin:9px 0 0; padding-left:18px; color:#c4d1e0; font-size:12px; line-height:1.8; }
 @media(min-width:600px) { .haja-module-stats { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media(max-width:390px) { .haja-module-row { flex-wrap:wrap; } .haja-module-row-main { flex-basis:calc(100% - 50px); } .haja-module-row>b { margin-left:48px; } .haja-module-workspace .dashboard-form-two { grid-template-columns:1fr; gap:0; } }
+
+
+.haja-order-status-form { flex:0 0 100%; display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+.haja-order-status-form select { flex:1 1 130px; min-width:0; padding:8px; border:1px solid #3b4d66; border-radius:8px; color:#f5f8ff; background:#09182a; font:inherit; font-size:11px; }
+.haja-order-status-form button,.haja-payment-review button { padding:8px 10px; border:0; border-radius:8px; background:#18c99b; color:#06291f; font-size:11px; font-weight:800; cursor:pointer; }
+.haja-order-status-form small { flex:0 0 100%; color:#b7c7d9; font-size:10px; }
+.haja-payment-review { flex:0 0 100%; display:flex; gap:8px; }
+.haja-payment-review form { flex:1; }
+.haja-payment-review button { width:100%; }
+.haja-payment-review form:nth-child(2) button { background:#5a3340; color:#ffe7eb; }
+.haja-payment-review small { flex:0 0 100%; color:#ffbdc5; font-size:10px; }
