@@ -15,7 +15,7 @@ create table if not exists public.orders (
   created_by uuid not null references auth.users(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint orders_customer_business_fk foreign key (customer_id, business_id) references public.customers(id, business_id) on delete set null,
+  constraint orders_customer_business_fk foreign key (customer_id, business_id) references public.customers(id, business_id) on delete restrict,
   constraint orders_deposit_lte_total check (deposit_amount <= total_amount)
 );
 create index if not exists orders_business_created_idx on public.orders(business_id, created_at desc);
