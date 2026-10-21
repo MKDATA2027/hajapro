@@ -38,7 +38,7 @@ export default async function WorkspacePage() {
 
   return (
     <main className="workspace-page dashboard-page">
-      <DashboardHome businessName={business.name} businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} />
+      <DashboardHome businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} />
     </main>
   );
 }
