@@ -18,7 +18,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
   customers: CustomerRecord[]; measurements: MeasurementRecord[];
   orders: { id: string; title: string; status: string; total_amount: number | string; deposit_amount: number | string; due_date: string | null; created_at: string; customer_id: string | null }[];
   products: { id: string; name: string; sku: string | null; category: string | null; unit_price: number | string; stock_quantity: number | string; low_stock_threshold: number | string }[];
-  payments: { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string }[];
+  payments: { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string; verified_at: string | null }[];
   notifications: { id: string; title: string; body: string; read_at: string | null; created_at: string }[];
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
@@ -28,7 +28,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
   const currentDate = new Date();
-  const currentMonthIncome = payments.filter((payment) => { const paidDate = new Date(payment.created_at); return payment.status === "verified" && paidDate.getFullYear() === currentDate.getFullYear() && paidDate.getMonth() === currentDate.getMonth(); }).reduce((sum, payment) => sum + Number(payment.amount), 0);
+  const currentMonthIncome = payments.filter((payment) => { const paidDate = new Date(payment.verified_at ?? payment.created_at); return payment.status === "verified" && paidDate.getFullYear() === currentDate.getFullYear() && paidDate.getMonth() === currentDate.getMonth(); }).reduce((sum, payment) => sum + Number(payment.amount), 0);
   const formatMoney = (amount: number) => new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 2 }).format(amount);
   const go = (module: ModuleKey) => { setActiveModule(module); setQuickCreateOrder(false); };
 
