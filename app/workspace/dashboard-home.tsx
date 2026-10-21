@@ -44,7 +44,7 @@ export function DashboardHome({ businessName, businessType, businessId, customer
               <span className="haja-income-note">Ana jiran haɗa bayanan kuɗi</span>
               <span className="haja-payment-label">{/* Language-aware label defaulting to Hausa */}Biyan Kuɗi</span>
             </span>
-            <span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span>
+            <span className="haja-wallet-group"><span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span><span className="haja-wallet-label">Wallet</span></span>
           </button>
 
           <button className="haja-overdue-card" type="button" onClick={() => go("overdue")}>
