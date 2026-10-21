@@ -24,7 +24,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
-  const go = (module: ModuleKey) => setActiveModule(module);
+  const go = (module: ModuleKey) => { setActiveModule(module); setQuickCreateOrder(false); };
 
   return (
     <div className="haja-dashboard">
@@ -102,7 +102,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
       <nav className="haja-bottom-nav" aria-label="Babban menu">
         <button className={activeModule === "overview" ? "is-active" : ""} type="button" onClick={() => go("overview")}><Home size={25} fill={activeModule === "overview" ? "currentColor" : "none"} /><span>Home</span></button>
         <button className={activeModule === "orders" ? "is-active" : ""} type="button" onClick={() => go("orders")}><ClipboardList size={25} /><span>Orders</span></button>
-        <button className="haja-add-button" type="button" onClick={() => { setQuickCreateOrder(true); go("orders"); }} aria-label="Ƙara sabon umarni"><Plus size={36} strokeWidth={2.7} /></button>
+        <button className="haja-add-button" type="button" onClick={() => { setQuickCreateOrder(true); setActiveModule("orders"); }} aria-label="Ƙara sabon umarni"><Plus size={36} strokeWidth={2.7} /></button>
         <button className={activeModule === "customers" ? "is-active" : ""} type="button" onClick={() => go("customers")}><Users size={25} /><span>Customers</span></button>
         <button className={activeModule === "settings" ? "is-active" : ""} type="button" onClick={() => go("settings")}><Menu size={27} /><span>More</span></button>
       </nav>
