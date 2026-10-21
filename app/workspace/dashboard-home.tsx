@@ -99,7 +99,7 @@ export function DashboardHome({ businessName, businessType, businessId, customer
           </main>
       ) : (
         <div className="haja-subpage">
-          <BusinessModulePanel module={activeModule} initialCreateOrder={quickCreateOrder} businessId={businessId} businessType={businessType} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} />
+          <BusinessModulePanel module={activeModule} initialCreateOrder={quickCreateOrder} businessId={businessId} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} />
         </div>
       )}
 
