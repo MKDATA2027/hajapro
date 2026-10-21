@@ -16,7 +16,7 @@ export type CustomerRecord = {
 
 export type MeasurementRecord = { id: string; customer_id: string; label: string; measurement_values: Record<string, number>; unit: "inches" | "cm"; recorded_at: string; notes: string | null };
 
-export function CustomersPanel({ initialCustomers, initialMeasurements }: { initialCustomers: CustomerRecord[]; initialMeasurements: MeasurementRecord[] }) {
+export function CustomersPanel({ businessId, initialCustomers, initialMeasurements }: { businessId: string; initialCustomers: CustomerRecord[]; initialMeasurements: MeasurementRecord[] }) {
   const [state, formAction, pending] = useActionState(createCustomerAction, initialState);
   const [showForm, setShowForm] = useState(false);
   const [measurementCustomer, setMeasurementCustomer] = useState<string | null>(null);
@@ -37,6 +37,7 @@ export function CustomersPanel({ initialCustomers, initialMeasurements }: { init
 
       {showForm && (
         <form className="dashboard-customer-form" action={formAction}>
+          <input type="hidden" name="business_id" value={businessId} />
           <h2>New customer</h2>
           <label>Full name<input name="full_name" required minLength={2} maxLength={120} placeholder="Customer full name" /></label>
           <div className="dashboard-form-two">
