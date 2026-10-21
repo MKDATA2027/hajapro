@@ -481,3 +481,19 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
   .dashboard-customer-row { grid-template-columns: 34px minmax(0, 1fr) 14px; gap: 9px; }
   .dashboard-customer-date { display: none; }
 }
+
+
+.dashboard-customer-measure-button { padding: 7px 9px; border: 1px solid #35465e; border-radius: 6px; background: #17273d; color: #9fe8cb; font-size: 9px; font-weight: 750; cursor: pointer; }
+.dashboard-customer-measure-button:hover { border-color: #10b981; }
+.dashboard-measurement-area { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 14px; padding: 8px 0 10px; }
+.dashboard-measurement-area .dashboard-customer-form { margin: 0; }
+.dashboard-measurement-area .dashboard-customer-form select { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid #35465e; border-radius: 6px; background: #101b2d; color: #f5f7fa; font: inherit; font-size: 11px; }
+.dashboard-measurement-history { padding: 17px; border: 1px solid #2b3a50; border-radius: 10px; background: #152238; }
+.dashboard-measurement-history h3 { margin: 0 0 12px; color: #e9eef6; font-family: Georgia, serif; font-size: 18px; font-weight: 400; }
+.dashboard-measurement-history > p { color: #8b9ab0; font-size: 10px; }
+.dashboard-measurement-record { padding: 11px 0; display: grid; gap: 7px; border-top: 1px solid #2b3a50; }
+.dashboard-measurement-record strong { color: #e9eef6; font-size: 11px; }
+.dashboard-measurement-record span { color: #9eacc0; font-size: 10px; line-height: 1.7; overflow-wrap: anywhere; }
+.dashboard-measurement-record small { color: #718199; font-size: 9px; }
+@media (max-width: 800px) { .dashboard-measurement-area { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .dashboard-customer-row { grid-template-columns: 34px minmax(0, 1fr) auto; } .dashboard-customer-measure-button { grid-column: 2 / -1; justify-self: start; } }
