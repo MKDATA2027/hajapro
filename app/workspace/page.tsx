@@ -30,9 +30,15 @@ export default async function WorkspacePage() {
     .eq("business_id", business.id)
     .order("recorded_at", { ascending: false });
 
+  const [{ data: orderRows }, { data: productRows }, { data: paymentRows }] = await Promise.all([
+    supabase.from("orders").select("id, title, status, total_amount, deposit_amount, due_date, created_at, customer_id").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("products").select("id, name, sku, category, unit_price, stock_quantity, low_stock_threshold").eq("business_id", business.id).order("name", { ascending: true }),
+    supabase.from("order_payments").select("id, order_id, amount, payment_method, status, created_at").eq("business_id", business.id).order("created_at", { ascending: false }),
+  ]);
+
   return (
     <main className="workspace-page dashboard-page">
-      <DashboardHome businessName={business.name} businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} />
+      <DashboardHome businessName={business.name} businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} />
     </main>
   );
 }
