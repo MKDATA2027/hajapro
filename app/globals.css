@@ -901,3 +901,52 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
   .haja-wallet-group { gap: 4px; }
   .haja-wallet-label { font-size: 10px; }
 }
+
+
+/* Functional dashboard modules */
+.haja-module-workspace { width: 100%; max-width: 1040px; margin: 0 auto; padding: 8px 0 112px; color: #f2f7ff; }
+.haja-module-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin:0 0 18px; }
+.haja-module-eyebrow { color:#35d9b1; font-size:10px; letter-spacing:.14em; font-weight:800; }
+.haja-module-heading h1 { margin:4px 0 5px; font-size:clamp(22px,5vw,30px); line-height:1.15; }
+.haja-module-heading p { margin:0; max-width:560px; color:#afbdd0; font-size:13px; line-height:1.5; }
+.haja-module-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin:0 0 14px; }
+.haja-module-stats>div { min-width:0; padding:13px; border:1px solid #2a3b53; border-radius:14px; background:#14263d; display:flex; flex-direction:column; gap:6px; }
+.haja-module-stats span { color:#aebdd0; font-size:11px; }
+.haja-module-stats strong { font-size:clamp(16px,4vw,22px); overflow-wrap:anywhere; }
+.haja-module-workspace .dashboard-primary-button { min-height:40px; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 13px; border:0; border-radius:10px; color:#06291f; background:#18c99b; font-size:12px; font-weight:800; cursor:pointer; }
+.haja-module-workspace .dashboard-primary-button:disabled { opacity:.6; cursor:wait; }
+.haja-module-form { margin:13px 0 17px; border:1px solid #30445e; border-radius:16px; background:#13253b; color:#f2f7ff; }
+.haja-module-form h2 { margin:0 0 12px; font-size:17px; }
+.haja-module-form label { display:flex; flex-direction:column; gap:6px; margin-bottom:11px; color:#d4deeb; font-size:12px; font-weight:700; }
+.haja-module-form input,.haja-module-form textarea,.haja-module-form select,.haja-stock-details input,.haja-stock-details select { width:100%; min-width:0; padding:10px 11px; border:1px solid #3b4d66; border-radius:9px; background:#09182a; color:#f7faff; font:inherit; font-size:13px; }
+.haja-module-form input:focus,.haja-module-form textarea:focus,.haja-module-form select:focus { outline:2px solid #19c99a; outline-offset:1px; }
+.haja-module-workspace .dashboard-form-two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.haja-module-list { display:flex; flex-direction:column; gap:9px; margin-top:15px; }
+.haja-module-row { display:flex; align-items:center; gap:10px; min-width:0; padding:12px; border:1px solid #273b55; border-radius:13px; background:#12243a; }
+.haja-module-row-icon { width:38px; height:38px; flex:0 0 38px; display:grid; place-items:center; border-radius:11px; color:#3be0b3; background:#0d544b; }
+.haja-module-row-main { display:flex; flex:1; min-width:0; flex-direction:column; gap:4px; }
+.haja-module-row-main strong { font-size:13px; overflow-wrap:anywhere; }
+.haja-module-row-main span,.haja-module-row-main small { color:#afbdd0; font-size:10px; line-height:1.35; overflow-wrap:anywhere; }
+.haja-module-row>b { flex:0 0 auto; font-size:12px; text-align:right; overflow-wrap:anywhere; }
+.haja-module-empty { padding:20px 14px; text-align:center; border:1px dashed #344963; border-radius:14px; color:#b9c7d9; font-size:13px; line-height:1.5; }
+.haja-stock-details { flex:0 0 100%; width:100%; }
+.haja-stock-details summary { color:#43dfb5; font-size:11px; cursor:pointer; }
+.haja-stock-details[open] { display:flex; flex-direction:column; gap:8px; }
+.haja-stock-details form { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.haja-stock-details form input:nth-of-type(3) { grid-column:1 / -1; }
+.haja-stock-details form button { grid-column:1 / -1; }
+.haja-module-section-title { margin:22px 0 9px; font-size:16px; }
+.haja-module-disclaimer { padding:11px 12px; border-radius:10px; background:#182b42; color:#b9c7d9; font-size:11px; line-height:1.5; }
+.haja-report-bar { display:grid; grid-template-columns:100px 1fr 22px; gap:9px; align-items:center; font-size:11px; color:#dce6f3; }
+.haja-report-bar>div { height:8px; overflow:hidden; border-radius:99px; background:#2a3b52; }
+.haja-report-bar i { display:block; height:100%; border-radius:99px; background:#16c99a; }
+.haja-report-bar>b { text-align:right; }
+.haja-ai-workspace { padding:17px; border:1px solid #2c4059; border-radius:17px; background:#14263d; }
+.haja-ai-workspace-icon { width:48px; height:48px; display:grid; place-items:center; border-radius:15px; background:#263b55; color:#4ce0bd; }
+.haja-ai-workspace h2 { margin:13px 0 6px; font-size:19px; }
+.haja-ai-workspace>p { color:#b6c5d8; font-size:12px; line-height:1.55; }
+.haja-ai-insight { margin-top:13px; padding:13px; border-radius:12px; background:#0d1c2e; }
+.haja-ai-insight strong { font-size:13px; }
+.haja-ai-insight ul { margin:9px 0 0; padding-left:18px; color:#c4d1e0; font-size:12px; line-height:1.8; }
+@media(min-width:600px) { .haja-module-stats { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:390px) { .haja-module-row { flex-wrap:wrap; } .haja-module-row-main { flex-basis:calc(100% - 50px); } .haja-module-row>b { margin-left:48px; } .haja-module-workspace .dashboard-form-two { grid-template-columns:1fr; gap:0; } }
