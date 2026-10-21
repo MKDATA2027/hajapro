@@ -151,3 +151,16 @@ export async function reviewPaymentAction(_prev: ModuleActionState, form: FormDa
   revalidatePath("/workspace");
   return { success: decision === "verified" ? "An tabbatar da biyan kuɗi." : "An ƙi biyan kuɗin." };
 }
+
+export async function markNotificationReadAction(_prev: ModuleActionState, form: FormData): Promise<ModuleActionState> {
+  const notificationId = textValue(form, "notification_id");
+  if (!notificationId) return { error: "Sanarwar ba ta inganta ba." };
+  const supabase = await createSupabaseServerClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) return { error: "Zaman shiga ya ƙare. Ka sake shiga." };
+  const { error } = await supabase.from("app_notifications").update({ read_at: new Date().toISOString() })
+    .eq("id", notificationId).eq("user_id", user.id).is("read_at", null);
+  if (error) return { error: "Ba a iya sabunta sanarwar ba." };
+  revalidatePath("/workspace");
+  return { success: "An karanta sanarwar." };
+}
