@@ -710,3 +710,43 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
   .haja-bottom-nav button.haja-add-button { width: 53px; height: 53px; min-height: 53px; margin-top: -16px; }
   .haja-bottom-nav button.haja-add-button svg { width: 27px; height: 27px; }
 }
+
+
+/* Final mobile fit: keep the full dashboard and AI tile visible above the fixed nav. */
+@media (max-width: 600px) and (max-height: 900px) {
+  .haja-dashboard { padding-top: 10px; padding-bottom: 84px; }
+  .haja-header { margin-bottom: 10px; }
+  .haja-brand-logo { width: 42px; height: 42px; }
+  .haja-brand-copy strong { font-size: 18px; }
+  .haja-brand-copy span { font-size: 9px; }
+  .haja-notifications { width: 40px; height: 40px; }
+  .haja-income-card { min-height: 116px; padding: 12px 13px; border-radius: 17px; }
+  .haja-income-copy { gap: 5px; }
+  .haja-income-label { font-size: 12px; }
+  .haja-income-value { font-size: 27px; }
+  .haja-income-note, .haja-payment-label { font-size: 9px; }
+  .haja-wallet-art { width: 48px; height: 48px; }
+  .haja-wallet-art svg { width: 27px; height: 27px; }
+  .haja-overdue-card { min-height: 63px; margin-top: 9px; padding: 7px 9px; gap: 8px; border-radius: 14px; }
+  .haja-overdue-icon { width: 38px; height: 38px; }
+  .haja-overdue-icon svg { width: 20px; height: 20px; }
+  .haja-overdue-copy { gap: 2px; }
+  .haja-overdue-copy strong { font-size: 11px; }
+  .haja-overdue-copy small { font-size: 8px; line-height: 1.2; }
+  .haja-shortcuts { margin-top: 9px; gap: 8px; }
+  .haja-shortcut { min-height: 91px; padding: 7px 9px 7px; border-radius: 14px; }
+  .haja-shortcut-icon { width: 34px; height: 34px; margin-bottom: 3px; border-radius: 10px; }
+  .haja-shortcut-icon svg { width: 20px; height: 20px; }
+  .haja-shortcut > .haja-card-chevron { top: 24px; right: 5px; width: 15px; }
+  .haja-shortcut > strong { font-size: 11px; line-height: 1.2; }
+  .haja-shortcut > small { margin-top: 2px; font-size: 8px; line-height: 1.15; }
+  .haja-ai-card { min-height: 52px; margin-top: 9px; padding: 6px 9px; gap: 8px; border-radius: 14px; }
+  .haja-ai-icon { width: 37px; height: 37px; }
+  .haja-ai-icon svg { width: 20px; height: 20px; }
+  .haja-ai-copy { gap: 2px; }
+  .haja-ai-copy strong { font-size: 11px; }
+  .haja-ai-copy small { font-size: 8px; }
+  .haja-bottom-nav { min-height: 60px; bottom: max(5px, env(safe-area-inset-bottom)); }
+  .haja-bottom-nav button { min-height: 45px; }
+  .haja-bottom-nav button.haja-add-button { width: 48px; height: 48px; min-height: 48px; margin-top: -13px; }
+}
