@@ -29,7 +29,7 @@ export function DashboardHome({ businessName, businessType, businessId, customer
     <div className="haja-dashboard">
       <header className="haja-header">
         <div className="haja-brand">
-          <Image src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={58} height={58} priority className="haja-brand-logo" />
+          <Image src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={58} height={58} priority unoptimized className="haja-brand-logo" />
           <div className="haja-brand-copy"><strong>HAJAPRO</strong><span>{isTailor ? "Tailor Business" : "Business"} · Dashboard</span></div>
         </div>
         <button className="haja-notifications" type="button" onClick={() => go("notifications")} aria-label="Buɗe sanarwa"><Bell size={25} /><i /></button>
