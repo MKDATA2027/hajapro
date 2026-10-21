@@ -26,6 +26,7 @@ export function DashboardHome({ businessName, businessType, businessId, customer
   payments: { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string }[];
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
+  const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
   const go = (module: ModuleKey) => setActiveModule(module);
 
@@ -98,14 +99,14 @@ export function DashboardHome({ businessName, businessType, businessId, customer
           </main>
       ) : (
         <div className="haja-subpage">
-          <BusinessModulePanel module={activeModule} businessId={businessId} businessType={businessType} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} />
+          <BusinessModulePanel module={activeModule} initialCreateOrder={quickCreateOrder} businessId={businessId} businessType={businessType} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} />
         </div>
       )}
 
       <nav className="haja-bottom-nav" aria-label="Babban menu">
         <button className={activeModule === "overview" ? "is-active" : ""} type="button" onClick={() => go("overview")}><Home size={25} fill={activeModule === "overview" ? "currentColor" : "none"} /><span>Home</span></button>
         <button className={activeModule === "orders" ? "is-active" : ""} type="button" onClick={() => go("orders")}><ClipboardList size={25} /><span>Orders</span></button>
-        <button className="haja-add-button" type="button" onClick={() => go("orders")} aria-label="Ƙara sabon umarni"><Plus size={36} strokeWidth={2.7} /></button>
+        <button className="haja-add-button" type="button" onClick={() => { setQuickCreateOrder(true); go("orders"); }} aria-label="Ƙara sabon umarni"><Plus size={36} strokeWidth={2.7} /></button>
         <button className={activeModule === "customers" ? "is-active" : ""} type="button" onClick={() => go("customers")}><Users size={25} /><span>Customers</span></button>
         <button className={activeModule === "settings" ? "is-active" : ""} type="button" onClick={() => go("settings")}><Menu size={27} /><span>More</span></button>
       </nav>
