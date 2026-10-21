@@ -966,3 +966,10 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
 .haja-notification-unread { border-color:#167b69; background:#142d40; }
 .haja-notification-read-button { flex:0 0 auto; padding:8px 10px; border:0; border-radius:8px; background:#18c99b; color:#06291f; font-size:10px; font-weight:800; cursor:pointer; }
 .haja-notification-read-button:disabled { opacity:.6; }
+
+
+.haja-language-settings { margin:16px 0; padding:14px; border:1px solid #2b405a; border-radius:14px; background:#14263d; }
+.haja-language-settings h2 { margin:0 0 10px; font-size:14px; color:#f1f6ff; }
+.haja-language-settings>div { display:flex; gap:9px; }
+.haja-language-settings button { min-width:90px; padding:10px 14px; border:1px solid #3b506a; border-radius:10px; color:#d5e0ee; background:#0c1b2d; font-size:12px; font-weight:800; cursor:pointer; }
+.haja-language-settings button.is-selected { border-color:#19c99a; background:#0b5146; color:#7cf0d0; }
