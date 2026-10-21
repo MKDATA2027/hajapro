@@ -16,7 +16,8 @@ create table if not exists public.orders (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint orders_customer_business_fk foreign key (customer_id, business_id) references public.customers(id, business_id) on delete restrict,
-  constraint orders_deposit_lte_total check (deposit_amount <= total_amount)
+  constraint orders_deposit_lte_total check (deposit_amount <= total_amount),
+  constraint orders_id_business_unique unique (id, business_id)
 );
 create index if not exists orders_business_created_idx on public.orders(business_id, created_at desc);
 create index if not exists orders_business_due_idx on public.orders(business_id, due_date) where status not in ('completed','cancelled');
@@ -33,7 +34,8 @@ create table if not exists public.products (
   created_by uuid not null references auth.users(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint products_business_sku_unique unique (business_id, sku)
+  constraint products_business_sku_unique unique (business_id, sku),
+  constraint products_id_business_unique unique (id, business_id)
 );
 create index if not exists products_business_name_idx on public.products(business_id, name);
 
@@ -107,5 +109,6 @@ create policy "Members create notifications" on public.app_notifications for ins
 
 grant select, insert, update, delete on public.orders, public.products to authenticated;
 grant select, insert on public.inventory_movements to authenticated;
-grant select, insert, update on public.order_payments to authenticated;
+grant select, insert on public.order_payments to authenticated;
+grant update (status, verified_by, verified_at) on public.order_payments to authenticated;
 grant select, update, insert on public.app_notifications to authenticated;
