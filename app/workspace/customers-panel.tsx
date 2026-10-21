@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { createCustomerAction, createMeasurementAction, type CustomerFormState } from "@/app/workspace/customer-actions";
-import { ChevronRight, Plus, Search, Users } from "lucide-react";
+import { Plus, Search, Users } from "lucide-react";
 
 const initialState: CustomerFormState = {};
 
