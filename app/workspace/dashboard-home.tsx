@@ -13,12 +13,13 @@ import {
 type ModuleKey = "overview" | "customers" | "orders" | "products" | "reports" | "payments" | "overdue" | "notifications" | "ai" | "settings";
 
 
-export function DashboardHome({ businessType, businessId, customers, measurements, orders, products, payments }: {
+export function DashboardHome({ businessType, businessId, customers, measurements, orders, products, payments, notifications }: {
   businessType: string; businessId: string;
   customers: CustomerRecord[]; measurements: MeasurementRecord[];
   orders: { id: string; title: string; status: string; total_amount: number | string; deposit_amount: number | string; due_date: string | null; created_at: string; customer_id: string | null }[];
   products: { id: string; name: string; sku: string | null; category: string | null; unit_price: number | string; stock_quantity: number | string; low_stock_threshold: number | string }[];
   payments: { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string }[];
+  notifications: { id: string; title: string; body: string; read_at: string | null; created_at: string }[];
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
@@ -94,7 +95,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
           </main>
       ) : (
         <div className="haja-subpage">
-          <BusinessModulePanel module={activeModule} initialCreateOrder={quickCreateOrder} businessId={businessId} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} />
+          <BusinessModulePanel module={activeModule} initialCreateOrder={quickCreateOrder} businessId={businessId} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} notifications={notifications} />
         </div>
       )}
 
