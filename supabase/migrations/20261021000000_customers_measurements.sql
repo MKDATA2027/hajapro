@@ -24,7 +24,7 @@ create table if not exists public.measurements (
   business_id uuid not null references public.businesses(id) on delete cascade,
   customer_id uuid not null,
   label text not null check (char_length(btrim(label)) between 2 and 100),
-  values jsonb not null default '{}'::jsonb check (jsonb_typeof(values) = 'object'),
+  measurement_values jsonb not null default '{}'::jsonb check (jsonb_typeof(values) = 'object'),
   unit text not null default 'inches' check (unit in ('inches', 'cm')),
   notes text,
   recorded_at timestamptz not null default now(),
