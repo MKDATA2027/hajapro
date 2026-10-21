@@ -42,7 +42,7 @@ export default async function WorkspacePage() {
           <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
         </form>
       </header>
-      <DashboardHome businessName={business.name} businessType={business.business_type} customers={customerRows ?? []} measurements={measurementRows ?? []} />
+      <DashboardHome businessName={business.name} businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} />
     </main>
   );
 }
