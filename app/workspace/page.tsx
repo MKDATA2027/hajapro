@@ -23,6 +23,11 @@ export default async function WorkspacePage() {
   if (!businesses?.length) redirect("/setup");
 
   const business = businesses[0];
+  const { data: customerRows } = await supabase
+    .from("customers")
+    .select("id, full_name, phone, email, created_at")
+    .eq("business_id", business.id)
+    .order("created_at", { ascending: false });
 
   return (
     <main className="workspace-page dashboard-page">
@@ -32,7 +37,7 @@ export default async function WorkspacePage() {
           <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
         </form>
       </header>
-      <DashboardHome businessName={business.name} businessType={business.business_type} />
+      <DashboardHome businessName={business.name} businessType={business.business_type} customers={customerRows ?? []} />
     </main>
   );
 }
