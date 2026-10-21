@@ -879,3 +879,25 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
   .haja-bottom-nav button.haja-add-button { width: 51px; height: 51px; min-height: 51px; margin-top: -14px; }
   .haja-bottom-nav button.haja-add-button svg { width: 27px; height: 27px; }
 }
+
+
+/* Keep a visible Wallet label paired with the wallet icon on the income card. */
+.haja-wallet-group {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.haja-wallet-label {
+  color: #e3fff6;
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .haja-wallet-group { gap: 4px; }
+  .haja-wallet-label { font-size: 10px; }
+}
