@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { createCustomerAction, type CustomerFormState } from "@/app/workspace/customer-actions";
+import { createCustomerAction, createMeasurementAction, type CustomerFormState } from "@/app/workspace/customer-actions";
 import { ChevronRight, Plus, Search, Users } from "lucide-react";
 
 const initialState: CustomerFormState = {};
@@ -14,9 +14,13 @@ export type CustomerRecord = {
   created_at: string;
 };
 
-export function CustomersPanel({ initialCustomers }: { initialCustomers: CustomerRecord[] }) {
+export type MeasurementRecord = { id: string; customer_id: string; label: string; measurement_values: Record<string, number>; unit: "inches" | "cm"; recorded_at: string; notes: string | null };
+
+export function CustomersPanel({ initialCustomers, initialMeasurements }: { initialCustomers: CustomerRecord[]; initialMeasurements: MeasurementRecord[] }) {
   const [state, formAction, pending] = useActionState(createCustomerAction, initialState);
   const [showForm, setShowForm] = useState(false);
+  const [measurementCustomer, setMeasurementCustomer] = useState<string | null>(null);
+  const [measurementState, measurementAction, measurementPending] = useActionState(createMeasurementAction, initialState);
   const [search, setSearch] = useState("");
   const filtered = initialCustomers.filter((customer) =>
     [customer.full_name, customer.phone ?? "", customer.email ?? ""].some((value) =>
@@ -58,7 +62,8 @@ export function CustomersPanel({ initialCustomers }: { initialCustomers: Custome
               <span className="dashboard-customer-avatar"><Users size={18} /></span>
               <div className="dashboard-customer-details"><strong>{customer.full_name}</strong><span>{customer.phone || customer.email || "No contact details added"}</span></div>
               <span className="dashboard-customer-date">{new Date(customer.created_at).toLocaleDateString()}</span>
-              <ChevronRight size={16} />
+              <button className="dashboard-customer-measure-button" type="button" onClick={() => setMeasurementCustomer((current) => current === customer.id ? null : customer.id)}>{measurementCustomer === customer.id ? "Close" : "Measurements"}</button>
+              {measurementCustomer === customer.id && <div className="dashboard-measurement-area"><form className="dashboard-customer-form" action={measurementAction}><h2>New measurement set</h2><input type="hidden" name="customer_id" value={customer.id} /><label>Set name<input name="label" required minLength={2} maxLength={100} placeholder="e.g. October fitting" /></label><label>Unit<select name="unit" defaultValue="inches"><option value="inches">Inches</option><option value="cm">Centimetres</option></select></label><div className="dashboard-form-two">{(["chest", "waist", "hip", "shoulder", "sleeve", "length"] as const).map((field) => <label key={field}>{field.charAt(0).toUpperCase() + field.slice(1)}<input name={field} type="number" min="0.1" max="1000" step="0.1" placeholder="Optional" /></label>)}</div><label>Notes<textarea name="measurement_notes" rows={2} maxLength={2000} placeholder="Optional fitting notes" /></label>{measurementState.error && <p className="dashboard-form-error" role="alert">{measurementState.error}</p>}{measurementState.success && <p className="dashboard-form-success" role="status">{measurementState.success}</p>}<button className="dashboard-primary-button" type="submit" disabled={measurementPending}>{measurementPending ? "Saving…" : "Save measurements"}</button></form><div className="dashboard-measurement-history"><h3>Saved measurement sets</h3>{initialMeasurements.filter((record) => record.customer_id === customer.id).length ? initialMeasurements.filter((record) => record.customer_id === customer.id).map((record) => <div className="dashboard-measurement-record" key={record.id}><strong>{record.label}</strong><span>{Object.entries(record.measurement_values).map(([key, value]) => `${key}: ${value} ${record.unit}`).join(" · ")}</span><small>{new Date(record.recorded_at).toLocaleDateString()}</small></div>) : <p>No measurements saved yet.</p>}</div></div>}
             </article>
           ))}
         </div>
