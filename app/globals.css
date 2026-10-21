@@ -961,3 +961,8 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
 .haja-payment-review button { width:100%; }
 .haja-payment-review form:nth-child(2) button { background:#5a3340; color:#ffe7eb; }
 .haja-payment-review small { flex:0 0 100%; color:#ffbdc5; font-size:10px; }
+
+
+.haja-notification-unread { border-color:#167b69; background:#142d40; }
+.haja-notification-read-button { flex:0 0 auto; padding:8px 10px; border:0; border-radius:8px; background:#18c99b; color:#06291f; font-size:10px; font-weight:800; cursor:pointer; }
+.haja-notification-read-button:disabled { opacity:.6; }
