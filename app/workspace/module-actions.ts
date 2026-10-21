@@ -84,13 +84,16 @@ export async function recordStockMovementAction(_prev: ModuleActionState, form: 
   if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   const { data: product } = await ctx.supabase.from("products").select("id,stock_quantity").eq("id", productId).eq("business_id", businessId).maybeSingle();
   if (!product) return { error: "Ba a sami wannan kaya ba." };
-  const next = movement === "stock_in" ? Number(product.stock_quantity) + quantity : Number(product.stock_quantity) - quantity;
+  const current = Number(product.stock_quantity);
+  const next = movement === "stock_in" ? current + quantity : movement === "stock_out" ? current - quantity : quantity;
   if (next < 0) return { error: "Ba za a cire kaya fiye da wanda yake stock ba." };
+  const movementQuantity = movement === "adjustment" ? Math.abs(next - current) : quantity;
+  if (movementQuantity <= 0) return { error: "Adadin stock bai canza ba." };
   const { error: updateError } = await ctx.supabase.from("products").update({ stock_quantity: next, updated_at: new Date().toISOString() }).eq("id", productId).eq("business_id", businessId);
   if (updateError) return { error: "Ba a iya sabunta stock ba." };
   const { error } = await ctx.supabase.from("inventory_movements").insert({
     business_id: businessId, product_id: productId, movement_type: movement,
-    quantity, note: note || null, created_by: ctx.user.id,
+    quantity: movementQuantity, note: note || null, created_by: ctx.user.id,
   });
   if (error) return { error: "Stock ya canza amma an kasa rubuta movement history. A bincika bayanan." };
   revalidatePath("/workspace");
@@ -109,8 +112,7 @@ export async function recordPaymentAction(_prev: ModuleActionState, form: FormDa
   if (!order) return { error: "Ba a sami odar ba." };
   const { data: paidRows } = await ctx.supabase.from("order_payments").select("amount").eq("order_id", orderId).eq("business_id", businessId).eq("status","verified");
   const verifiedPaid = (paidRows ?? []).reduce((sum, row) => sum + Number(row.amount), 0);
-  const pendingDeposit = Number(order.deposit_amount);
-  if (verifiedPaid + amount + pendingDeposit > Number(order.total_amount)) return { error: "Jimillar biyan kuɗi ta wuce kuɗin odar. Duba deposit da biyan kuɗin da aka tabbatar." };
+  if (verifiedPaid + amount > Number(order.total_amount)) return { error: "Jimillar biyan kuɗi ta wuce kuɗin odar. Duba deposit da biyan kuɗin da aka tabbatar." };
   const { error } = await ctx.supabase.from("order_payments").insert({
     business_id: businessId, order_id: orderId, amount, payment_method: method,
     reference: reference || null, note: note || null, recorded_by: ctx.user.id, status: "pending",
@@ -118,4 +120,34 @@ export async function recordPaymentAction(_prev: ModuleActionState, form: FormDa
   if (error) return { error: "Ba a iya rubuta biyan kuɗin ba. Tabbatar an kunna migration." };
   revalidatePath("/workspace");
   return { success: "An rubuta biyan kuɗin; yana jiran tabbatarwar mai izini." };
+}
+
+export async function updateOrderStatusAction(_prev: ModuleActionState, form: FormData): Promise<ModuleActionState> {
+  const businessId = textValue(form, "business_id"), orderId = textValue(form, "order_id");
+  const status = textValue(form, "status");
+  const allowed = ["new","measuring","cutting","sewing","fitting","ready","completed","cancelled"];
+  if (!businessId || !orderId || !allowed.includes(status)) return { error: "Duba matakin odar." };
+  const ctx = await authorizedBusiness(businessId);
+  if (ctx.error || !ctx.supabase) return { error: ctx.error ?? "An kasa tabbatar da izini." };
+  const { error } = await ctx.supabase.from("orders").update({ status, updated_at: new Date().toISOString() }).eq("id", orderId).eq("business_id", businessId);
+  if (error) return { error: "Ba a iya sabunta matakin oda ba." };
+  revalidatePath("/workspace");
+  return { success: "An sabunta matakin oda." };
+}
+
+export async function reviewPaymentAction(_prev: ModuleActionState, form: FormData): Promise<ModuleActionState> {
+  const businessId = textValue(form, "business_id"), paymentId = textValue(form, "payment_id");
+  const decision = textValue(form, "decision");
+  if (!businessId || !paymentId || !["verified","rejected"].includes(decision)) return { error: "Bayanin tabbatar da biyan kuɗi bai inganta ba." };
+  const ctx = await authorizedBusiness(businessId);
+  if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
+  if (!ctx.membership || !["owner","manager"].includes(ctx.membership.role)) return { error: "Mai kasuwanci ko manager kaɗai zai iya tantance biyan kuɗi." };
+  const { data: payment } = await ctx.supabase.from("order_payments").select("id,status").eq("id", paymentId).eq("business_id", businessId).maybeSingle();
+  if (!payment || payment.status !== "pending") return { error: "Ba a sami payment mai jiran tantancewa ba." };
+  const { error } = await ctx.supabase.from("order_payments").update({
+    status: decision, verified_by: ctx.user.id, verified_at: new Date().toISOString(),
+  }).eq("id", paymentId).eq("business_id", businessId).eq("status","pending");
+  if (error) return { error: "Ba a iya sabunta matsayin payment ba." };
+  revalidatePath("/workspace");
+  return { success: decision === "verified" ? "An tabbatar da biyan kuɗi." : "An ƙi biyan kuɗin." };
 }
