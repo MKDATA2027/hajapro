@@ -1,148 +1,104 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { CustomersPanel, type CustomerRecord, type MeasurementRecord } from "@/app/workspace/customers-panel";
 import {
-  Bell,
-  Bot,
-  Boxes,
-  CalendarClock,
-  ChartNoAxesCombined,
-  ChevronRight,
-  CircleHelp,
-  ClipboardList,
-  CreditCard,
-  LayoutDashboard,
-  Package,
-  Search,
-  Settings2,
-  ShoppingBag,
-  Users,
-  Wallet,
+  Bell, Bot, Boxes, CalendarClock, ChartNoAxesCombined, ChevronRight,
+  ClipboardList, CreditCard, Home, Menu, Package, Plus, Scissors, Users, Wallet,
 } from "lucide-react";
 
-type ModuleKey =
-  | "overview"
-  | "customers"
-  | "orders"
-  | "products"
-  | "reports"
-  | "payments"
-  | "overdue"
-  | "notifications"
-  | "ai"
-  | "settings";
-
-const modules: {
-  key: ModuleKey;
-  label: string;
-  description: string;
-  icon: typeof Users;
-}[] = [
-  { key: "customers", label: "Customers", description: "Profiles and measurements", icon: Users },
-  { key: "orders", label: "Orders", description: "Track work from start to delivery", icon: ClipboardList },
-  { key: "products", label: "Products", description: "Your product catalogue", icon: ShoppingBag },
-  { key: "reports", label: "Reports", description: "Business performance", icon: ChartNoAxesCombined },
-  { key: "overdue", label: "Overdue work", description: "Work that needs attention", icon: CalendarClock },
-  { key: "notifications", label: "Notifications", description: "Important updates and reminders", icon: Bell },
-];
+type ModuleKey = "overview" | "customers" | "orders" | "products" | "reports" | "payments" | "overdue" | "notifications" | "ai" | "settings";
 
 const moduleTitles: Record<ModuleKey, string> = {
-  overview: "Overview",
-  customers: "Customers",
-  orders: "Orders",
-  products: "Products",
-  reports: "Reports",
-  payments: "Payments",
-  overdue: "Overdue work",
-  notifications: "Notifications",
-  ai: "HAJAPRO AI",
-  settings: "Settings",
+  overview: "Home", customers: "Kwastomomi", orders: "Umarni", products: "Kayayyaki",
+  reports: "Rahotanni", payments: "Biyan Kuɗi", overdue: "Ayyukan da suka makara",
+  notifications: "Sanarwa", ai: "HAJAPRO AI", settings: "Saituna",
 };
 
-export function DashboardHome({ businessName, businessType, businessId, customers, measurements }: { businessName: string; businessType: string; businessId: string; customers: CustomerRecord[]; measurements: MeasurementRecord[] }) {
+export function DashboardHome({ businessName, businessType, businessId, customers, measurements }: {
+  businessName: string; businessType: string; businessId: string;
+  customers: CustomerRecord[]; measurements: MeasurementRecord[];
+}) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
-  const [searchValue, setSearchValue] = useState("");
   const isTailor = businessType === "tailor";
-
-  function openModule(module: ModuleKey) {
-    setActiveModule(module);
-  }
+  const go = (module: ModuleKey) => setActiveModule(module);
 
   return (
-    <div className="dashboard-shell">
-      <aside className="dashboard-sidebar">
-        <div className="dashboard-brand">
-          <span className="dashboard-brand-mark">H</span>
-          <span>HAJA<strong>PRO</strong></span>
+    <div className="haja-dashboard">
+      <header className="haja-header">
+        <div className="haja-brand">
+          <Image src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={58} height={58} priority className="haja-brand-logo" />
+          <div className="haja-brand-copy"><strong>HAJAPRO</strong><span>{isTailor ? "Tailor Business" : "Business"} · Dashboard</span></div>
         </div>
-        <p className="dashboard-nav-label">WORKSPACE</p>
-        <nav className="dashboard-nav" aria-label="Workspace navigation">
-          <button className={activeModule === "overview" ? "dashboard-nav-item is-active" : "dashboard-nav-item"} onClick={() => openModule("overview")} type="button"><LayoutDashboard size={18} /> Overview</button>
-          {modules.slice(0, 3).map((item) => {
-            const Icon = item.icon;
-            return <button key={item.key} className={activeModule === item.key ? "dashboard-nav-item is-active" : "dashboard-nav-item"} onClick={() => openModule(item.key)} type="button"><Icon size={18} /> {item.label}</button>;
-          })}
-          <button className={activeModule === "payments" ? "dashboard-nav-item is-active" : "dashboard-nav-item"} onClick={() => openModule("payments")} type="button"><CreditCard size={18} /> Payments</button>
-          {modules.slice(3).map((item) => {
-            const Icon = item.icon;
-            return <button key={item.key} className={activeModule === item.key ? "dashboard-nav-item is-active" : "dashboard-nav-item"} onClick={() => openModule(item.key)} type="button"><Icon size={18} /> {item.label}</button>;
-          })}
-        </nav>
-        <div className="dashboard-sidebar-bottom">
-          <button className={activeModule === "ai" ? "dashboard-nav-item is-active" : "dashboard-nav-item"} onClick={() => openModule("ai")} type="button"><Bot size={18} /> HAJAPRO AI</button>
-          <button className={activeModule === "settings" ? "dashboard-nav-item is-active" : "dashboard-nav-item"} onClick={() => openModule("settings")} type="button"><Settings2 size={18} /> Settings</button>
-          <div className="dashboard-account"><span className="dashboard-avatar">{businessName.slice(0, 1).toUpperCase()}</span><span><strong>{businessName}</strong><small>{isTailor ? "Tailoring business" : "Trading business"}</small></span></div>
-        </div>
-      </aside>
+        <button className="haja-notifications" type="button" onClick={() => go("notifications")} aria-label="Buɗe sanarwa"><Bell size={25} /><i /></button>
+      </header>
 
-      <main className="dashboard-main">
-        <header className="dashboard-topbar">
-          <div className="dashboard-breadcrumb">Workspace <ChevronRight size={14} /> <strong>{moduleTitles[activeModule]}</strong></div>
-          <div className="dashboard-top-actions">
-            <label className="dashboard-search"><Search size={16} /><input value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder="Search workspace" aria-label="Search workspace" /></label>
-            <button className="dashboard-icon-button" type="button" onClick={() => openModule("notifications")} aria-label="Open notifications"><Bell size={18} /></button>
-          </div>
-        </header>
+      {activeModule === "overview" ? (
+        <main className="haja-dashboard-content">
+          <button className="haja-income-card" type="button" onClick={() => go("payments")}>
+            <span className="haja-income-copy">
+              <span className="haja-income-label">Kudin shiga (This month)</span>
+              <strong className="haja-income-value">—</strong>
+              <span className="haja-income-note">Ana jiran haɗa bayanan kuɗi</span>
+              <span className="haja-payment-label">{/* Language-aware label defaulting to Hausa */}Biyan Kuɗi</span>
+            </span>
+            <span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span>
+          </button>
 
-        {activeModule === "overview" ? (
-          <section className="dashboard-content">
-            <div className="dashboard-greeting">
-              <div><p className="dashboard-eyebrow">YOUR BUSINESS AT A GLANCE</p><h1>Welcome back.</h1><p>Manage your {isTailor ? "tailoring business" : "trading business"} from one place.</p></div>
-              <span className="dashboard-date-chip">HAJAPRO WORKSPACE</span>
-            </div>
+          <button className="haja-overdue-card" type="button" onClick={() => go("overdue")}>
+            <span className="haja-overdue-icon"><CalendarClock size={36} /></span>
+            <span className="haja-overdue-copy"><strong>Ayyukan da suka makara</strong><small>Duba ayyukan da suka wuce lokacin kammalawa</small></span>
+            <ChevronRight className="haja-card-chevron" size={28} />
+          </button>
 
-            <div className="dashboard-metric-grid">
-              <button className="dashboard-metric-card dashboard-wallet-card" type="button" onClick={() => openModule("payments")}>
-                <span className="dashboard-metric-icon"><Wallet size={20} /></span><span className="dashboard-metric-label">Income wallet</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-wallet-link">Payment <ChevronRight size={14} /></span>
-              </button>
-              <div className="dashboard-metric-card"><span className="dashboard-metric-icon"><ClipboardList size={20} /></span><span className="dashboard-metric-label">Active orders</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-metric-note">Awaiting database connection</span></div>
-              <button className="dashboard-metric-card" type="button" onClick={() => openModule("customers")}><span className="dashboard-metric-icon"><Users size={20} /></span><span className="dashboard-metric-label">Customers</span><strong className="dashboard-metric-value">{customers.length}</strong><span className="dashboard-metric-note">Saved customer records</span></button>
-              <div className="dashboard-metric-card"><span className="dashboard-metric-icon"><Boxes size={20} /></span><span className="dashboard-metric-label">{isTailor ? "Materials" : "Stock items"}</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-metric-note">Awaiting database connection</span></div>
-            </div>
-
-            <div className="dashboard-section-heading"><div><p className="dashboard-eyebrow">WORKSPACE TOOLS</p><h2>What would you like to do?</h2></div></div>
-            <div className="dashboard-module-grid">
-              {modules.map((item) => {
-                const Icon = item.icon;
-                return <button key={item.key} type="button" className="dashboard-module-card" onClick={() => openModule(item.key)}><span className="dashboard-module-icon"><Icon size={19} /></span><span className="dashboard-module-copy"><strong>{item.label}</strong><small>{item.description}</small></span><ChevronRight size={17} className="dashboard-module-arrow" /></button>;
-              })}
-              <button type="button" className="dashboard-module-card" onClick={() => openModule("ai")}><span className="dashboard-module-icon dashboard-ai-icon"><Bot size={19} /></span><span className="dashboard-module-copy"><strong>HAJAPRO AI</strong><small>Business guidance and insights</small></span><ChevronRight size={17} className="dashboard-module-arrow" /></button>
-            </div>
-            <p className="dashboard-integrity-note"><CircleHelp size={15} /> Business figures will appear after the relevant database modules are connected. No sample figures are being shown.</p>
+          <section className="haja-shortcuts" aria-label="Manyan sassan dashboard">
+            <button className="haja-shortcut haja-customers" type="button" onClick={() => go("customers")}>
+              <span className="haja-shortcut-icon"><Users size={36} fill="currentColor" strokeWidth={1.5} /></span>
+              <ChevronRight className="haja-card-chevron" size={26} />
+              <strong>Kwastomomi</strong><small>Duba da sarrafa kwastomomi</small>
+            </button>
+            <button className="haja-shortcut haja-orders" type="button" onClick={() => go("orders")}>
+              <span className="haja-shortcut-icon"><Scissors size={36} strokeWidth={2.4} /></span>
+              <ChevronRight className="haja-card-chevron" size={26} />
+              <strong>Umarni</strong><small>{isTailor ? "Sabon umarni ko duba na yanzu" : "Duba umarni da ayyukan yanzu"}</small>
+            </button>
+            <button className="haja-shortcut haja-products" type="button" onClick={() => go("products")}>
+              <span className="haja-shortcut-icon"><Package size={36} strokeWidth={2.2} /></span>
+              <ChevronRight className="haja-card-chevron" size={26} />
+              <strong>Kayayyaki</strong><small>Duba kayayyaki da farashi</small>
+            </button>
+            <button className="haja-shortcut haja-reports" type="button" onClick={() => go("reports")}>
+              <span className="haja-shortcut-icon"><ChartNoAxesCombined size={36} strokeWidth={2.4} /></span>
+              <ChevronRight className="haja-card-chevron" size={26} />
+              <strong>Rahotanni</strong><small>Duba kudin shiga da bayanan kasuwanci</small>
+            </button>
           </section>
-        ) : activeModule === "customers" ? (
-          <CustomersPanel businessId={businessId} initialCustomers={customers} initialMeasurements={measurements} />
-        ) : (
-          <section className="dashboard-content dashboard-module-empty">
-            <span className="dashboard-empty-icon">{activeModule === "products" ? <Package size={24} /> : activeModule === "payments" ? <Wallet size={24} /> : activeModule === "customers" ? <Users size={24} /> : activeModule === "ai" ? <Bot size={24} /> : <ClipboardList size={24} />}</span>
-            <p className="dashboard-eyebrow">HAJAPRO WORKSPACE</p>
-            <h1>{moduleTitles[activeModule]}</h1>
-            <p>This section is part of the dashboard plan. It will be connected to secure business records as its module is implemented.</p>
-            <button className="dashboard-back-button" type="button" onClick={() => openModule("overview")}>Back to overview</button>
-          </section>
-        )}
-      </main>
+
+          <button className="haja-ai-card" type="button" onClick={() => go("ai")}>
+            <span className="haja-ai-icon"><Bot size={35} /></span>
+            <span className="haja-ai-copy"><strong>HAJAPRO AI</strong><small>Taimakon gudanar da sana’a</small></span>
+            <ChevronRight className="haja-card-chevron" size={28} />
+          </button>
+        </main>
+      ) : activeModule === "customers" ? (
+        <div className="haja-subpage"><CustomersPanel businessId={businessId} initialCustomers={customers} initialMeasurements={measurements} /></div>
+      ) : (
+        <main className="haja-subpage haja-module-placeholder">
+          <span className="haja-subpage-icon">{activeModule === "payments" ? <Wallet size={30} /> : activeModule === "orders" ? <ClipboardList size={30} /> : activeModule === "products" ? <Boxes size={30} /> : activeModule === "reports" ? <ChartNoAxesCombined size={30} /> : activeModule === "ai" ? <Bot size={30} /> : activeModule === "overdue" ? <CalendarClock size={30} /> : activeModule === "notifications" ? <Bell size={30} /> : <CreditCard size={30} />}</span>
+          <h1>{moduleTitles[activeModule]}</h1>
+          <p>Wannan sashe yana cikin tsarin HAJAPRO. Za a haɗa shi da bayanan kasuwanci masu inganci yayin kammala wannan module.</p>
+          <button type="button" className="haja-back-home" onClick={() => go("overview")}>Komawa Home</button>
+        </main>
+      )}
+
+      <nav className="haja-bottom-nav" aria-label="Babban menu">
+        <button className={activeModule === "overview" ? "is-active" : ""} type="button" onClick={() => go("overview")}><Home size={25} fill={activeModule === "overview" ? "currentColor" : "none"} /><span>Home</span></button>
+        <button className={activeModule === "orders" ? "is-active" : ""} type="button" onClick={() => go("orders")}><ClipboardList size={25} /><span>Orders</span></button>
+        <button className="haja-add-button" type="button" onClick={() => go("orders")} aria-label="Ƙara sabon umarni"><Plus size={36} strokeWidth={2.7} /></button>
+        <button className={activeModule === "customers" ? "is-active" : ""} type="button" onClick={() => go("customers")}><Users size={25} /><span>Customers</span></button>
+        <button className={activeModule === "settings" ? "is-active" : ""} type="button" onClick={() => go("settings")}><Menu size={27} /><span>More</span></button>
+      </nav>
     </div>
   );
 }
