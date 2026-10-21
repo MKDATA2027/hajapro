@@ -28,6 +28,11 @@ export default async function WorkspacePage() {
     .select("id, full_name, phone, email, created_at")
     .eq("business_id", business.id)
     .order("created_at", { ascending: false });
+  const { data: measurementRows } = await supabase
+    .from("measurements")
+    .select("id, customer_id, label, measurement_values, unit, recorded_at, notes")
+    .eq("business_id", business.id)
+    .order("recorded_at", { ascending: false });
 
   return (
     <main className="workspace-page dashboard-page">
@@ -37,7 +42,7 @@ export default async function WorkspacePage() {
           <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
         </form>
       </header>
-      <DashboardHome businessName={business.name} businessType={business.business_type} customers={customerRows ?? []} />
+      <DashboardHome businessName={business.name} businessType={business.business_type} customers={customerRows ?? []} measurements={measurementRows ?? []} />
     </main>
   );
 }
