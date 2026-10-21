@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { signOutAction } from "@/app/auth/actions";
 import { CustomersPanel, type CustomerRecord, type MeasurementRecord } from "@/app/workspace/customers-panel";
+import { BusinessModulePanel } from "@/app/workspace/business-modules";
 import {
   Bell, Bot, Boxes, CalendarClock, ChartNoAxesCombined, ChevronRight,
   ClipboardList, CreditCard, Home, LogOut, Menu, Package, Plus, Scissors, Users, Wallet,
@@ -17,9 +18,12 @@ const moduleTitles: Record<ModuleKey, string> = {
   notifications: "Sanarwa", ai: "HAJAPRO AI", settings: "Saituna",
 };
 
-export function DashboardHome({ businessName, businessType, businessId, customers, measurements }: {
+export function DashboardHome({ businessName, businessType, businessId, customers, measurements, orders, products, payments }: {
   businessName: string; businessType: string; businessId: string;
   customers: CustomerRecord[]; measurements: MeasurementRecord[];
+  orders: { id: string; title: string; status: string; total_amount: number | string; deposit_amount: number | string; due_date: string | null; created_at: string; customer_id: string | null }[];
+  products: { id: string; name: string; sku: string | null; category: string | null; unit_price: number | string; stock_quantity: number | string; low_stock_threshold: number | string }[];
+  payments: { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string }[];
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const isTailor = businessType === "tailor";
@@ -93,12 +97,9 @@ export function DashboardHome({ businessName, businessType, businessId, customer
             </form>
           </main>
       ) : (
-        <main className="haja-subpage haja-module-placeholder">
-          <span className="haja-subpage-icon">{activeModule === "payments" ? <Wallet size={30} /> : activeModule === "orders" ? <ClipboardList size={30} /> : activeModule === "products" ? <Boxes size={30} /> : activeModule === "reports" ? <ChartNoAxesCombined size={30} /> : activeModule === "ai" ? <Bot size={30} /> : activeModule === "overdue" ? <CalendarClock size={30} /> : activeModule === "notifications" ? <Bell size={30} /> : <CreditCard size={30} />}</span>
-          <h1>{moduleTitles[activeModule]}</h1>
-          <p>Wannan sashe yana cikin tsarin HAJAPRO. Za a haɗa shi da bayanan kasuwanci masu inganci yayin kammala wannan module.</p>
-          <button type="button" className="haja-back-home" onClick={() => go("overview")}>Komawa Home</button>
-        </main>
+        <div className="haja-subpage">
+          <BusinessModulePanel module={activeModule} businessId={businessId} businessType={businessType} customers={customers.map(({id,full_name})=>({id,full_name}))} orders={orders} products={products} payments={payments} />
+        </div>
       )}
 
       <nav className="haja-bottom-nav" aria-label="Babban menu">
