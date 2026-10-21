@@ -47,8 +47,8 @@ export function DashboardHome({ businessType, businessId, customers, measurement
           <button className="haja-income-card" type="button" onClick={() => go("payments")}>
             <span className="haja-income-copy">
               <span className="haja-income-label">Kudin shiga (This month)</span>
-              <strong className="haja-income-value">—</strong>
-              <span className="haja-income-note">Ana jiran haɗa bayanan kuɗi</span>
+              <strong className="haja-income-value">{formatMoney(currentMonthIncome)}</strong>
+              <span className="haja-income-note">{currentMonthIncome > 0 ? (language === "ha" ? "Kuɗin da aka tabbatar wannan watan" : "Verified payments this month") : (language === "ha" ? "Babu biyan kuɗi da aka tabbatar wannan watan" : "No verified payments this month")}</span>
               <span className="haja-payment-label">{/* Language-aware label defaulting to Hausa */}{language === "ha" ? "Biyan Kuɗi" : "Payment"}</span>
             </span>
             <span className="haja-wallet-group"><span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span><span className="haja-wallet-label">Wallet</span></span>
