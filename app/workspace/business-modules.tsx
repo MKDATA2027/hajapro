@@ -1,16 +1,17 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { recordPaymentAction, recordStockMovementAction, createOrderAction, createProductAction, updateOrderStatusAction, reviewPaymentAction, type ModuleActionState } from "@/app/workspace/module-actions";
+import { recordPaymentAction, recordStockMovementAction, createOrderAction, createProductAction, updateOrderStatusAction, reviewPaymentAction, markNotificationReadAction, type ModuleActionState } from "@/app/workspace/module-actions";
 import { Bot, CalendarClock, CreditCard, Package, Plus, Scissors } from "lucide-react";
 
 type Customer = { id: string; full_name: string };
 type Order = { id: string; title: string; status: string; total_amount: number | string; deposit_amount: number | string; due_date: string | null; created_at: string; customer_id: string | null };
 type Product = { id: string; name: string; sku: string | null; category: string | null; unit_price: number | string; stock_quantity: number | string; low_stock_threshold: number | string };
 type Payment = { id: string; order_id: string; amount: number | string; payment_method: string; status: string; created_at: string };
+type Notification = { id: string; title: string; body: string; read_at: string | null; created_at: string };
 function OrderStatusForm({businessId,order}:{businessId:string;order:Order}) { const [state,action,pending]=useActionState(updateOrderStatusAction,empty); return <form className="haja-order-status-form" action={action}><input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="order_id" value={order.id}/><select aria-label="Matakin oda" name="status" defaultValue={order.status}>{Object.entries(statusLabels).map(([v,l])=><option key={v} value={v}>{l}</option>)}</select><button type="submit" disabled={pending}>{pending?"…":"Sabunta"}</button>{state.error&&<small role="alert">{state.error}</small>}{state.success&&<small role="status">{state.success}</small>}</form> }
 function PaymentReviewForm({businessId,payment}:{businessId:string;payment:Payment}) { const [state,action,pending]=useActionState(reviewPaymentAction,empty); return <div className="haja-payment-review"><form action={action}><input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="payment_id" value={payment.id}/><input type="hidden" name="decision" value="verified"/><button type="submit" disabled={pending}>Tabbatar</button></form><form action={action}><input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="payment_id" value={payment.id}/><input type="hidden" name="decision" value="rejected"/><button type="submit" disabled={pending}>Ƙi</button></form>{state.error&&<small role="alert">{state.error}</small>}{state.success&&<small role="status">{state.success}</small>}</div> }
-type Props = { module: string; initialCreateOrder?: boolean; businessId: string; customers: Customer[]; orders: Order[]; products: Product[]; payments: Payment[] };
+type Props = { module: string; initialCreateOrder?: boolean; businessId: string; customers: Customer[]; orders: Order[]; products: Product[]; payments: Payment[]; notifications: Notification[] };
 
 const titles: Record<string,string> = { orders: "Umarni", products: "Kayayyaki", payments: "Wallet · Biyan Kuɗi", reports: "Rahotanni", overdue: "Ayyukan da suka makara", ai: "HAJAPRO AI", notifications: "Sanarwa" };
 const statusLabels: Record<string,string> = { new:"Sabon oda", measuring:"Auna jiki", cutting:"Yanke kaya", sewing:"Dinki", fitting:"Gwada kaya", ready:"A shirye", completed:"An kammala", cancelled:"An soke" };
@@ -20,13 +21,14 @@ const empty: ModuleActionState = {};
 
 function Feedback({state}:{state:ModuleActionState}) { return <>{state.error && <p className="dashboard-form-error" role="alert">{state.error}</p>}{state.success && <p className="dashboard-form-success" role="status">{state.success}</p>}</>; }
 
-export function BusinessModulePanel({module,initialCreateOrder=false,businessId,customers,orders,products,payments}:Props) {
+export function BusinessModulePanel({module,initialCreateOrder=false,businessId,customers,orders,products,payments,notifications}:Props) {
  const [showOrder,setShowOrder]=useState(initialCreateOrder);
  const [showProduct,setShowProduct]=useState(false);
  const [orderState,orderAction,orderPending]=useActionState(createOrderAction,empty);
  const [productState,productAction,productPending]=useActionState(createProductAction,empty);
  const [stockState,stockAction,stockPending]=useActionState(recordStockMovementAction,empty);
  const [paymentState,paymentAction,paymentPending]=useActionState(recordPaymentAction,empty);
+ const [notificationState,notificationAction,notificationPending]=useActionState(markNotificationReadAction,empty);
  const orderName = (id:string) => orders.find(o=>o.id===id)?.title ?? "Oda";
  const verifiedPayments = payments.filter(p=>p.status==="verified");
  const pendingPayments = payments.filter(p=>p.status==="pending");
@@ -62,6 +64,6 @@ export function BusinessModulePanel({module,initialCreateOrder=false,businessId,
   </>}
   {module==="overdue" && <><div className="haja-module-stats"><div><span>Oda da suka makara</span><strong>{overdue.length}</strong></div><div><span>Darajar oda</span><strong>{money(overdue.reduce((s,o)=>s+Number(o.total_amount),0))}</strong></div></div><div className="haja-module-list">{overdue.length?overdue.map(o=><article className="haja-module-row" key={o.id}><span className="haja-module-row-icon"><CalendarClock size={20}/></span><div className="haja-module-row-main"><strong>{o.title}</strong><span>Ranar ƙarshe: {date(o.due_date)}</span><small>{statusLabels[o.status]??o.status}</small></div><b>{money(o.total_amount)}</b></article>):<p className="haja-module-empty">Babu oda da suka makara a bayanan yanzu.</p>}</div></>}
   {module==="ai" && <div className="haja-ai-workspace"><span className="haja-ai-workspace-icon"><Bot size={28}/></span><h2>Mai taimakon kasuwanci</h2><p>Wannan sigar tana ba da taƙaitaccen bayani daga bayanan kasuwancinka. Ba a haɗa AI model na tattaunawa da waje ba tukuna, don haka ba za ta yi iƙirarin amsa daga AI ba.</p><div className="haja-ai-insight"><strong>Taƙaitaccen halin kasuwanci</strong><ul><li>Kwastomomi: {customers.length}</li><li>Oda masu buɗe: {orders.filter(o=>!["completed","cancelled"].includes(o.status)).length}</li><li>Oda da suka makara: {overdue.length}</li><li>Kayayyaki masu ƙarancin stock: {lowStock.length}</li><li>Kuɗin da aka tabbatar: {money(paid)}</li></ul></div><div className="haja-ai-insight"><strong>Abubuwan da za a duba</strong><ul>{overdue.length>0&&<li>A bibiyi oda {overdue.length} da suka wuce ranar kammalawa.</li>}{lowStock.length>0&&<li>A duba kayayyaki {lowStock.length} masu ƙarancin stock.</li>}{pendingPayments.length>0&&<li>A tantance biyan kuɗi {pendingPayments.length} da ke jiran tabbatarwa.</li>}{!overdue.length&&!lowStock.length&&!pendingPayments.length&&<li>Babu wata matsala a cikin waɗannan alamomi bisa bayanan da ake da su.</li>}</ul></div></div>}
-  {module==="notifications" && <div className="haja-module-empty"><strong>Sanarwa</strong><p>A wannan sigar, an tanadi tsarin ajiyar sanarwa. Sanarwa za ta bayyana a nan idan an samar da su daga ayyukan kasuwanci.</p></div>}
+  {module==="notifications" && <><div className="haja-module-stats"><div><span>Duk sanarwa</span><strong>{notifications.length}</strong></div><div><span>Ba a karanta ba</span><strong>{notifications.filter(n=>!n.read_at).length}</strong></div></div><Feedback state={notificationState}/><div className="haja-module-list">{notifications.length?notifications.map(n=><article className={`haja-module-row ${n.read_at?"":"haja-notification-unread"}`} key={n.id}><span className="haja-module-row-icon"><Bot size={20}/></span><div className="haja-module-row-main"><strong>{n.title}</strong><span>{n.body}</span><small>{date(n.created_at)} · {n.read_at?"An karanta":"Sabuwar sanarwa"}</small></div>{!n.read_at&&<form action={notificationAction}><input type="hidden" name="notification_id" value={n.id}/><button className="haja-notification-read-button" disabled={notificationPending}>Karanta</button></form>}</article>):<p className="haja-module-empty">Babu sanarwa tukuna. Sabbin sanarwa za su bayyana a nan.</p>}</div></>}
  </section>;
 }
