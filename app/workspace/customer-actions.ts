@@ -19,13 +19,15 @@ export async function createCustomerAction(_previous: CustomerFormState, formDat
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return { error: "Your session has expired. Sign in again." };
 
-  const { data: memberships, error: membershipError } = await supabase
+  const businessId = String(formData.get("business_id") ?? "").trim();
+  if (!businessId) return { error: "Business workspace is missing. Refresh and try again." };
+  const { data: membership, error: membershipError } = await supabase
     .from("business_members")
-    .select("business_id, businesses(id, name, business_type, created_at)")
-    .eq("user_id", user.id);
-  if (membershipError) return { error: "Could not load your business access. Please try again." };
-  const membership = memberships?.[0];
-  if (!membership?.business_id) return { error: "No business workspace is connected to this account." };
+    .select("business_id")
+    .eq("user_id", user.id)
+    .eq("business_id", businessId)
+    .maybeSingle();
+  if (membershipError || !membership) return { error: "You do not have access to this business workspace." };
 
   const { error } = await supabase.from("customers").insert({
     business_id: membership.business_id,
