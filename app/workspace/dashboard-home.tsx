@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signOutAction } from "@/app/auth/actions";
 import { CustomersPanel, type CustomerRecord, type MeasurementRecord } from "@/app/workspace/customers-panel";
 import { BusinessModulePanel } from "@/app/workspace/business-modules";
@@ -22,6 +22,9 @@ export function DashboardHome({ businessType, businessId, customers, measurement
   notifications: { id: string; title: string; body: string; read_at: string | null; created_at: string }[];
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
+  const [language, setLanguage] = useState<"ha" | "en">("ha");
+  useEffect(() => { const saved = window.localStorage.getItem("hajapro-language"); if (saved === "ha" || saved === "en") setLanguage(saved); }, []);
+  const changeLanguage = (value: "ha" | "en") => { window.localStorage.setItem("hajapro-language", value); setLanguage(value); };
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
   const go = (module: ModuleKey) => { setActiveModule(module); setQuickCreateOrder(false); };
@@ -43,7 +46,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
               <span className="haja-income-label">Kudin shiga (This month)</span>
               <strong className="haja-income-value">—</strong>
               <span className="haja-income-note">Ana jiran haɗa bayanan kuɗi</span>
-              <span className="haja-payment-label">{/* Language-aware label defaulting to Hausa */}Biyan Kuɗi</span>
+              <span className="haja-payment-label">{/* Language-aware label defaulting to Hausa */}{language === "ha" ? "Biyan Kuɗi" : "Payment"}</span>
             </span>
             <span className="haja-wallet-group"><span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span><span className="haja-wallet-label">Wallet</span></span>
           </button>
@@ -88,7 +91,8 @@ export function DashboardHome({ businessType, businessId, customers, measurement
       ) : activeModule === "settings" ? (
           <main className="haja-subpage haja-settings-panel">
             <h1>Saituna</h1>
-            <p>Sarrafa saitunan asusunka da fita daga HAJAPRO.</p>
+            <p>Sarrafa harshen app da saitunan asusunka.</p>
+            <section className="haja-language-settings" aria-label="App language"><h2>Language / Harshe</h2><div><button type="button" className={language === "ha" ? "is-selected" : ""} onClick={() => changeLanguage("ha")}>Hausa</button><button type="button" className={language === "en" ? "is-selected" : ""} onClick={() => changeLanguage("en")}>English</button></div></section>
             <form action={signOutAction}>
               <button className="haja-settings-signout" type="submit"><LogOut size={19} /> Sign out</button>
             </form>
