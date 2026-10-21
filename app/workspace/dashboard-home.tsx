@@ -27,6 +27,9 @@ export function DashboardHome({ businessType, businessId, customers, measurement
   const changeLanguage = (value: "ha" | "en") => { window.localStorage.setItem("hajapro-language", value); setLanguage(value); };
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
+  const currentDate = new Date();
+  const currentMonthIncome = payments.filter((payment) => { const paidDate = new Date(payment.created_at); return payment.status === "verified" && paidDate.getFullYear() === currentDate.getFullYear() && paidDate.getMonth() === currentDate.getMonth(); }).reduce((sum, payment) => sum + Number(payment.amount), 0);
+  const formatMoney = (amount: number) => new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 2 }).format(amount);
   const go = (module: ModuleKey) => { setActiveModule(module); setQuickCreateOrder(false); };
 
   return (
