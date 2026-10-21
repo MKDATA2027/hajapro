@@ -1,9 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LogOut } from "lucide-react";
 import { DashboardHome } from "@/app/workspace/dashboard-home";
-import { signOutAction } from "@/app/auth/actions";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -36,12 +32,6 @@ export default async function WorkspacePage() {
 
   return (
     <main className="workspace-page dashboard-page">
-      <header className="workspace-header dashboard-mobile-header">
-        <Link className="workspace-logo-link" href="/" aria-label="HAJAPRO home"><Image className="workspace-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={1536} height={1499} priority /></Link>
-        <form action={signOutAction}>
-          <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
-        </form>
-      </header>
       <DashboardHome businessName={business.name} businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} />
     </main>
   );
