@@ -6,17 +6,12 @@ import { signOutAction } from "@/app/auth/actions";
 import { CustomersPanel, type CustomerRecord, type MeasurementRecord } from "@/app/workspace/customers-panel";
 import { BusinessModulePanel } from "@/app/workspace/business-modules";
 import {
-  Bell, Bot, Boxes, CalendarClock, ChartNoAxesCombined, ChevronRight,
-  ClipboardList, CreditCard, Home, LogOut, Menu, Package, Plus, Scissors, Users, Wallet,
+  Bell, Bot, CalendarClock, ChartNoAxesCombined, ChevronRight,
+  ClipboardList, Home, LogOut, Menu, Package, Plus, Scissors, Users, Wallet,
 } from "lucide-react";
 
 type ModuleKey = "overview" | "customers" | "orders" | "products" | "reports" | "payments" | "overdue" | "notifications" | "ai" | "settings";
 
-const moduleTitles: Record<ModuleKey, string> = {
-  overview: "Home", customers: "Kwastomomi", orders: "Umarni", products: "Kayayyaki",
-  reports: "Rahotanni", payments: "Biyan Kuɗi", overdue: "Ayyukan da suka makara",
-  notifications: "Sanarwa", ai: "HAJAPRO AI", settings: "Saituna",
-};
 
 export function DashboardHome({ businessType, businessId, customers, measurements, orders, products, payments }: {
   businessType: string; businessId: string;
