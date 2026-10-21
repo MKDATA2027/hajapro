@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CustomersPanel, type CustomerRecord } from "@/app/workspace/customers-panel";
 import {
   Bell,
   Bot,
@@ -59,7 +60,7 @@ const moduleTitles: Record<ModuleKey, string> = {
   settings: "Settings",
 };
 
-export function DashboardHome({ businessName, businessType }: { businessName: string; businessType: string }) {
+export function DashboardHome({ businessName, businessType, customers }: { businessName: string; businessType: string; customers: CustomerRecord[] }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const [searchValue, setSearchValue] = useState("");
   const isTailor = businessType === "tailor";
@@ -116,7 +117,7 @@ export function DashboardHome({ businessName, businessType }: { businessName: st
                 <span className="dashboard-metric-icon"><Wallet size={20} /></span><span className="dashboard-metric-label">Income wallet</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-wallet-link">Payment <ChevronRight size={14} /></span>
               </button>
               <div className="dashboard-metric-card"><span className="dashboard-metric-icon"><ClipboardList size={20} /></span><span className="dashboard-metric-label">Active orders</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-metric-note">Awaiting database connection</span></div>
-              <div className="dashboard-metric-card"><span className="dashboard-metric-icon"><Users size={20} /></span><span className="dashboard-metric-label">Customers</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-metric-note">Awaiting database connection</span></div>
+              <button className="dashboard-metric-card" type="button" onClick={() => openModule("customers")}><span className="dashboard-metric-icon"><Users size={20} /></span><span className="dashboard-metric-label">Customers</span><strong className="dashboard-metric-value">{customers.length}</strong><span className="dashboard-metric-note">Saved customer records</span></button>
               <div className="dashboard-metric-card"><span className="dashboard-metric-icon"><Boxes size={20} /></span><span className="dashboard-metric-label">{isTailor ? "Materials" : "Stock items"}</span><strong className="dashboard-metric-value">—</strong><span className="dashboard-metric-note">Awaiting database connection</span></div>
             </div>
 
@@ -130,6 +131,8 @@ export function DashboardHome({ businessName, businessType }: { businessName: st
             </div>
             <p className="dashboard-integrity-note"><CircleHelp size={15} /> Business figures will appear after the relevant database modules are connected. No sample figures are being shown.</p>
           </section>
+        ) : activeModule === "customers" ? (
+          <CustomersPanel initialCustomers={customers} />
         ) : (
           <section className="dashboard-content dashboard-module-empty">
             <span className="dashboard-empty-icon">{activeModule === "products" ? <Package size={24} /> : activeModule === "payments" ? <Wallet size={24} /> : activeModule === "customers" ? <Users size={24} /> : activeModule === "ai" ? <Bot size={24} /> : <ClipboardList size={24} />}</span>
