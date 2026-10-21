@@ -110,9 +110,9 @@ export async function recordPaymentAction(_prev: ModuleActionState, form: FormDa
   if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   const { data: order } = await ctx.supabase.from("orders").select("id,total_amount,deposit_amount").eq("id", orderId).eq("business_id", businessId).maybeSingle();
   if (!order) return { error: "Ba a sami odar ba." };
-  const { data: paidRows } = await ctx.supabase.from("order_payments").select("amount").eq("order_id", orderId).eq("business_id", businessId).eq("status","verified");
-  const verifiedPaid = (paidRows ?? []).reduce((sum, row) => sum + Number(row.amount), 0);
-  if (verifiedPaid + amount > Number(order.total_amount)) return { error: "Jimillar biyan kuɗi ta wuce kuɗin odar. Duba deposit da biyan kuɗin da aka tabbatar." };
+  const { data: paidRows } = await ctx.supabase.from("order_payments").select("amount,status").eq("order_id", orderId).eq("business_id", businessId).neq("status","rejected");
+  const recordedPayments = (paidRows ?? []).reduce((sum, row) => sum + Number(row.amount), 0);
+  if (recordedPayments + amount > Number(order.total_amount)) return { error: "Jimillar biyan kuɗi da ke jiran dubawa ko waɗanda aka tabbatar za su wuce kuɗin odar." };
   const { error } = await ctx.supabase.from("order_payments").insert({
     business_id: businessId, order_id: orderId, amount, payment_method: method,
     reference: reference || null, note: note || null, recorded_by: ctx.user.id, status: "pending",
