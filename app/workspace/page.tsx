@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, BriefcaseBusiness, LogOut } from "lucide-react";
-import { signOutAction } from "@/app/auth/actions";
+import { DashboardHome } from "@/app/workspace/dashboard-home";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -20,33 +18,28 @@ export default async function WorkspacePage() {
     .order("created_at", { ascending: true });
   if (!businesses?.length) redirect("/setup");
 
+  const business = businesses[0];
+  const { data: customerRows } = await supabase
+    .from("customers")
+    .select("id, full_name, phone, email, created_at")
+    .eq("business_id", business.id)
+    .order("created_at", { ascending: false });
+  const { data: measurementRows } = await supabase
+    .from("measurements")
+    .select("id, customer_id, label, measurement_values, unit, recorded_at, notes")
+    .eq("business_id", business.id)
+    .order("recorded_at", { ascending: false });
+
+  const [{ data: orderRows }, { data: productRows }, { data: paymentRows }, { data: notificationRows }] = await Promise.all([
+    supabase.from("orders").select("id, title, status, total_amount, deposit_amount, due_date, created_at, customer_id").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("products").select("id, name, sku, category, unit_price, stock_quantity, low_stock_threshold").eq("business_id", business.id).order("name", { ascending: true }),
+    supabase.from("order_payments").select("id, order_id, amount, payment_method, status, created_at, verified_at").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("app_notifications").select("id, title, body, read_at, created_at").eq("business_id", business.id).eq("user_id", user.id).order("created_at", { ascending: false }).limit(50),
+  ]);
+
   return (
-    <main className="workspace-page">
-      <header className="workspace-header">
-        <Link className="wordmark" href="/">HAJA<span>PRO</span></Link>
-        <form action={signOutAction}>
-          <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
-        </form>
-      </header>
-      <section className="workspace-content">
-        <p className="eyebrow">Your HajaPro workspace</p>
-        <h1>Welcome to a smarter way to work.</h1>
-        <p className="workspace-lead">Your account is connected. Business operations are being built in the next milestones.</p>
-        <div className="workspace-list">
-          {businesses.map((business) => (
-            <article className="workspace-item" key={business.id}>
-              <div className="workspace-item-icon"><BriefcaseBusiness size={20} /></div>
-              <div><h2>{business.name}</h2><p>{business.business_type === "tailor" ? "Tailoring workspace" : "Trading & retail workspace"}</p></div>
-              <span className="workspace-status">Setup complete</span>
-            </article>
-          ))}
-        </div>
-        <div className="planned-strip">
-          <span>Next up</span>
-          <p>Customer and order management for your workspace</p>
-          <ArrowRight size={18} />
-        </div>
-      </section>
+    <main className="workspace-page dashboard-page">
+      <DashboardHome businessType={business.business_type} businessId={business.id} customers={customerRows ?? []} measurements={measurementRows ?? []} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} notifications={notificationRows ?? []} />
     </main>
   );
 }

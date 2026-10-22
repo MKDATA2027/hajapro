@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
 import { signInAction, signUpAction } from "@/app/auth/actions";
@@ -23,7 +24,7 @@ export function AuthForm({ mode, error, sent, intent }: AuthFormProps) {
   return (
     <main className="auth-layout">
       <section className="auth-story" aria-label="About HajaPro">
-        <Link href="/" className="wordmark auth-wordmark">HAJA<span>PRO</span></Link>
+        <Link href="/" className="auth-logo-link" aria-label="HAJAPRO home"><Image className="auth-logo-image" src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={1536} height={1499} unoptimized /></Link>
         <div className="auth-story-copy">
           <p className="eyebrow">Product by MK Company</p>
           <h1>Good work deserves a <em>better system.</em></h1>

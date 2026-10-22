@@ -1,34 +1,36 @@
 import Link from "next/link";
-import { ArrowDownRight, ArrowRight, MoveUpRight, ShieldCheck } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowRight,
+  MoveUpRight,
+  ShieldCheck,
+  Scissors,
+  Store,
+  UserRound,
+} from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 
 const experiences = [
   {
-    number: "01",
     title: "HajaPro Tailor",
-    description: "A clearer path from customer details to finished orders.",
-    detail: "Orders, measurements, production",
+    description: "Orders and measurements",
     type: "tailor",
     className: "experience-tailor",
-    available: "Workspace setup available",
+    Icon: Scissors,
   },
   {
-    number: "02",
-    title: "HajaPro Trading",
-    description: "Bring products, stock and everyday business activity together.",
-    detail: "Catalog, inventory, sales",
+    title: "HajaPro Retailer",
+    description: "Products and sales",
     type: "trading",
     className: "experience-trading",
-    available: "Workspace setup available",
+    Icon: Store,
   },
   {
-    number: "03",
     title: "HajaPro Customer",
-    description: "Follow order progress across the shops you work with.",
-    detail: "Verified order tracking",
+    description: "Track your orders",
     type: "customer",
     className: "experience-customer",
-    available: "Customer dashboard planned",
+    Icon: UserRound,
   },
 ];
 
@@ -41,7 +43,7 @@ export default function HomePage() {
           <div className="hero-copy">
             <p className="eyebrow"><span className="eyebrow-line" /> Product by MK Company</p>
             <h1>Make room for <em>better work.</em></h1>
-            <p className="hero-description">The business essentials for tailors, retailers and the people who count on them, brought into one secure place.</p>
+            <p className="hero-description">Business essentials for tailors, retailers and their customers, brought into one secure place.</p>
             <div className="hero-actions">
               <Link className="button button-green" href="/sign-up?type=tailor">Set up your business <MoveUpRight size={17} /></Link>
               <Link className="text-link" href="#platform">Explore HajaPro <ArrowDownRight size={16} /></Link>
@@ -63,31 +65,23 @@ export default function HomePage() {
 
         <section className="platform-section" id="platform">
           <div className="section-heading">
-            <div><p className="eyebrow">Built around your kind of work</p><h2>One platform.<br /><em>Room to grow.</em></h2></div>
-            <p>Start with the workspace that fits your business. Secure accounts and private business data are the foundation; focused tools are arriving in milestones.</p>
+            <div><p className="eyebrow">Built around your kind of work</p><h2>Choose your<br /><em>workspace.</em></h2></div>
+            <p>Choose the HajaPro space that fits what you do.</p>
           </div>
           <div className="experience-list">
-            {experiences.map((experience) => (
+            {experiences.map(({ title, description, type, className, Icon }) => (
               <Link
-                className={`experience-row ${experience.className}`}
-                href={`/sign-up?type=${experience.type}`}
-                key={experience.number}
+                className={`experience-row ${className}`}
+                href={`/sign-up?type=${type}`}
+                key={type}
               >
-                <span className="experience-number">{experience.number}</span>
-                <span className="experience-main"><strong>{experience.title}</strong><span>{experience.description}</span></span>
-                <span className="experience-detail">{experience.detail}</span>
-                <span className="experience-availability">{experience.available}</span>
-                <span className="experience-arrow"><ArrowRight size={18} /></span>
+                <span className="experience-icon"><Icon size={20} strokeWidth={1.8} /></span>
+                <span className="experience-main"><strong>{title}</strong><span>{description}</span></span>
+                <span className="experience-arrow" aria-hidden="true"><ArrowRight size={19} /></span>
               </Link>
             ))}
           </div>
-          <div className="foundation-note"><span className="foundation-check">✓</span><p><strong>Available now:</strong> account registration, secure sign-in and private business workspace setup.</p></div>
-        </section>
-
-        <section className="closing-band">
-          <div><p className="eyebrow">Your next chapter starts here</p><h2>Build a business<br /><em>that feels in hand.</em></h2></div>
-          <Link className="button button-light" href="/sign-up?type=tailor">Create an account <MoveUpRight size={17} /></Link>
-          <span className="closing-caption">HAJAPRO · PRODUCT BY MK COMPANY</span>
+          <div className="foundation-note"><span className="foundation-check">✓</span><p><strong>Available now:</strong> secure registration and business workspace setup.</p></div>
         </section>
       </main>
       <footer className="site-footer"><Link className="wordmark" href="/">HAJA<span>PRO</span></Link><p>Manage Smarter. Grow Faster.</p><span>© 2026 MK Company</span></footer>
