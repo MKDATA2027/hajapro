@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #111111;
-  --paper: #f7f8f4;
+  --ink: #0B3332;
+  --paper: #ffffff;
   --white: #ffffff;
-  --green: #10b981;
-  --green-dark: #087e59;
-  --lime: #d5ed6f;
-  --muted: #66706b;
-  --line: #dce1dc;
+  --green: #087F5B;
+  --green-dark: #065F46;
+  --lime: #D5A64A;
+  --muted: #526765;
+  --line: #DCE8E4;
   --display: Georgia, "Times New Roman", serif;
   --sans: "Manrope Variable", "Manrope", sans-serif;
 }
@@ -973,3 +973,142 @@ button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40;
 .haja-language-settings>div { display:flex; gap:9px; }
 .haja-language-settings button { min-width:90px; padding:10px 14px; border:1px solid #3b506a; border-radius:10px; color:#d5e0ee; background:#0c1b2d; font-size:12px; font-weight:800; cursor:pointer; }
 .haja-language-settings button.is-selected { border-color:#19c99a; background:#0b5146; color:#7cf0d0; }
+
+
+/* HAJAPRO approved dashboard palette — based on the user's MK Dictionary reference mockup.
+   Keep all dashboard surfaces white; emerald is primary, dark teal is for headings/navigation,
+   and gold is a restrained accent only. */
+:root {
+  --hajapro-dark-teal: #0B3332;
+  --hajapro-emerald: #087F5B;
+  --hajapro-emerald-hover: #066B4D;
+  --hajapro-white: #FFFFFF;
+  --hajapro-soft-mint: #EAF5F0;
+  --hajapro-gold: #D5A64A;
+  --hajapro-text-muted: #526765;
+  --hajapro-border: #DCE8E4;
+}
+body, .setup-page, .workspace-page, .dashboard-page,
+.dashboard-shell, .dashboard-main, .dashboard-sidebar,
+.haja-dashboard, .haja-subpage {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal);
+}
+.dashboard-sidebar { border-right-color: var(--hajapro-border); }
+.dashboard-brand, .dashboard-brand strong, .dashboard-greeting h1,
+.dashboard-module-empty h1, .dashboard-section-heading h2,
+.dashboard-module-copy strong, .dashboard-customer-details strong,
+.dashboard-customer-empty h2, .dashboard-customer-form h2,
+.dashboard-measurement-history h3, .haja-brand-copy strong,
+.haja-income-value, .haja-overdue-copy strong, .haja-shortcut > strong,
+.haja-ai-copy strong, .haja-module-placeholder, .haja-module-placeholder h1,
+.haja-language-settings h2 {
+  color: var(--hajapro-dark-teal) !important;
+}
+.dashboard-topbar, .dashboard-sidebar, .dashboard-account,
+.dashboard-customer-list, .dashboard-customer-row,
+.dashboard-measurement-record, .haja-header {
+  border-color: var(--hajapro-border) !important;
+}
+.dashboard-nav-label, .dashboard-breadcrumb, .dashboard-greeting > div > p:last-child,
+.dashboard-module-copy small, .dashboard-integrity-note,
+.dashboard-customer-details span, .dashboard-customer-date,
+.dashboard-module-empty > p:not(.dashboard-eyebrow), .haja-brand-copy span,
+.haja-income-note, .haja-overdue-copy small, .haja-shortcut > small,
+.haja-ai-copy small, .haja-module-placeholder p {
+  color: var(--hajapro-text-muted) !important;
+}
+.dashboard-nav-item { color: var(--hajapro-dark-teal); }
+.dashboard-nav-item:hover, .dashboard-nav-item.is-active {
+  border-color: var(--hajapro-emerald) !important;
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-brand-mark, .dashboard-avatar, .dashboard-metric-icon,
+.dashboard-module-icon, .dashboard-empty-icon, .dashboard-customer-avatar,
+.haja-subpage-icon, .haja-wallet-art, .haja-overdue-icon, .haja-shortcut-icon,
+.haja-ai-icon, .auth-card-icon, .setup-mark, .type-icon {
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-metric-card, .dashboard-module-card, .dashboard-customer-form,
+.dashboard-measurement-history, .dashboard-language-settings,
+.haja-language-settings, .haja-notifications, .haja-income-card,
+.haja-overdue-card, .haja-shortcut, .haja-ai-card,
+.dashboard-search, .dashboard-icon-button, .dashboard-customer-search,
+.dashboard-customer-empty, .dashboard-customer-measure-button,
+.dashboard-customer-form input, .dashboard-customer-form textarea,
+.dashboard-measurement-area .dashboard-customer-form select,
+.haja-language-settings button, .dashboard-back-button {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+  border-color: var(--hajapro-border) !important;
+  box-shadow: none;
+}
+.dashboard-metric-card:hover, .dashboard-module-card:hover,
+.dashboard-icon-button:hover, .dashboard-customer-measure-button:hover {
+  background: var(--hajapro-soft-mint) !important;
+  border-color: var(--hajapro-emerald) !important;
+}
+.dashboard-metric-label, .dashboard-customer-form label,
+.dashboard-customer-form h2, .dashboard-customer-empty p,
+.dashboard-measurement-record span, .dashboard-measurement-record small,
+.dashboard-customer-form input, .dashboard-customer-form textarea,
+.dashboard-measurement-area .dashboard-customer-form select {
+  color: var(--hajapro-text-muted) !important;
+}
+.dashboard-primary-button, .button-green, .haja-add-button,
+.haja-bottom-nav button.haja-add-button, .haja-notification-read-button {
+  background: var(--hajapro-emerald) !important;
+  border-color: var(--hajapro-emerald) !important;
+  color: #FFFFFF !important;
+}
+.dashboard-primary-button:hover, .button-green:hover {
+  background: var(--hajapro-emerald-hover) !important;
+}
+.button-dark, .dashboard-back-button {
+  background: var(--hajapro-dark-teal) !important;
+  color: #FFFFFF !important;
+}
+.dashboard-eyebrow, .dashboard-wallet-link, .dashboard-integrity-note svg,
+.haja-bottom-nav button.is-active, .haja-payment-label {
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-date-chip { border-color: var(--hajapro-border); color: var(--hajapro-text-muted); }
+.dashboard-form-error { color: #B42318 !important; }
+.dashboard-form-success { color: var(--hajapro-emerald) !important; }
+.haja-dashboard { --haja-bg: #FFFFFF; --haja-panel: #FFFFFF; --haja-muted: var(--hajapro-text-muted); padding-top: 18px; }
+.haja-income-card { background: #FFFFFF !important; border: 1px solid var(--hajapro-border) !important; }
+.haja-income-card::before { display: none; }
+.haja-income-label { color: var(--hajapro-text-muted) !important; }
+.haja-wallet-art { border: 1px solid var(--hajapro-border); }
+.haja-overdue-card { background: #FFFFFF !important; border: 1px solid var(--hajapro-border) !important; }
+.haja-overdue-icon { background: var(--hajapro-soft-mint) !important; color: var(--hajapro-emerald) !important; }
+.haja-shortcut { border: 1px solid var(--hajapro-border) !important; background: #FFFFFF !important; }
+.haja-shortcut .haja-shortcut-icon { background: var(--hajapro-soft-mint) !important; color: var(--hajapro-emerald) !important; }
+.haja-shortcut:nth-child(4) .haja-shortcut-icon, .haja-ai-icon {
+  background: #FBF4E5 !important; color: #9A6B12 !important;
+}
+.haja-card-chevron { color: var(--hajapro-emerald) !important; }
+.haja-bottom-nav {
+  background: rgba(255,255,255,.97) !important;
+  border-color: var(--hajapro-border) !important;
+  box-shadow: 0 8px 30px rgba(11,51,50,.10) !important;
+}
+.haja-bottom-nav button { color: var(--hajapro-text-muted) !important; }
+.haja-bottom-nav button.is-active { color: var(--hajapro-emerald) !important; }
+.haja-bottom-nav button.haja-add-button { color: #FFFFFF !important; }
+.haja-language-settings button { color: var(--hajapro-dark-teal) !important; }
+.haja-language-settings button.is-selected {
+  border-color: var(--hajapro-emerald) !important;
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.auth-story { background: var(--hajapro-dark-teal); }
+.auth-wordmark span, .auth-story h1 em { color: var(--hajapro-gold); }
+.closing-band { background: var(--hajapro-emerald); color: #FFFFFF; }
+.closing-band .eyebrow, .closing-caption { color: #FFFFFF; }
+@media (max-width: 700px) {
+  .dashboard-page .dashboard-mobile-header { background: #FFFFFF !important; border-bottom-color: var(--hajapro-border) !important; }
+  .dashboard-page .icon-text-button { color: var(--hajapro-dark-teal) !important; }
+}
