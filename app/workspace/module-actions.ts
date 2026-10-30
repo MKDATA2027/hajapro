@@ -59,7 +59,7 @@ export async function createProductAction(_prev: ModuleActionState, form: FormDa
   const threshold = moneyValue(form, "low_stock_threshold");
   if (!businessId || name.length < 2 || name.length > 120) return { error: message(form, "Shigar da sunan kaya mai inganci.", "Enter a valid product name.") };
   if (price === null || stock === null || threshold === null) return { error: message(form, "Farashi da stock dole su zama lambobi masu inganci.", "Price and stock must be valid numbers.") };
-  const ctx = await authorizedBusiness(businessId);
+  const ctx = await authorizedBusiness(businessId, form);
   if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   const { data, error } = await ctx.supabase.from("products").insert({
     business_id: businessId, name, sku: sku || null, category: category || null,
@@ -82,7 +82,7 @@ export async function recordStockMovementAction(_prev: ModuleActionState, form: 
   const movement = textValue(form, "movement_type"), quantity = moneyValue(form, "quantity");
   const note = textValue(form, "note");
   if (!businessId || !productId || !["stock_in","stock_out","adjustment"].includes(movement) || quantity === null || quantity <= 0) return { error: message(form, "Duba nau'in motsin kaya da adadi.", "Check the stock movement type and quantity.") };
-  const ctx = await authorizedBusiness(businessId);
+  const ctx = await authorizedBusiness(businessId, form);
   if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   const { data: product } = await ctx.supabase.from("products").select("id,stock_quantity").eq("id", productId).eq("business_id", businessId).maybeSingle();
   if (!product) return { error: message(form, "Ba a sami wannan kaya ba.", "This product was not found.") };
@@ -108,7 +108,7 @@ export async function recordPaymentAction(_prev: ModuleActionState, form: FormDa
   const reference = textValue(form, "reference"), note = textValue(form, "note");
   if (!businessId || !orderId || amount === null || amount <= 0) return { error: message(form, "Zaɓi oda kuma shigar da kuɗin da aka karɓa.", "Select an order and enter the amount received.") };
   if (!["cash","bank_transfer","pos","other"].includes(method)) return { error: message(form, "Hanyar biyan kuɗi ba ta inganta ba.", "The payment method is invalid.") };
-  const ctx = await authorizedBusiness(businessId);
+  const ctx = await authorizedBusiness(businessId, form);
   if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   const { data: order } = await ctx.supabase.from("orders").select("id,total_amount,deposit_amount").eq("id", orderId).eq("business_id", businessId).maybeSingle();
   if (!order) return { error: message(form, "Ba a sami odar ba.", "Order not found.") };
@@ -129,7 +129,7 @@ export async function updateOrderStatusAction(_prev: ModuleActionState, form: Fo
   const status = textValue(form, "status");
   const allowed = ["new","measuring","cutting","sewing","fitting","ready","completed","cancelled"];
   if (!businessId || !orderId || !allowed.includes(status)) return { error: message(form, "Duba matakin odar.", "Check the order status.") };
-  const ctx = await authorizedBusiness(businessId);
+  const ctx = await authorizedBusiness(businessId, form);
   if (ctx.error || !ctx.supabase) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   const { error } = await ctx.supabase.from("orders").update({ status, updated_at: new Date().toISOString() }).eq("id", orderId).eq("business_id", businessId);
   if (error) return { error: message(form, "Ba a iya sabunta matakin oda ba.", "Could not update the order status.") };
@@ -141,7 +141,7 @@ export async function reviewPaymentAction(_prev: ModuleActionState, form: FormDa
   const businessId = textValue(form, "business_id"), paymentId = textValue(form, "payment_id");
   const decision = textValue(form, "decision");
   if (!businessId || !paymentId || !["verified","rejected"].includes(decision)) return { error: message(form, "Bayanin tabbatar da biyan kuɗi bai inganta ba.", "The payment review details are invalid.") };
-  const ctx = await authorizedBusiness(businessId);
+  const ctx = await authorizedBusiness(businessId, form);
   if (ctx.error || !ctx.supabase || !ctx.user) return { error: ctx.error ?? "An kasa tabbatar da izini." };
   if (!ctx.membership || !["owner","manager"].includes(ctx.membership.role)) return { error: message(form, "Mai kasuwanci ko manager kaɗai zai iya tantance biyan kuɗi.", "Only an owner or manager can review payments.") };
   const { data: payment } = await ctx.supabase.from("order_payments").select("id,status").eq("id", paymentId).eq("business_id", businessId).maybeSingle();
@@ -159,7 +159,7 @@ export async function markNotificationReadAction(_prev: ModuleActionState, form:
   if (!notificationId) return { error: message(form, "Sanarwar ba ta inganta ba.", "The notification is invalid.") };
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) return { error: "Zaman shiga ya ƙare. Ka sake shiga." };
+  if (authError || !user) return { error: message(form, "Zaman shiga ya ƙare. Ka sake shiga.", "Your session expired. Please sign in again.") };
   const { error } = await supabase.from("app_notifications").update({ read_at: new Date().toISOString() })
     .eq("id", notificationId).eq("user_id", user.id).is("read_at", null);
   if (error) return { error: message(form, "Ba a iya sabunta sanarwar ba.", "Could not update the notification.") };
