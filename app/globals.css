@@ -1325,3 +1325,175 @@ body, .setup-page, .workspace-page, .dashboard-page,
 .haja-theme-dark .haja-module-workspace, .haja-theme-dark .dashboard-content { color: #e7f1ed; }
 .haja-theme-dark .haja-module-row, .haja-theme-dark .haja-ai-insight { background: #172725; border-color: #31504a; color: #e7f1ed; }
 .haja-theme-dark .haja-module-row-main span, .haja-theme-dark .haja-module-row-main small { color: #b5c9c1; }
+
+
+/* Responsive account access screen */
+.role-shell {
+  min-height: 100svh;
+  padding: 0 clamp(18px, 5vw, 76px) 54px;
+  background: #fff;
+  color: #0b3332;
+}
+.role-header {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid #dce8e4;
+}
+.role-secure {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #526765;
+  font-size: 12px;
+  font-weight: 700;
+}
+.role-secure svg { color: #087f5b; }
+.role-content {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: clamp(38px, 7vh, 76px) 0 0;
+}
+.role-intro { max-width: 680px; margin-bottom: 34px; }
+.role-intro .eyebrow { margin-bottom: 14px; }
+.role-intro h1 {
+  margin: 0;
+  color: #0b3332;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(36px, 6vw, 58px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.7px;
+}
+.role-lead {
+  max-width: 620px;
+  margin: 16px 0 0;
+  color: #526765;
+  font-size: clamp(14px, 1.7vw, 17px);
+  line-height: 1.75;
+}
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 30px 0 24px;
+}
+.role-card {
+  min-width: 0;
+  min-height: 245px;
+  padding: 24px 21px 21px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid #dce8e4;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 8px 26px rgba(11, 51, 50, .045);
+}
+.role-card.is-selected {
+  border-color: #087f5b;
+  box-shadow: 0 0 0 1px #087f5b, 0 10px 28px rgba(8, 127, 91, .08);
+}
+.role-card-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #eaf5f0;
+  color: #087f5b;
+}
+.role-card-detail {
+  margin-top: 20px;
+  color: #087f5b;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+.role-card h2 {
+  margin: 7px 0 0;
+  color: #0b3332;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+.role-card p {
+  margin: 7px 0 20px;
+  color: #526765;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.role-card form { width: 100%; margin-top: auto; }
+.role-continue {
+  width: 100%;
+  min-height: 49px;
+  justify-content: space-between;
+  padding-inline: 15px;
+  border-radius: 7px;
+  background: #087f5b;
+  color: #fff;
+  font-size: 12px;
+}
+.role-continue:hover { background: #065f46; }
+.role-session {
+  margin: 22px 0;
+  padding: 15px 17px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  border: 1px solid #dce8e4;
+  border-radius: 9px;
+  background: #f8fbf9;
+}
+.role-session-label {
+  color: #087f5b;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+.role-session strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #0b3332;
+  font-size: 13px;
+}
+.role-session form { margin-left: auto; }
+.role-shell .text-button {
+  border: 0;
+  background: transparent;
+  color: #526765;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.role-shell .auth-legal {
+  max-width: 620px;
+  margin: 27px 0 18px;
+  color: #7c8c87;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.role-shell .back-link { margin-top: 10px; }
+@media (max-width: 760px) {
+  .role-shell { padding-inline: 20px; padding-bottom: 36px; }
+  .role-header { min-height: 68px; }
+  .role-content { padding-top: 42px; }
+  .role-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
+  .role-card { min-height: 0; padding: 19px; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 0 14px; }
+  .role-card-icon { grid-row: span 3; }
+  .role-card-detail { margin-top: 0; align-self: end; }
+  .role-card h2 { margin-top: 4px; font-size: 22px; }
+  .role-card p { margin: 4px 0 14px; }
+  .role-card form { grid-column: 1 / -1; }
+}
+@media (max-width: 420px) {
+  .role-shell { padding-inline: 16px; }
+  .role-secure { font-size: 10px; }
+  .role-intro h1 { font-size: 37px; }
+  .role-session { align-items: flex-start; }
+  .role-session form { margin-left: 0; }
+}
