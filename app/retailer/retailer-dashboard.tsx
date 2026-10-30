@@ -133,10 +133,10 @@ export function RetailerDashboard({
 
       <nav className="trading-bottom-nav" aria-label="Main navigation">
         <button type="button" className="is-active"><Home size={19} /><span>Home</span></button>
-        <button type="button"><ClipboardList size={19} /><span>Sales</span></button>
+        <button type="button" disabled aria-label="Sales navigation will be connected with the sales workflow"><ClipboardList size={19} /><span>Sales</span></button>
         <button type="button" className="trading-nav-add" onClick={() => setShowQuickAdd(true)} aria-label="Quick actions"><Plus size={25} /></button>
-        <button type="button"><Package size={19} /><span>Products</span></button>
-        <button type="button"><span className="trading-more-dots">•••</span><span>More</span></button>
+        <button type="button" disabled aria-label="Products navigation will be connected with the product workflow"><Package size={19} /><span>Products</span></button>
+        <button type="button" disabled aria-label="More navigation will be connected after module flows are specified"><span className="trading-more-dots">•••</span><span>More</span></button>
       </nav>
 
       {showLowStock && (
