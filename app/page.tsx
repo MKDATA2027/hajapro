@@ -10,7 +10,7 @@ const experiences = [
     detail: "Orders, measurements, production",
     type: "tailor",
     className: "experience-tailor",
-    available: "Workspace setup available",
+    available: "Open public preview",
   },
   {
     number: "02",
@@ -28,7 +28,7 @@ const experiences = [
     detail: "Verified order tracking",
     type: "customer",
     className: "experience-customer",
-    available: "Customer dashboard planned",
+    available: "Open customer preview",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function HomePage() {
             <h1>Make room for <em>better work.</em></h1>
             <p className="hero-description">The business essentials for tailors, retailers and the people who count on them, brought into one secure place.</p>
             <div className="hero-actions">
-              <Link className="button button-green" href="/sign-up?type=tailor">Set up your business <MoveUpRight size={17} /></Link>
+              <Link className="button button-green" href="/settings">Choose your experience <MoveUpRight size={17} /></Link>
               <Link className="text-link" href="#platform">Explore HajaPro <ArrowDownRight size={16} /></Link>
             </div>
             <p className="hero-tagline">Manage Smarter. Grow Faster.</p>
@@ -70,7 +70,7 @@ export default function HomePage() {
             {experiences.map((experience) => (
               <Link
                 className={`experience-row ${experience.className}`}
-                href={`/sign-up?type=${experience.type}`}
+                href={experience.type === "trading" ? "/retailer" : `/${experience.type}`}
                 key={experience.number}
               >
                 <span className="experience-number">{experience.number}</span>
@@ -86,7 +86,7 @@ export default function HomePage() {
 
         <section className="closing-band">
           <div><p className="eyebrow">Your next chapter starts here</p><h2>Build a business<br /><em>that feels in hand.</em></h2></div>
-          <Link className="button button-light" href="/sign-up?type=tailor">Create an account <MoveUpRight size={17} /></Link>
+          <Link className="button button-light" href="/settings">Open an experience <MoveUpRight size={17} /></Link>
           <span className="closing-caption">HAJAPRO · PRODUCT BY MK COMPANY</span>
         </section>
       </main>
