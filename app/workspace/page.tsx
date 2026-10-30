@@ -1,52 +1,55 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, BriefcaseBusiness, LogOut } from "lucide-react";
-import { signOutAction } from "@/app/auth/actions";
+import { DashboardHome } from "@/app/workspace/dashboard-home";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/database.types";
+
+function normalizeMeasurements(value: Json): Record<string, number> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value).filter((entry): entry is [string, number] => typeof entry[1] === "number"),
+  );
+}
 
 export const dynamic = "force-dynamic";
 
 export default async function WorkspacePage() {
-  if (!getSupabaseConfig()) redirect("/sign-in");
+  if (!getSupabaseConfig()) redirect("/settings");
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in");
-  if (user.user_metadata?.intent === "customer") redirect("/setup");
-
-  const { data: businesses } = await supabase
-    .from("businesses")
-    .select("id, name, business_type")
-    .order("created_at", { ascending: true });
+  if (!user) redirect("/settings");
+  const { data: businesses, error: businessError } = await supabase.from("businesses")
+    .select("id, name, business_type").order("created_at", { ascending: true });
+  if (businessError) return <main className="setup-shell"><h1>Workspace unavailable</h1><p>We could not load your authorized workspace.</p></main>;
   if (!businesses?.length) redirect("/setup");
-
-  return (
-    <main className="workspace-page">
-      <header className="workspace-header">
-        <Link className="wordmark" href="/">HAJA<span>PRO</span></Link>
-        <form action={signOutAction}>
-          <button className="icon-text-button" type="submit"><LogOut size={16} /> Sign out</button>
-        </form>
-      </header>
-      <section className="workspace-content">
-        <p className="eyebrow">Your HajaPro workspace</p>
-        <h1>Welcome to a smarter way to work.</h1>
-        <p className="workspace-lead">Your account is connected. Business operations are being built in the next milestones.</p>
-        <div className="workspace-list">
-          {businesses.map((business) => (
-            <article className="workspace-item" key={business.id}>
-              <div className="workspace-item-icon"><BriefcaseBusiness size={20} /></div>
-              <div><h2>{business.name}</h2><p>{business.business_type === "tailor" ? "Tailoring workspace" : "Trading & retail workspace"}</p></div>
-              <span className="workspace-status">Setup complete</span>
-            </article>
-          ))}
-        </div>
-        <div className="planned-strip">
-          <span>Next up</span>
-          <p>Customer and order management for your workspace</p>
-          <ArrowRight size={18} />
-        </div>
-      </section>
-    </main>
-  );
+  const business = businesses[0];
+  const [{ data: customerRows }, { data: measurementRows }, { data: orderRows }, { data: productRows }, { data: paymentRows }, { data: notificationRows }] = await Promise.all([
+    supabase.from("customers").select("id, full_name, phone, email, notes, created_at").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("measurements").select("id, customer_id, label, measurement_values, unit, recorded_at, notes").eq("business_id", business.id).order("recorded_at", { ascending: false }),
+    supabase.from("orders").select("id, title, status, total_amount, deposit_amount, due_date, created_at, customer_id").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("products").select("id, name, sku, category, unit_price, stock_quantity, low_stock_threshold").eq("business_id", business.id).order("name", { ascending: true }),
+    supabase.from("order_payments").select("id, order_id, amount, payment_method, status, created_at, verified_at").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("app_notifications").select("id, title, body, read_at, created_at").eq("business_id", business.id).eq("user_id", user.id).order("created_at", { ascending: false }).limit(50),
+  ]);
+  // Photo columns are introduced by a separate additive migration. If it has not
+  // been applied yet, continue to show all existing customer records without photos.
+  const { data: photoRows } = await supabase.from("customers")
+    .select("id, customer_photo_path, garment_photo_path").eq("business_id", business.id);
+  const photoByCustomer = new Map((photoRows ?? []).map(row => [row.id, row]));
+  const customers = await Promise.all((customerRows ?? []).map(async customer => {
+    const paths = photoByCustomer.get(customer.id);
+    const [customerPhoto, garmentPhoto] = await Promise.all([
+      paths?.customer_photo_path ? supabase.storage.from("customer-media").createSignedUrl(paths.customer_photo_path, 3600) : Promise.resolve({ data: null }),
+      paths?.garment_photo_path ? supabase.storage.from("customer-media").createSignedUrl(paths.garment_photo_path, 3600) : Promise.resolve({ data: null }),
+    ]);
+    return { id: customer.id, full_name: customer.full_name, phone: customer.phone, email: customer.email, notes: customer.notes, created_at: customer.created_at,
+      customer_photo_url: customerPhoto.data?.signedUrl ?? null, garment_photo_url: garmentPhoto.data?.signedUrl ?? null };
+  }));
+  const measurements = (measurementRows ?? []).map(row => ({
+    ...row,
+    measurement_values: normalizeMeasurements(row.measurement_values),
+    unit: row.unit === "cm" ? "cm" as const : "inches" as const,
+  }));
+  return <main className="workspace-page dashboard-page"><DashboardHome businessType={business.business_type} businessId={business.id} userEmail={user.email ?? ""} customers={customers}
+    measurements={measurements} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} notifications={notificationRows ?? []}/></main>;
 }

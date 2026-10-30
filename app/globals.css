@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #111111;
-  --paper: #f7f8f4;
+  --ink: #0B3332;
+  --paper: #ffffff;
   --white: #ffffff;
-  --green: #10b981;
-  --green-dark: #087e59;
-  --lime: #d5ed6f;
-  --muted: #66706b;
-  --line: #dce1dc;
+  --green: #087F5B;
+  --green-dark: #065F46;
+  --lime: #D5A64A;
+  --muted: #526765;
+  --line: #DCE8E4;
   --display: Georgia, "Times New Roman", serif;
   --sans: "Manrope Variable", "Manrope", sans-serif;
 }
@@ -239,3 +239,1089 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .planned-strip p { flex-basis: calc(100% - 92px); }
   .setup-customer h1 { font-size: 36px; }
 }
+
+/* Official HAJAPRO logo asset — preserve the supplied artwork without filters or recoloring. */
+.auth-logo-link { display: inline-flex; align-items: center; width: fit-content; }
+.auth-logo-image { display: block; width: 96px; height: 96px; object-fit: contain; background: #fff; }
+.workspace-logo-link { display: inline-flex; align-items: center; flex: 0 0 auto; }
+.workspace-logo-image { display: block; width: 58px; height: 58px; object-fit: contain; background: #fff; }
+@media (max-width: 800px) { .auth-logo-image { width: 82px; height: 82px; } }
+
+
+/* Compact two-column homepage experience tiles. */
+.experience-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  border-top: 0;
+}
+.experience-row {
+  min-width: 0;
+  min-height: 112px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 18px;
+  align-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: 8px;
+}
+.experience-row:hover {
+  padding: 16px;
+  border-color: #a8d9c2;
+  background: #f8fcf9;
+}
+.experience-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #e6f7ef;
+  color: var(--green-dark);
+}
+.experience-main {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+.experience-main strong {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+.experience-main > span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.experience-arrow {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+}
+.experience-trading .experience-icon {
+  background: #e8f4ff;
+  color: #27648c;
+}
+.experience-customer .experience-icon {
+  background: #fff3df;
+  color: #946a22;
+}
+@media (max-width: 500px) {
+  .platform-section { padding: 42px 16px 48px; }
+  .section-heading { margin-bottom: 22px; gap: 10px; }
+  .section-heading h2 { font-size: 32px; }
+  .section-heading > p { font-size: 11px; line-height: 1.6; }
+  .experience-list { gap: 9px; }
+  .experience-row {
+    min-height: 112px;
+    padding: 11px;
+    grid-template-columns: 28px minmax(0, 1fr) 14px;
+    gap: 7px;
+  }
+  .experience-row:hover { padding: 11px; }
+  .experience-icon { width: 28px; height: 28px; }
+  .experience-icon svg { width: 17px; height: 17px; }
+  .experience-main strong { font-size: 11px; overflow-wrap: anywhere; }
+  .experience-main > span { font-size: 9px; }
+  .experience-arrow svg { width: 15px; height: 15px; }
+  .foundation-note { margin-top: 17px; font-size: 10px; }
+}
+@media (max-width: 340px) {
+  .experience-list { grid-template-columns: 1fr; }
+  .experience-row { min-height: 84px; grid-template-columns: 34px minmax(0, 1fr) 18px; padding: 13px; }
+  .experience-row:hover { padding: 13px; }
+  .experience-icon { width: 34px; height: 34px; }
+  .experience-main strong { font-size: 13px; }
+  .experience-main > span { font-size: 10px; }
+}
+
+
+/* HAJAPRO dashboard shell */
+.dashboard-page { background: #101b2d; color: #f5f7fa; }
+.dashboard-page .dashboard-mobile-header { display: none; }
+.dashboard-shell { min-height: 100vh; display: grid; grid-template-columns: 246px minmax(0, 1fr); background: #101b2d; color: #f5f7fa; }
+.dashboard-sidebar { min-height: 100vh; padding: 25px 15px 18px; display: flex; flex-direction: column; border-right: 1px solid #29364a; background: #111e31; }
+.dashboard-brand { padding: 0 10px 35px; display: flex; align-items: center; gap: 10px; font-size: 18px; letter-spacing: -.5px; font-weight: 850; }
+.dashboard-brand strong { color: #10b981; }
+.dashboard-brand-mark { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; background: #10b981; color: #102236; font-family: Georgia, serif; font-size: 20px; font-weight: 800; }
+.dashboard-nav-label { margin: 0 10px 11px; color: #718199; font-size: 9px; font-weight: 850; letter-spacing: 1.4px; }
+.dashboard-nav { display: grid; gap: 5px; }
+.dashboard-nav-item { width: 100%; min-height: 43px; padding: 0 11px; display: flex; align-items: center; gap: 11px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: #a9b5c7; text-align: left; font-size: 12px; font-weight: 650; cursor: pointer; }
+.dashboard-nav-item:hover { background: #1b2a40; color: #fff; }
+.dashboard-nav-item.is-active { border-color: #214f49; background: #183a3b; color: #66e0b2; }
+.dashboard-sidebar-bottom { margin-top: auto; display: grid; gap: 5px; }
+.dashboard-account { margin-top: 16px; padding: 17px 5px 0; display: flex; align-items: center; gap: 10px; border-top: 1px solid #29364a; }
+.dashboard-avatar { width: 34px; height: 34px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #293a50; color: #b7f1d9; font-size: 13px; font-weight: 800; }
+.dashboard-account > span:last-child { min-width: 0; display: grid; gap: 4px; }
+.dashboard-account strong { overflow: hidden; color: #e6ebf2; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.dashboard-account small { color: #8290a4; font-size: 9px; }
+.dashboard-main { min-width: 0; }
+.dashboard-topbar { min-height: 73px; padding: 0 4.5%; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid #29364a; }
+.dashboard-breadcrumb, .dashboard-top-actions { display: flex; align-items: center; gap: 9px; }
+.dashboard-breadcrumb { color: #8290a4; font-size: 11px; }
+.dashboard-breadcrumb strong { color: #e7edf5; font-weight: 700; }
+.dashboard-top-actions { gap: 12px; }
+.dashboard-search { width: min(260px, 35vw); height: 36px; padding: 0 10px; display: flex; align-items: center; gap: 8px; border: 1px solid #344258; border-radius: 8px; color: #8796ab; background: #152238; }
+.dashboard-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #f5f7fa; font-size: 11px; }
+.dashboard-search input::placeholder { color: #7c8ba1; }
+.dashboard-icon-button { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid #344258; border-radius: 8px; background: #152238; color: #b5c0d0; cursor: pointer; }
+.dashboard-icon-button:hover { border-color: #10b981; color: #65e1b1; }
+.dashboard-content { width: min(100% - 64px, 1150px); margin: 0 auto; padding: 38px 0 44px; }
+.dashboard-greeting { margin-bottom: 27px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+.dashboard-eyebrow { margin: 0 0 9px; color: #67dcb0; font-size: 9px; font-weight: 850; letter-spacing: 1.3px; }
+.dashboard-greeting h1, .dashboard-module-empty h1 { margin: 0; color: #f7f9fc; font-family: Georgia, "Times New Roman", serif; font-size: clamp(34px, 3.3vw, 43px); font-weight: 400; letter-spacing: -.6px; line-height: 1.12; }
+.dashboard-greeting > div > p:last-child { margin: 10px 0 0; color: #9eacc0; font-size: 12px; }
+.dashboard-date-chip { padding: 8px 10px; border: 1px solid #33445b; border-radius: 6px; color: #aab7c9; font-size: 8px; font-weight: 850; letter-spacing: .8px; }
+.dashboard-metric-grid { margin-bottom: 36px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+.dashboard-metric-card { min-width: 0; min-height: 150px; padding: 16px; display: flex; flex-direction: column; align-items: flex-start; border: 1px solid #2a394f; border-radius: 10px; background: #16243a; text-align: left; }
+button.dashboard-metric-card { color: inherit; cursor: pointer; }
+button.dashboard-metric-card:hover { border-color: #39836d; background: #192c40; }
+.dashboard-metric-icon { width: 34px; height: 34px; margin-bottom: 13px; display: grid; place-items: center; border-radius: 8px; background: #1b3d3e; color: #65dfb1; }
+.dashboard-metric-label { color: #a9b6c8; font-size: 10px; }
+.dashboard-metric-value { margin-top: 9px; color: #f7f9fc; font-family: Georgia, serif; font-size: 27px; font-weight: 400; line-height: 1; }
+.dashboard-metric-note { margin-top: 8px; color: #7788a0; font-size: 8px; line-height: 1.5; }
+.dashboard-wallet-link { margin-top: auto; padding-top: 10px; display: inline-flex; align-items: center; gap: 3px; color: #69dfb3; font-size: 10px; font-weight: 800; }
+.dashboard-section-heading { margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.dashboard-section-heading .dashboard-eyebrow { margin-bottom: 6px; }
+.dashboard-section-heading h2 { margin: 0; color: #edf2f8; font-family: Georgia, serif; font-size: 23px; font-weight: 400; }
+.dashboard-module-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.dashboard-module-card { min-width: 0; min-height: 86px; padding: 14px; display: flex; align-items: center; gap: 11px; border: 1px solid #2b3a50; border-radius: 9px; background: #152238; color: inherit; text-align: left; cursor: pointer; }
+.dashboard-module-card:hover { border-color: #39836d; background: #192b40; }
+.dashboard-module-icon { width: 36px; height: 36px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 8px; background: #21334a; color: #a7bad1; }
+.dashboard-ai-icon { background: #1b3d3e; color: #65dfb1; }
+.dashboard-module-copy { min-width: 0; flex: 1; display: grid; gap: 5px; }
+.dashboard-module-copy strong { color: #e9eef6; font-size: 11px; font-weight: 750; }
+.dashboard-module-copy small { color: #8b9ab0; font-size: 9px; line-height: 1.5; }
+.dashboard-module-arrow { flex: 0 0 auto; color: #72849c; }
+.dashboard-integrity-note { margin: 20px 0 0; display: flex; align-items: flex-start; gap: 8px; color: #8494a9; font-size: 10px; line-height: 1.6; }
+.dashboard-integrity-note svg { flex: 0 0 auto; color: #69dfb3; }
+.dashboard-module-empty { min-height: 60vh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.dashboard-empty-icon { width: 48px; height: 48px; margin-bottom: 23px; display: grid; place-items: center; border: 1px solid #305447; border-radius: 12px; background: #183a3b; color: #69dfb3; }
+.dashboard-module-empty > p:not(.dashboard-eyebrow) { max-width: 440px; margin: 13px 0 20px; color: #9eacc0; font-size: 12px; line-height: 1.8; }
+.dashboard-back-button { min-height: 38px; padding: 0 14px; border: 1px solid #3a4b62; border-radius: 7px; background: #17273d; color: #dce5ef; font-size: 11px; font-weight: 750; cursor: pointer; }
+.dashboard-back-button:hover { border-color: #10b981; }
+@media (max-width: 1100px) {
+  .dashboard-shell { grid-template-columns: 210px minmax(0, 1fr); }
+  .dashboard-content { width: calc(100% - 42px); }
+  .dashboard-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .dashboard-page .dashboard-mobile-header { height: 62px; padding: 0 17px; display: flex; border-bottom-color: #29364a; background: #111e31; }
+  .dashboard-page .workspace-logo-image { width: 43px; height: 43px; }
+  .dashboard-page .icon-text-button { color: #b8c5d7; }
+  .dashboard-shell { min-height: calc(100vh - 62px); grid-template-columns: minmax(0, 1fr); }
+  .dashboard-sidebar { min-height: auto; padding: 10px 13px; border-right: 0; border-bottom: 1px solid #29364a; }
+  .dashboard-brand { display: none; }
+  .dashboard-nav-label, .dashboard-sidebar-bottom { display: none; }
+  .dashboard-nav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin; }
+  .dashboard-nav-item { width: auto; min-height: 38px; padding: 0 11px; flex: 0 0 auto; gap: 7px; font-size: 10px; }
+  .dashboard-nav-item svg { width: 15px; height: 15px; }
+  .dashboard-topbar { min-height: 56px; padding: 0 17px; }
+  .dashboard-search { width: 36px; padding: 0 9px; }
+  .dashboard-search input { display: none; }
+  .dashboard-top-actions { gap: 7px; }
+  .dashboard-content { width: calc(100% - 34px); padding-top: 27px; }
+  .dashboard-greeting { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .dashboard-greeting h1, .dashboard-module-empty h1 { font-size: 36px; }
+  .dashboard-metric-grid { gap: 9px; margin-bottom: 30px; }
+  .dashboard-metric-card { min-height: 136px; padding: 13px; }
+  .dashboard-metric-icon { width: 30px; height: 30px; margin-bottom: 11px; }
+  .dashboard-metric-value { font-size: 25px; }
+  .dashboard-module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+  .dashboard-module-card { min-height: 91px; padding: 11px; gap: 8px; }
+  .dashboard-module-icon { width: 30px; height: 30px; }
+  .dashboard-module-icon svg { width: 16px; height: 16px; }
+  .dashboard-module-copy strong { font-size: 10px; }
+  .dashboard-module-copy small { font-size: 8px; }
+  .dashboard-section-heading h2 { font-size: 21px; }
+}
+@media (max-width: 360px) {
+  .dashboard-module-card { align-items: flex-start; flex-wrap: wrap; }
+  .dashboard-module-arrow { margin-left: auto; }
+  .dashboard-date-chip { font-size: 7px; }
+}
+
+
+/* Customer directory */
+.dashboard-primary-button { min-height: 40px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #10b981; border-radius: 8px; background: #10b981; color: #102236; font-size: 11px; font-weight: 800; cursor: pointer; }
+.dashboard-primary-button:hover { background: #34d399; }
+.dashboard-primary-button:disabled { cursor: wait; opacity: .65; }
+.dashboard-customer-form { margin: 0 0 22px; padding: 20px; display: grid; gap: 14px; border: 1px solid #2b3a50; border-radius: 10px; background: #152238; }
+.dashboard-customer-form h2 { margin: 0; font-family: Georgia, serif; font-size: 22px; font-weight: 400; }
+.dashboard-customer-form label { display: grid; gap: 7px; color: #bac6d7; font-size: 10px; font-weight: 750; }
+.dashboard-customer-form input, .dashboard-customer-form textarea { width: 100%; min-height: 40px; padding: 10px 11px; border: 1px solid #35465e; border-radius: 6px; background: #101b2d; color: #f5f7fa; font: inherit; font-size: 11px; }
+.dashboard-customer-form textarea { resize: vertical; }
+.dashboard-form-two { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.dashboard-form-error, .dashboard-form-success { margin: 0; font-size: 11px; line-height: 1.6; }
+.dashboard-form-error { color: #ff9b8b; }
+.dashboard-form-success { color: #6fe2b5; }
+.dashboard-customer-toolbar { margin-bottom: 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #8b9ab0; font-size: 10px; }
+.dashboard-customer-search { width: min(100%, 340px); min-height: 39px; padding: 0 11px; display: flex; align-items: center; gap: 9px; border: 1px solid #344258; border-radius: 8px; background: #152238; color: #8796ab; }
+.dashboard-customer-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #f5f7fa; font-size: 11px; }
+.dashboard-customer-list { border-top: 1px solid #2b3a50; }
+.dashboard-customer-row { min-height: 70px; padding: 12px 10px; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto 16px; align-items: center; gap: 12px; border-bottom: 1px solid #2b3a50; }
+.dashboard-customer-avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 9px; background: #1b3d3e; color: #65dfb1; }
+.dashboard-customer-details { min-width: 0; display: grid; gap: 5px; }
+.dashboard-customer-details strong { overflow: hidden; color: #e9eef6; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.dashboard-customer-details span, .dashboard-customer-date { color: #8b9ab0; font-size: 9px; }
+.dashboard-customer-empty { min-height: 240px; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px dashed #34465d; border-radius: 10px; text-align: center; }
+.dashboard-customer-empty .dashboard-empty-icon { margin-bottom: 15px; }
+.dashboard-customer-empty h2 { margin: 0; color: #e9eef6; font-family: Georgia, serif; font-size: 22px; font-weight: 400; }
+.dashboard-customer-empty p { max-width: 380px; margin: 9px 0 0; color: #8b9ab0; font-size: 11px; line-height: 1.7; }
+@media (max-width: 600px) {
+  .dashboard-customers .dashboard-greeting { align-items: stretch; }
+  .dashboard-customers .dashboard-primary-button { align-self: flex-start; }
+  .dashboard-form-two { grid-template-columns: 1fr; }
+  .dashboard-customer-row { grid-template-columns: 34px minmax(0, 1fr) 14px; gap: 9px; }
+  .dashboard-customer-date { display: none; }
+}
+
+
+.dashboard-customer-measure-button { padding: 7px 9px; border: 1px solid #35465e; border-radius: 6px; background: #17273d; color: #9fe8cb; font-size: 9px; font-weight: 750; cursor: pointer; }
+.dashboard-customer-measure-button:hover { border-color: #10b981; }
+.dashboard-measurement-area { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 14px; padding: 8px 0 10px; }
+.dashboard-measurement-area .dashboard-customer-form { margin: 0; }
+.dashboard-measurement-area .dashboard-customer-form select { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid #35465e; border-radius: 6px; background: #101b2d; color: #f5f7fa; font: inherit; font-size: 11px; }
+.dashboard-measurement-history { padding: 17px; border: 1px solid #2b3a50; border-radius: 10px; background: #152238; }
+.dashboard-measurement-history h3 { margin: 0 0 12px; color: #e9eef6; font-family: Georgia, serif; font-size: 18px; font-weight: 400; }
+.dashboard-measurement-history > p { color: #8b9ab0; font-size: 10px; }
+.dashboard-measurement-record { padding: 11px 0; display: grid; gap: 7px; border-top: 1px solid #2b3a50; }
+.dashboard-measurement-record strong { color: #e9eef6; font-size: 11px; }
+.dashboard-measurement-record span { color: #9eacc0; font-size: 10px; line-height: 1.7; overflow-wrap: anywhere; }
+.dashboard-measurement-record small { color: #718199; font-size: 9px; }
+@media (max-width: 800px) { .dashboard-measurement-area { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .dashboard-customer-row { grid-template-columns: 34px minmax(0, 1fr) auto; } .dashboard-customer-measure-button { grid-column: 2 / -1; justify-self: start; } }
+
+
+/* Approved HAJAPRO mobile dashboard reference */
+.haja-dashboard {
+  --haja-bg: #081426;
+  --haja-panel: #17263d;
+  --haja-muted: #aebbd0;
+  min-height: 100vh;
+  padding: 26px clamp(18px, 5.3vw, 56px) 122px;
+  background: radial-gradient(ellipse at 82% 45%, #10243b 0%, var(--haja-bg) 58%);
+  color: #f5f7fc;
+  font-family: var(--sans);
+}
+.haja-header {
+  width: min(100%, 1120px);
+  margin: 0 auto 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.haja-brand { min-width: 0; display: flex; align-items: center; gap: 17px; }
+.haja-brand-logo { width: 108px; height: 108px; object-fit: contain; border-radius: 0; }
+.haja-brand-copy { display: grid; gap: 5px; }
+.haja-brand-copy strong { font-size: clamp(23px, 3vw, 39px); font-weight: 850; letter-spacing: -.7px; }
+.haja-brand-copy span { color: #b7c4d8; font-size: clamp(12px, 1.8vw, 20px); }
+.haja-notifications { position: relative; width: 70px; height: 70px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid #263750; border-radius: 25px; background: #1a2a42; color: #e3ebf6; cursor: pointer; }
+.haja-notifications i { position: absolute; top: 7px; right: 7px; width: 14px; height: 14px; border-radius: 50%; background: #fb4f5b; }
+.haja-dashboard-content, .haja-subpage { width: min(100%, 1120px); margin: 0 auto; }
+.haja-income-card {
+  position: relative; width: 100%; min-height: 235px; padding: 34px 40px; overflow: hidden;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  border: 1px solid #078b76; border-radius: 31px;
+  background: linear-gradient(116deg, #087865 0%, #009b7c 100%);
+  color: #f4fffb; text-align: left; cursor: pointer;
+}
+.haja-income-card::before { content: ""; position: absolute; width: 58%; height: 145%; right: 9%; bottom: -100%; border-radius: 50%; background: #15b18c; opacity: .4; }
+.haja-income-copy { position: relative; z-index: 1; display: grid; justify-items: start; gap: 12px; }
+.haja-income-label { font-size: clamp(17px, 2.5vw, 26px); font-weight: 750; color: #d7f4ed; }
+.haja-income-value { font-size: clamp(34px, 5vw, 55px); line-height: 1.08; letter-spacing: -1.2px; font-weight: 850; }
+.haja-income-note { color: #c4eee4; font-size: clamp(12px, 1.8vw, 18px); }
+.haja-payment-label { margin-top: 2px; color: #e3fff6; font-size: 13px; font-weight: 700; opacity: .95; }
+.haja-wallet-art { position: relative; z-index: 1; width: 138px; height: 138px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #10ad8c; color: #f2fffb; }
+.haja-overdue-card { width: 100%; min-height: 137px; margin-top: 28px; padding: 22px 30px; display: flex; align-items: center; gap: 27px; border: 1px solid #714522; border-radius: 29px; background: linear-gradient(105deg, #30221e, #29211f); color: #f8f6f4; text-align: left; cursor: pointer; }
+.haja-overdue-icon { width: 86px; height: 86px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #df690c; color: white; }
+.haja-overdue-copy { flex: 1; display: grid; gap: 9px; }
+.haja-overdue-copy strong { font-size: clamp(17px, 2.4vw, 25px); font-weight: 800; }
+.haja-overdue-copy small { color: #c4c8d1; font-size: clamp(12px, 1.8vw, 18px); line-height: 1.4; }
+.haja-card-chevron { flex: 0 0 auto; color: #c2cde0; }
+.haja-shortcuts { margin-top: 30px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 23px 27px; }
+.haja-shortcut { position: relative; min-width: 0; min-height: 239px; padding: 28px 37px 25px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; border: 1px solid transparent; border-radius: 29px; color: #f8f9ff; text-align: left; cursor: pointer; }
+.haja-shortcut-icon { width: 98px; height: 98px; margin-bottom: 10px; display: grid; place-items: center; border-radius: 25px; }
+.haja-shortcut > .haja-card-chevron { position: absolute; top: 86px; right: 30px; }
+.haja-shortcut > strong { margin-top: 0; font-size: clamp(17px, 2.4vw, 25px); font-weight: 800; }
+.haja-shortcut > small { max-width: 280px; margin-top: 7px; color: #c1cbe0; font-size: clamp(12px, 1.7vw, 17px); line-height: 1.45; }
+.haja-customers { border-color: #3b398e; background: linear-gradient(120deg, #29286b, #292b68); }
+.haja-customers .haja-shortcut-icon { background: #5148d0; color: white; }
+.haja-orders { border-color: #164b80; background: linear-gradient(120deg, #123d68, #14365d); }
+.haja-orders .haja-shortcut-icon { background: #126bc4; color: white; }
+.haja-products { border-color: #08786f; background: linear-gradient(120deg, #075b58, #075a57); }
+.haja-products .haja-shortcut-icon { background: #0aa887; color: white; }
+.haja-reports { border-color: #79561b; background: linear-gradient(120deg, #493719, #3d301b); }
+.haja-reports .haja-shortcut-icon { background: #c68a13; color: white; }
+.haja-ai-card { width: 100%; min-height: 135px; margin-top: 29px; padding: 23px 33px; display: flex; align-items: center; gap: 28px; border: 1px solid #1e3049; border-radius: 29px; background: linear-gradient(110deg, #192a43, #1b2c45); color: #f5f7fc; text-align: left; cursor: pointer; }
+.haja-ai-icon { width: 92px; height: 92px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #33445f; color: #e5ebf6; }
+.haja-ai-copy { flex: 1; display: grid; gap: 8px; }
+.haja-ai-copy strong { font-size: clamp(17px, 2.4vw, 25px); font-weight: 800; }
+.haja-ai-copy small { color: #b9c6da; font-size: clamp(12px, 1.7vw, 17px); }
+.haja-bottom-nav { position: fixed; z-index: 20; left: 50%; bottom: max(12px, env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100% - 38px), 1120px); min-height: 112px; padding: 8px 17px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; gap: 8px; border: 1px solid #253952; border-radius: 39px; background: rgb(22 39 61 / 96%); box-shadow: 0 12px 40px rgb(0 0 0 / 25%); backdrop-filter: blur(16px); }
+.haja-bottom-nav button { min-width: 0; min-height: 75px; padding: 7px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 22px; background: transparent; color: #a7b7ce; cursor: pointer; }
+.haja-bottom-nav button span { font-size: clamp(10px, 1.5vw, 16px); }
+.haja-bottom-nav button.is-active { color: #22d9a1; }
+.haja-bottom-nav button.haja-add-button { width: 92px; height: 92px; min-height: 92px; justify-self: center; margin-top: -34px; border-radius: 50%; background: #05b88c; color: white; box-shadow: 0 5px 18px rgb(0 0 0 / 18%); }
+.haja-subpage { min-height: 55vh; padding-bottom: 30px; }
+.haja-module-placeholder { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; color: #f5f7fc; }
+.haja-subpage-icon { width: 60px; height: 60px; margin-bottom: 18px; display: grid; place-items: center; border-radius: 18px; background: #193c3a; color: #6be2b8; }
+.haja-module-placeholder h1 { margin: 0; font-size: 32px; }
+.haja-module-placeholder p { max-width: 460px; color: #adbad0; line-height: 1.7; }
+.haja-back-home { padding: 12px 17px; border: 1px solid #38506a; border-radius: 9px; background: #17283e; color: white; cursor: pointer; }
+@media (max-width: 600px) {
+  .haja-dashboard { padding: 18px 16px 108px; }
+  .haja-header { margin-bottom: 24px; gap: 9px; }
+  .haja-brand { gap: 10px; }
+  .haja-brand-logo { width: 58px; height: 58px; }
+  .haja-brand-copy strong { font-size: 22px; letter-spacing: -.4px; }
+  .haja-brand-copy span { font-size: 11px; }
+  .haja-notifications { width: 55px; height: 55px; border-radius: 19px; }
+  .haja-notifications svg { width: 22px; height: 22px; }
+  .haja-notifications i { width: 11px; height: 11px; }
+  .haja-income-card { min-height: 168px; padding: 22px 18px; gap: 10px; border-radius: 24px; }
+  .haja-income-copy { gap: 8px; }
+  .haja-income-label { font-size: 15px; }
+  .haja-income-value { font-size: clamp(29px, 8vw, 38px); letter-spacing: -.7px; }
+  .haja-income-note { font-size: 11px; }
+  .haja-payment-label { font-size: 11px; }
+  .haja-wallet-art { width: 75px; height: 75px; }
+  .haja-wallet-art svg { width: 40px; height: 40px; }
+  .haja-overdue-card { min-height: 105px; margin-top: 18px; padding: 15px 15px; gap: 15px; border-radius: 23px; }
+  .haja-overdue-icon { width: 62px; height: 62px; }
+  .haja-overdue-icon svg { width: 29px; height: 29px; }
+  .haja-overdue-copy { gap: 6px; }
+  .haja-overdue-copy strong { font-size: 15px; line-height: 1.35; }
+  .haja-overdue-copy small { font-size: 11px; }
+  .haja-overdue-card .haja-card-chevron { width: 22px; }
+  .haja-shortcuts { margin-top: 18px; gap: 14px; }
+  .haja-shortcut { min-height: 172px; padding: 17px 14px 15px; border-radius: 22px; }
+  .haja-shortcut-icon { width: 60px; height: 60px; margin-bottom: 8px; border-radius: 18px; }
+  .haja-shortcut-icon svg { width: 29px; height: 29px; }
+  .haja-shortcut > .haja-card-chevron { top: 57px; right: 12px; width: 21px; }
+  .haja-shortcut > strong { font-size: 15px; line-height: 1.3; }
+  .haja-shortcut > small { margin-top: 5px; font-size: 10px; line-height: 1.4; }
+  .haja-ai-card { min-height: 95px; margin-top: 18px; padding: 15px; gap: 15px; border-radius: 23px; }
+  .haja-ai-icon { width: 59px; height: 59px; }
+  .haja-ai-icon svg { width: 28px; height: 28px; }
+  .haja-ai-copy { gap: 5px; }
+  .haja-ai-copy strong { font-size: 15px; }
+  .haja-ai-copy small { font-size: 11px; line-height: 1.4; }
+  .haja-ai-card .haja-card-chevron { width: 23px; }
+  .haja-bottom-nav { width: calc(100% - 26px); min-height: 80px; padding: 5px 7px; gap: 1px; border-radius: 29px; }
+  .haja-bottom-nav button { min-height: 62px; gap: 4px; border-radius: 17px; }
+  .haja-bottom-nav button svg { width: 21px; height: 21px; }
+  .haja-bottom-nav button span { font-size: 9px; }
+  .haja-bottom-nav button.haja-add-button { width: 62px; height: 62px; min-height: 62px; margin-top: -24px; }
+  .haja-bottom-nav button.haja-add-button svg { width: 30px; height: 30px; }
+}
+@media (max-width: 360px) {
+  .haja-dashboard { padding-left: 12px; padding-right: 12px; }
+  .haja-brand-logo { width: 48px; height: 48px; }
+  .haja-brand-copy strong { font-size: 19px; }
+  .haja-brand-copy span { font-size: 9px; }
+  .haja-wallet-art { width: 58px; height: 58px; }
+  .haja-wallet-art svg { width: 32px; height: 32px; }
+  .haja-shortcut { padding-left: 11px; padding-right: 10px; }
+  .haja-shortcut > strong { font-size: 13px; }
+  .haja-shortcut > small { font-size: 9px; }
+}
+
+
+/* Compact mobile dashboard to match the approved reference. */
+.dashboard-page { background: #081426; }
+.dashboard-page > .dashboard-mobile-header { display: none !important; }
+.haja-dashboard { min-height: 100dvh; padding: 18px clamp(16px, 4vw, 44px) 104px; }
+.haja-header { margin-bottom: 22px; }
+.haja-brand-logo { width: 66px; height: 66px; }
+.haja-income-card { min-height: 174px; padding: 22px 26px; border-radius: 25px; }
+.haja-wallet-art { width: 88px; height: 88px; }
+.haja-wallet-art svg { width: 43px; height: 43px; }
+.haja-overdue-card { min-height: 94px; margin-top: 16px; padding: 13px 18px; gap: 16px; border-radius: 22px; }
+.haja-overdue-icon { width: 58px; height: 58px; }
+.haja-overdue-icon svg { width: 28px; height: 28px; }
+.haja-overdue-copy { gap: 4px; }
+.haja-overdue-copy strong { font-size: 15px; }
+.haja-overdue-copy small { font-size: 11px; }
+.haja-shortcuts { margin-top: 16px; gap: 12px 14px; }
+.haja-shortcut { min-height: 132px; padding: 13px 14px 12px; border-radius: 20px; }
+.haja-shortcut-icon { width: 48px; height: 48px; margin-bottom: 6px; border-radius: 15px; }
+.haja-shortcut-icon svg { width: 27px; height: 27px; }
+.haja-shortcut > .haja-card-chevron { top: 39px; right: 10px; width: 19px; }
+.haja-shortcut > strong { font-size: 14px; }
+.haja-shortcut > small { margin-top: 4px; font-size: 10px; line-height: 1.35; }
+.haja-ai-card { min-height: 76px; margin-top: 16px; padding: 11px 15px; gap: 13px; border-radius: 20px; }
+.haja-ai-icon { width: 50px; height: 50px; }
+.haja-ai-icon svg { width: 26px; height: 26px; }
+.haja-ai-copy { gap: 4px; }
+.haja-ai-copy strong { font-size: 14px; }
+.haja-ai-copy small { font-size: 10px; }
+.haja-bottom-nav { min-height: 72px; bottom: max(8px, env(safe-area-inset-bottom)); padding: 4px 7px; border-radius: 27px; }
+.haja-bottom-nav button { min-height: 56px; gap: 3px; }
+.haja-bottom-nav button.haja-add-button { width: 60px; height: 60px; min-height: 60px; margin-top: -19px; }
+.haja-settings-panel { width: 100%; max-width: 620px; margin: 0 auto; color: #f5f7fc; }
+.haja-settings-panel h1 { margin: 0 0 8px; font-size: 27px; }
+.haja-settings-panel p { margin: 0 0 20px; color: #aebbd0; font-size: 12px; line-height: 1.6; }
+.haja-settings-signout { width: 100%; min-height: 52px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border: 1px solid #49364a; border-radius: 12px; background: #211e32; color: #ffb5b5; font-size: 13px; font-weight: 750; text-align: left; cursor: pointer; }
+.haja-settings-signout:hover { border-color: #a65a69; background: #2b2034; }
+@media (max-width: 600px) {
+  .haja-dashboard { padding: 14px 13px 96px; }
+  .haja-header { margin-bottom: 15px; }
+  .haja-brand-logo { width: 49px; height: 49px; }
+  .haja-brand { gap: 9px; }
+  .haja-brand-copy strong { font-size: 20px; }
+  .haja-brand-copy span { font-size: 10px; }
+  .haja-notifications { width: 46px; height: 46px; border-radius: 16px; }
+  .haja-income-card { min-height: 145px; padding: 17px 15px; gap: 8px; border-radius: 20px; }
+  .haja-income-label { font-size: 14px; }
+  .haja-income-value { font-size: clamp(27px, 7.5vw, 34px); }
+  .haja-income-note { font-size: 10px; }
+  .haja-payment-label { font-size: 10px; }
+  .haja-wallet-art { width: 60px; height: 60px; }
+  .haja-wallet-art svg { width: 33px; height: 33px; }
+  .haja-overdue-card { min-height: 82px; margin-top: 13px; padding: 10px 11px; gap: 10px; border-radius: 18px; }
+  .haja-overdue-icon { width: 47px; height: 47px; }
+  .haja-overdue-icon svg { width: 24px; height: 24px; }
+  .haja-overdue-copy strong { font-size: 13px; }
+  .haja-overdue-copy small { font-size: 9px; }
+  .haja-shortcuts { margin-top: 13px; gap: 10px; }
+  .haja-shortcut { min-height: 119px; padding: 11px 10px 10px; border-radius: 17px; }
+  .haja-shortcut-icon { width: 43px; height: 43px; margin-bottom: 5px; border-radius: 13px; }
+  .haja-shortcut-icon svg { width: 24px; height: 24px; }
+  .haja-shortcut > .haja-card-chevron { top: 33px; right: 7px; width: 17px; }
+  .haja-shortcut > strong { font-size: 13px; }
+  .haja-shortcut > small { font-size: 9px; line-height: 1.3; }
+  .haja-ai-card { min-height: 68px; margin-top: 13px; padding: 9px 11px; gap: 10px; border-radius: 17px; }
+  .haja-ai-icon { width: 43px; height: 43px; }
+  .haja-ai-icon svg { width: 23px; height: 23px; }
+  .haja-ai-copy strong { font-size: 13px; }
+  .haja-ai-copy small { font-size: 9px; }
+  .haja-bottom-nav { width: calc(100% - 20px); min-height: 67px; bottom: max(6px, env(safe-area-inset-bottom)); padding: 3px 5px; }
+  .haja-bottom-nav button { min-height: 51px; gap: 2px; }
+  .haja-bottom-nav button svg { width: 19px; height: 19px; }
+  .haja-bottom-nav button span { font-size: 8px; }
+  .haja-bottom-nav button.haja-add-button { width: 53px; height: 53px; min-height: 53px; margin-top: -16px; }
+  .haja-bottom-nav button.haja-add-button svg { width: 27px; height: 27px; }
+}
+
+
+/* Final mobile fit: keep the full dashboard and AI tile visible above the fixed nav. */
+@media (max-width: 600px) and (max-height: 900px) {
+  .haja-dashboard { padding-top: 10px; padding-bottom: 84px; }
+  .haja-header { margin-bottom: 10px; }
+  .haja-brand-logo { width: 42px; height: 42px; }
+  .haja-brand-copy strong { font-size: 18px; }
+  .haja-brand-copy span { font-size: 9px; }
+  .haja-notifications { width: 40px; height: 40px; }
+  .haja-income-card { min-height: 116px; padding: 12px 13px; border-radius: 17px; }
+  .haja-income-copy { gap: 5px; }
+  .haja-income-label { font-size: 12px; }
+  .haja-income-value { font-size: 27px; }
+  .haja-income-note, .haja-payment-label { font-size: 9px; }
+  .haja-wallet-art { width: 48px; height: 48px; }
+  .haja-wallet-art svg { width: 27px; height: 27px; }
+  .haja-overdue-card { min-height: 63px; margin-top: 9px; padding: 7px 9px; gap: 8px; border-radius: 14px; }
+  .haja-overdue-icon { width: 38px; height: 38px; }
+  .haja-overdue-icon svg { width: 20px; height: 20px; }
+  .haja-overdue-copy { gap: 2px; }
+  .haja-overdue-copy strong { font-size: 11px; }
+  .haja-overdue-copy small { font-size: 8px; line-height: 1.2; }
+  .haja-shortcuts { margin-top: 9px; gap: 8px; }
+  .haja-shortcut { min-height: 91px; padding: 7px 9px 7px; border-radius: 14px; }
+  .haja-shortcut-icon { width: 34px; height: 34px; margin-bottom: 3px; border-radius: 10px; }
+  .haja-shortcut-icon svg { width: 20px; height: 20px; }
+  .haja-shortcut > .haja-card-chevron { top: 24px; right: 5px; width: 15px; }
+  .haja-shortcut > strong { font-size: 11px; line-height: 1.2; }
+  .haja-shortcut > small { margin-top: 2px; font-size: 8px; line-height: 1.15; }
+  .haja-ai-card { min-height: 52px; margin-top: 9px; padding: 6px 9px; gap: 8px; border-radius: 14px; }
+  .haja-ai-icon { width: 37px; height: 37px; }
+  .haja-ai-icon svg { width: 20px; height: 20px; }
+  .haja-ai-copy { gap: 2px; }
+  .haja-ai-copy strong { font-size: 11px; }
+  .haja-ai-copy small { font-size: 8px; }
+  .haja-bottom-nav { min-height: 60px; bottom: max(5px, env(safe-area-inset-bottom)); }
+  .haja-bottom-nav button { min-height: 45px; }
+  .haja-bottom-nav button.haja-add-button { width: 48px; height: 48px; min-height: 48px; margin-top: -13px; }
+}
+
+
+/* Compact all phone layouts; keep the complete home dashboard above the fixed navigation. */
+@media (max-width: 600px) {
+  .haja-dashboard { min-height: 100svh; padding: 8px 12px 0; }
+  .haja-header { margin-bottom: 8px; }
+  .haja-brand-logo { width: 40px; height: 40px; }
+  .haja-brand-copy strong { font-size: 17px; }
+  .haja-brand-copy span { font-size: 8px; }
+  .haja-notifications { width: 38px; height: 38px; }
+  .haja-income-card { min-height: 104px; padding: 9px 11px; border-radius: 15px; }
+  .haja-income-copy { gap: 3px; }
+  .haja-income-label { font-size: 11px; }
+  .haja-income-value { font-size: 23px; }
+  .haja-income-note, .haja-payment-label { font-size: 8px; }
+  .haja-wallet-art { width: 43px; height: 43px; }
+  .haja-wallet-art svg { width: 24px; height: 24px; }
+  .haja-overdue-card { min-height: 56px; margin-top: 7px; padding: 5px 8px; gap: 7px; border-radius: 12px; }
+  .haja-overdue-icon { width: 34px; height: 34px; }
+  .haja-overdue-icon svg { width: 18px; height: 18px; }
+  .haja-overdue-copy { gap: 1px; }
+  .haja-overdue-copy strong { font-size: 10px; }
+  .haja-overdue-copy small { font-size: 7px; line-height: 1.1; }
+  .haja-shortcuts { margin-top: 7px; gap: 6px; }
+  .haja-shortcut { min-height: 78px; padding: 5px 7px; border-radius: 12px; }
+  .haja-shortcut-icon { width: 29px; height: 29px; margin-bottom: 2px; border-radius: 8px; }
+  .haja-shortcut-icon svg { width: 17px; height: 17px; }
+  .haja-shortcut > .haja-card-chevron { top: 19px; right: 4px; width: 13px; }
+  .haja-shortcut > strong { font-size: 10px; line-height: 1.1; }
+  .haja-shortcut > small { margin-top: 1px; font-size: 7px; line-height: 1.1; }
+  .haja-ai-card { min-height: 44px; margin-top: 7px; padding: 4px 7px; gap: 6px; border-radius: 12px; }
+  .haja-ai-icon { width: 32px; height: 32px; }
+  .haja-ai-icon svg { width: 17px; height: 17px; }
+  .haja-ai-copy { gap: 1px; }
+  .haja-ai-copy strong { font-size: 10px; }
+  .haja-ai-copy small { font-size: 7px; line-height: 1.1; }
+  .haja-bottom-nav { min-height: 54px; bottom: max(4px, env(safe-area-inset-bottom)); padding: 2px 4px; }
+  .haja-bottom-nav button { min-height: 40px; gap: 1px; }
+  .haja-bottom-nav button svg { width: 17px; height: 17px; }
+  .haja-bottom-nav button span { font-size: 7px; }
+  .haja-bottom-nav button.haja-add-button { width: 44px; height: 44px; min-height: 44px; margin-top: -11px; }
+  .haja-bottom-nav button.haja-add-button svg { width: 24px; height: 24px; }
+}
+
+
+/* Balanced mobile sizing: restore comfortable tile proportions while keeping AI clear of the fixed nav. */
+@media (max-width: 600px) {
+  .haja-dashboard { padding: 12px 13px 88px; }
+  .haja-header { margin-bottom: 12px; }
+  .haja-brand-logo { width: 46px; height: 46px; }
+  .haja-brand-copy strong { font-size: 19px; }
+  .haja-brand-copy span { font-size: 9px; }
+  .haja-notifications { width: 43px; height: 43px; }
+  .haja-income-card { min-height: 132px; padding: 14px 14px; border-radius: 18px; }
+  .haja-income-copy { gap: 4px; }
+  .haja-income-label { font-size: 13px; }
+  .haja-income-value { font-size: 29px; }
+  .haja-income-note, .haja-payment-label { font-size: 9px; }
+  .haja-wallet-art { width: 54px; height: 54px; }
+  .haja-wallet-art svg { width: 30px; height: 30px; }
+  .haja-overdue-card { min-height: 74px; margin-top: 10px; padding: 8px 10px; gap: 9px; border-radius: 15px; }
+  .haja-overdue-icon { width: 43px; height: 43px; }
+  .haja-overdue-icon svg { width: 23px; height: 23px; }
+  .haja-overdue-copy { gap: 2px; }
+  .haja-overdue-copy strong { font-size: 12px; }
+  .haja-overdue-copy small { font-size: 8px; line-height: 1.2; }
+  .haja-shortcuts { margin-top: 10px; gap: 9px; }
+  .haja-shortcut { min-height: 103px; padding: 8px 9px; border-radius: 15px; }
+  .haja-shortcut-icon { width: 39px; height: 39px; margin-bottom: 4px; border-radius: 11px; }
+  .haja-shortcut-icon svg { width: 22px; height: 22px; }
+  .haja-shortcut > .haja-card-chevron { top: 28px; right: 6px; width: 16px; }
+  .haja-shortcut > strong { font-size: 12px; line-height: 1.2; }
+  .haja-shortcut > small { margin-top: 2px; font-size: 8px; line-height: 1.2; }
+  .haja-ai-card { min-height: 60px; margin-top: 10px; padding: 7px 9px; gap: 8px; border-radius: 15px; }
+  .haja-ai-icon { width: 39px; height: 39px; }
+  .haja-ai-icon svg { width: 21px; height: 21px; }
+  .haja-ai-copy { gap: 2px; }
+  .haja-ai-copy strong { font-size: 12px; }
+  .haja-ai-copy small { font-size: 8px; line-height: 1.2; }
+  .haja-bottom-nav { min-height: 60px; bottom: max(5px, env(safe-area-inset-bottom)); padding: 3px 5px; }
+  .haja-bottom-nav button { min-height: 45px; gap: 2px; }
+  .haja-bottom-nav button svg { width: 18px; height: 18px; }
+  .haja-bottom-nav button span { font-size: 8px; }
+  .haja-bottom-nav button.haja-add-button { width: 49px; height: 49px; min-height: 49px; margin-top: -13px; }
+  .haja-bottom-nav button.haja-add-button svg { width: 25px; height: 25px; }
+}
+
+
+/* Restore the intended spacious reference proportions on mobile. */
+@media (max-width: 600px) {
+  .haja-dashboard { padding: 14px 14px 88px; }
+  .haja-header { margin-bottom: 14px; }
+  .haja-brand-logo { width: 50px; height: 50px; }
+  .haja-brand-copy strong { font-size: 20px; }
+  .haja-brand-copy span { font-size: 10px; }
+  .haja-notifications { width: 46px; height: 46px; }
+  .haja-income-card { min-height: 150px; padding: 17px 16px; border-radius: 19px; }
+  .haja-income-copy { gap: 5px; }
+  .haja-income-label { font-size: 14px; }
+  .haja-income-value { font-size: 31px; }
+  .haja-income-note, .haja-payment-label { font-size: 10px; }
+  .haja-wallet-art { width: 59px; height: 59px; }
+  .haja-wallet-art svg { width: 33px; height: 33px; }
+  .haja-overdue-card { min-height: 83px; margin-top: 12px; padding: 10px 12px; gap: 10px; border-radius: 16px; }
+  .haja-overdue-icon { width: 47px; height: 47px; }
+  .haja-overdue-icon svg { width: 25px; height: 25px; }
+  .haja-overdue-copy { gap: 3px; }
+  .haja-overdue-copy strong { font-size: 13px; }
+  .haja-overdue-copy small { font-size: 9px; line-height: 1.25; }
+  .haja-shortcuts { margin-top: 12px; gap: 10px; }
+  .haja-shortcut { min-height: 116px; padding: 10px 11px; border-radius: 16px; }
+  .haja-shortcut-icon { width: 43px; height: 43px; margin-bottom: 5px; border-radius: 12px; }
+  .haja-shortcut-icon svg { width: 24px; height: 24px; }
+  .haja-shortcut > .haja-card-chevron { top: 31px; right: 7px; width: 17px; }
+  .haja-shortcut > strong { font-size: 13px; line-height: 1.2; }
+  .haja-shortcut > small { margin-top: 3px; font-size: 9px; line-height: 1.2; }
+  .haja-ai-card { min-height: 66px; margin-top: 12px; padding: 8px 10px; gap: 9px; border-radius: 16px; }
+  .haja-ai-icon { width: 43px; height: 43px; }
+  .haja-ai-icon svg { width: 23px; height: 23px; }
+  .haja-ai-copy { gap: 3px; }
+  .haja-ai-copy strong { font-size: 13px; }
+  .haja-ai-copy small { font-size: 9px; line-height: 1.2; }
+  .haja-bottom-nav { min-height: 62px; bottom: max(5px, env(safe-area-inset-bottom)); padding: 3px 5px; }
+  .haja-bottom-nav button { min-height: 47px; gap: 2px; }
+  .haja-bottom-nav button svg { width: 19px; height: 19px; }
+  .haja-bottom-nav button span { font-size: 8px; }
+  .haja-bottom-nav button.haja-add-button { width: 51px; height: 51px; min-height: 51px; margin-top: -14px; }
+  .haja-bottom-nav button.haja-add-button svg { width: 27px; height: 27px; }
+}
+
+
+/* Keep a visible Wallet label paired with the wallet icon on the income card. */
+.haja-wallet-group {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.haja-wallet-label {
+  color: #e3fff6;
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .haja-wallet-group { gap: 4px; }
+  .haja-wallet-label { font-size: 10px; }
+}
+
+
+/* Functional dashboard modules */
+.haja-module-workspace { width: 100%; max-width: 1040px; margin: 0 auto; padding: 8px 0 112px; color: #f2f7ff; }
+.haja-module-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin:0 0 18px; }
+.haja-module-eyebrow { color:#35d9b1; font-size:10px; letter-spacing:.14em; font-weight:800; }
+.haja-module-heading h1 { margin:4px 0 5px; font-size:clamp(22px,5vw,30px); line-height:1.15; }
+.haja-module-heading p { margin:0; max-width:560px; color:#afbdd0; font-size:13px; line-height:1.5; }
+.haja-module-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin:0 0 14px; }
+.haja-module-stats>div { min-width:0; padding:13px; border:1px solid #2a3b53; border-radius:14px; background:#14263d; display:flex; flex-direction:column; gap:6px; }
+.haja-module-stats span { color:#aebdd0; font-size:11px; }
+.haja-module-stats strong { font-size:clamp(16px,4vw,22px); overflow-wrap:anywhere; }
+.haja-module-workspace .dashboard-primary-button { min-height:40px; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 13px; border:0; border-radius:10px; color:#06291f; background:#18c99b; font-size:12px; font-weight:800; cursor:pointer; }
+.haja-module-workspace .dashboard-primary-button:disabled { opacity:.6; cursor:wait; }
+.haja-module-form { margin:13px 0 17px; border:1px solid #30445e; border-radius:16px; background:#13253b; color:#f2f7ff; }
+.haja-module-form h2 { margin:0 0 12px; font-size:17px; }
+.haja-module-form label { display:flex; flex-direction:column; gap:6px; margin-bottom:11px; color:#d4deeb; font-size:12px; font-weight:700; }
+.haja-module-form input,.haja-module-form textarea,.haja-module-form select,.haja-stock-details input,.haja-stock-details select { width:100%; min-width:0; padding:10px 11px; border:1px solid #3b4d66; border-radius:9px; background:#09182a; color:#f7faff; font:inherit; font-size:13px; }
+.haja-module-form input:focus,.haja-module-form textarea:focus,.haja-module-form select:focus { outline:2px solid #19c99a; outline-offset:1px; }
+.haja-module-workspace .dashboard-form-two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.haja-module-list { display:flex; flex-direction:column; gap:9px; margin-top:15px; }
+.haja-module-row { display:flex; align-items:center; gap:10px; min-width:0; padding:12px; border:1px solid #273b55; border-radius:13px; background:#12243a; }
+.haja-module-row-icon { width:38px; height:38px; flex:0 0 38px; display:grid; place-items:center; border-radius:11px; color:#3be0b3; background:#0d544b; }
+.haja-module-row-main { display:flex; flex:1; min-width:0; flex-direction:column; gap:4px; }
+.haja-module-row-main strong { font-size:13px; overflow-wrap:anywhere; }
+.haja-module-row-main span,.haja-module-row-main small { color:#afbdd0; font-size:10px; line-height:1.35; overflow-wrap:anywhere; }
+.haja-module-row>b { flex:0 0 auto; font-size:12px; text-align:right; overflow-wrap:anywhere; }
+.haja-module-empty { padding:20px 14px; text-align:center; border:1px dashed #344963; border-radius:14px; color:#b9c7d9; font-size:13px; line-height:1.5; }
+.haja-stock-details { flex:0 0 100%; width:100%; }
+.haja-stock-details summary { color:#43dfb5; font-size:11px; cursor:pointer; }
+.haja-stock-details[open] { display:flex; flex-direction:column; gap:8px; }
+.haja-stock-details form { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+.haja-stock-details form input:nth-of-type(3) { grid-column:1 / -1; }
+.haja-stock-details form button { grid-column:1 / -1; }
+.haja-module-section-title { margin:22px 0 9px; font-size:16px; }
+.haja-module-disclaimer { padding:11px 12px; border-radius:10px; background:#182b42; color:#b9c7d9; font-size:11px; line-height:1.5; }
+.haja-report-bar { display:grid; grid-template-columns:100px 1fr 22px; gap:9px; align-items:center; font-size:11px; color:#dce6f3; }
+.haja-report-bar>div { height:8px; overflow:hidden; border-radius:99px; background:#2a3b52; }
+.haja-report-bar i { display:block; height:100%; border-radius:99px; background:#16c99a; }
+.haja-report-bar>b { text-align:right; }
+.haja-ai-workspace { padding:17px; border:1px solid #2c4059; border-radius:17px; background:#14263d; }
+.haja-ai-workspace-icon { width:48px; height:48px; display:grid; place-items:center; border-radius:15px; background:#263b55; color:#4ce0bd; }
+.haja-ai-workspace h2 { margin:13px 0 6px; font-size:19px; }
+.haja-ai-workspace>p { color:#b6c5d8; font-size:12px; line-height:1.55; }
+.haja-ai-insight { margin-top:13px; padding:13px; border-radius:12px; background:#0d1c2e; }
+.haja-ai-insight strong { font-size:13px; }
+.haja-ai-insight ul { margin:9px 0 0; padding-left:18px; color:#c4d1e0; font-size:12px; line-height:1.8; }
+@media(min-width:600px) { .haja-module-stats { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:390px) { .haja-module-row { flex-wrap:wrap; } .haja-module-row-main { flex-basis:calc(100% - 50px); } .haja-module-row>b { margin-left:48px; } .haja-module-workspace .dashboard-form-two { grid-template-columns:1fr; gap:0; } }
+
+
+.haja-order-status-form { flex:0 0 100%; display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+.haja-order-status-form select { flex:1 1 130px; min-width:0; padding:8px; border:1px solid #3b4d66; border-radius:8px; color:#f5f8ff; background:#09182a; font:inherit; font-size:11px; }
+.haja-order-status-form button,.haja-payment-review button { padding:8px 10px; border:0; border-radius:8px; background:#18c99b; color:#06291f; font-size:11px; font-weight:800; cursor:pointer; }
+.haja-order-status-form small { flex:0 0 100%; color:#b7c7d9; font-size:10px; }
+.haja-payment-review { flex:0 0 100%; display:flex; gap:8px; }
+.haja-payment-review form { flex:1; }
+.haja-payment-review button { width:100%; }
+.haja-payment-review form:nth-child(2) button { background:#5a3340; color:#ffe7eb; }
+.haja-payment-review small { flex:0 0 100%; color:#ffbdc5; font-size:10px; }
+
+
+.haja-notification-unread { border-color:#167b69; background:#142d40; }
+.haja-notification-read-button { flex:0 0 auto; padding:8px 10px; border:0; border-radius:8px; background:#18c99b; color:#06291f; font-size:10px; font-weight:800; cursor:pointer; }
+.haja-notification-read-button:disabled { opacity:.6; }
+
+
+.haja-language-settings { margin:16px 0; padding:14px; border:1px solid #2b405a; border-radius:14px; background:#14263d; }
+.haja-language-settings h2 { margin:0 0 10px; font-size:14px; color:#f1f6ff; }
+.haja-language-settings>div { display:flex; gap:9px; }
+.haja-language-settings button { min-width:90px; padding:10px 14px; border:1px solid #3b506a; border-radius:10px; color:#d5e0ee; background:#0c1b2d; font-size:12px; font-weight:800; cursor:pointer; }
+.haja-language-settings button.is-selected { border-color:#19c99a; background:#0b5146; color:#7cf0d0; }
+
+
+/* HAJAPRO approved dashboard palette — based on the user's MK Dictionary reference mockup.
+   Keep all dashboard surfaces white; emerald is primary, dark teal is for headings/navigation,
+   and gold is a restrained accent only. */
+:root {
+  --hajapro-dark-teal: #0B3332;
+  --hajapro-emerald: #087F5B;
+  --hajapro-emerald-hover: #066B4D;
+  --hajapro-white: #FFFFFF;
+  --hajapro-soft-mint: #EAF5F0;
+  --hajapro-gold: #D5A64A;
+  --hajapro-text-muted: #526765;
+  --hajapro-border: #DCE8E4;
+}
+body, .setup-page, .workspace-page, .dashboard-page,
+.dashboard-shell, .dashboard-main, .dashboard-sidebar,
+.haja-dashboard, .haja-subpage {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal);
+}
+.dashboard-sidebar { border-right-color: var(--hajapro-border); }
+.dashboard-brand, .dashboard-brand strong, .dashboard-greeting h1,
+.dashboard-module-empty h1, .dashboard-section-heading h2,
+.dashboard-module-copy strong, .dashboard-customer-details strong,
+.dashboard-customer-empty h2, .dashboard-customer-form h2,
+.dashboard-measurement-history h3, .haja-brand-copy strong,
+.haja-income-value, .haja-overdue-copy strong, .haja-shortcut > strong,
+.haja-ai-copy strong, .haja-module-placeholder, .haja-module-placeholder h1,
+.haja-language-settings h2 {
+  color: var(--hajapro-dark-teal) !important;
+}
+.dashboard-topbar, .dashboard-sidebar, .dashboard-account,
+.dashboard-customer-list, .dashboard-customer-row,
+.dashboard-measurement-record, .haja-header {
+  border-color: var(--hajapro-border) !important;
+}
+.dashboard-nav-label, .dashboard-breadcrumb, .dashboard-greeting > div > p:last-child,
+.dashboard-module-copy small, .dashboard-integrity-note,
+.dashboard-customer-details span, .dashboard-customer-date,
+.dashboard-module-empty > p:not(.dashboard-eyebrow), .haja-brand-copy span,
+.haja-income-note, .haja-overdue-copy small, .haja-shortcut > small,
+.haja-ai-copy small, .haja-module-placeholder p {
+  color: var(--hajapro-text-muted) !important;
+}
+.dashboard-nav-item { color: var(--hajapro-dark-teal); }
+.dashboard-nav-item:hover, .dashboard-nav-item.is-active {
+  border-color: var(--hajapro-emerald) !important;
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-brand-mark, .dashboard-avatar, .dashboard-metric-icon,
+.dashboard-module-icon, .dashboard-empty-icon, .dashboard-customer-avatar,
+.haja-subpage-icon, .haja-wallet-art, .haja-overdue-icon, .haja-shortcut-icon,
+.haja-ai-icon, .auth-card-icon, .setup-mark, .type-icon {
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-metric-card, .dashboard-module-card, .dashboard-customer-form,
+.dashboard-measurement-history, .dashboard-language-settings,
+.haja-language-settings, .haja-notifications, .haja-income-card,
+.haja-overdue-card, .haja-shortcut, .haja-ai-card,
+.dashboard-search, .dashboard-icon-button, .dashboard-customer-search,
+.dashboard-customer-empty, .dashboard-customer-measure-button,
+.dashboard-customer-form input, .dashboard-customer-form textarea,
+.dashboard-measurement-area .dashboard-customer-form select,
+.haja-language-settings button, .dashboard-back-button {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+  border-color: var(--hajapro-border) !important;
+  box-shadow: none;
+}
+.dashboard-metric-card:hover, .dashboard-module-card:hover,
+.dashboard-icon-button:hover, .dashboard-customer-measure-button:hover {
+  background: var(--hajapro-soft-mint) !important;
+  border-color: var(--hajapro-emerald) !important;
+}
+.dashboard-metric-label, .dashboard-customer-form label,
+.dashboard-customer-form h2, .dashboard-customer-empty p,
+.dashboard-measurement-record span, .dashboard-measurement-record small,
+.dashboard-customer-form input, .dashboard-customer-form textarea,
+.dashboard-measurement-area .dashboard-customer-form select {
+  color: var(--hajapro-text-muted) !important;
+}
+.dashboard-primary-button, .button-green, .haja-add-button,
+.haja-bottom-nav button.haja-add-button, .haja-notification-read-button {
+  background: var(--hajapro-emerald) !important;
+  border-color: var(--hajapro-emerald) !important;
+  color: #FFFFFF !important;
+}
+.dashboard-primary-button:hover, .button-green:hover {
+  background: var(--hajapro-emerald-hover) !important;
+}
+.button-dark, .dashboard-back-button {
+  background: var(--hajapro-dark-teal) !important;
+  color: #FFFFFF !important;
+}
+.dashboard-eyebrow, .dashboard-wallet-link, .dashboard-integrity-note svg,
+.haja-bottom-nav button.is-active, .haja-payment-label {
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-date-chip { border-color: var(--hajapro-border); color: var(--hajapro-text-muted); }
+.dashboard-form-error { color: #B42318 !important; }
+.dashboard-form-success { color: var(--hajapro-emerald) !important; }
+.haja-dashboard { --haja-bg: #FFFFFF; --haja-panel: #FFFFFF; --haja-muted: var(--hajapro-text-muted); padding-top: 18px; }
+.haja-income-card { background: #FFFFFF !important; border: 1px solid var(--hajapro-border) !important; }
+.haja-income-card::before { display: none; }
+.haja-income-label { color: var(--hajapro-text-muted) !important; }
+.haja-wallet-art { border: 1px solid var(--hajapro-border); }
+.haja-overdue-card { background: #FFFFFF !important; border: 1px solid var(--hajapro-border) !important; }
+.haja-overdue-icon { background: var(--hajapro-soft-mint) !important; color: var(--hajapro-emerald) !important; }
+.haja-shortcut { border: 1px solid var(--hajapro-border) !important; background: #FFFFFF !important; }
+.haja-shortcut .haja-shortcut-icon { background: var(--hajapro-soft-mint) !important; color: var(--hajapro-emerald) !important; }
+.haja-shortcut:nth-child(4) .haja-shortcut-icon, .haja-ai-icon {
+  background: #FBF4E5 !important; color: #9A6B12 !important;
+}
+.haja-card-chevron { color: var(--hajapro-emerald) !important; }
+.haja-bottom-nav {
+  background: rgba(255,255,255,.97) !important;
+  border-color: var(--hajapro-border) !important;
+  box-shadow: 0 8px 30px rgba(11,51,50,.10) !important;
+}
+.haja-bottom-nav button { color: var(--hajapro-text-muted) !important; }
+.haja-bottom-nav button.is-active { color: var(--hajapro-emerald) !important; }
+.haja-bottom-nav button.haja-add-button { color: #FFFFFF !important; }
+.haja-language-settings button { color: var(--hajapro-dark-teal) !important; }
+.haja-language-settings button.is-selected {
+  border-color: var(--hajapro-emerald) !important;
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.auth-story { background: var(--hajapro-dark-teal); }
+.auth-wordmark span, .auth-story h1 em { color: var(--hajapro-gold); }
+.closing-band { background: var(--hajapro-emerald); color: #FFFFFF; }
+.closing-band .eyebrow, .closing-caption { color: #FFFFFF; }
+@media (max-width: 700px) {
+  .dashboard-page .dashboard-mobile-header { background: #FFFFFF !important; border-bottom-color: var(--hajapro-border) !important; }
+  .dashboard-page .icon-text-button { color: var(--hajapro-dark-teal) !important; }
+}
+
+
+/* Final dashboard CSS normalization: remove legacy dark surfaces from every workspace module. */
+.dashboard-page,
+.dashboard-page .haja-dashboard,
+.dashboard-page .haja-dashboard-content,
+.dashboard-page .haja-module-placeholder,
+.dashboard-page .haja-module-workspace,
+.dashboard-page .haja-settings-panel,
+.dashboard-page .haja-module-form,
+.dashboard-page .haja-ai-workspace,
+.dashboard-page .haja-ai-insight,
+.dashboard-page .haja-module-stats > div,
+.dashboard-page .haja-module-row,
+.dashboard-page .haja-module-empty,
+.dashboard-page .haja-module-disclaimer,
+.dashboard-page .haja-language-settings,
+.dashboard-page .haja-stock-details,
+.dashboard-page .haja-notification-unread {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+}
+.dashboard-page .haja-header {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+  border-bottom: 1px solid var(--hajapro-border) !important;
+}
+.dashboard-page .haja-notifications {
+  background: #FFFFFF !important;
+  border-color: var(--hajapro-border) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-page .haja-income-card {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+  border: 1px solid var(--hajapro-border) !important;
+  box-shadow: 0 8px 24px rgba(11, 51, 50, .06) !important;
+}
+.dashboard-page .haja-income-card::before { content: none !important; }
+.dashboard-page .haja-income-label,
+.dashboard-page .haja-income-value,
+.dashboard-page .haja-income-note,
+.dashboard-page .haja-payment-label,
+.dashboard-page .haja-wallet-label { color: var(--hajapro-dark-teal) !important; }
+.dashboard-page .haja-payment-label { color: var(--hajapro-emerald) !important; }
+.dashboard-page .haja-wallet-art {
+  background: var(--hajapro-soft-mint) !important;
+  border: 1px solid var(--hajapro-border) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-page .haja-overdue-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--hajapro-border) !important;
+  color: var(--hajapro-dark-teal) !important;
+  box-shadow: 0 5px 18px rgba(11, 51, 50, .04) !important;
+}
+.dashboard-page .haja-overdue-copy strong,
+.dashboard-page .haja-shortcut > strong,
+.dashboard-page .haja-ai-copy strong,
+.dashboard-page .haja-module-heading h1,
+.dashboard-page .haja-module-section-title,
+.dashboard-page .haja-ai-workspace h2,
+.dashboard-page .haja-ai-insight strong,
+.dashboard-page .haja-settings-panel h1,
+.dashboard-page .haja-settings-panel h2 { color: var(--hajapro-dark-teal) !important; }
+.dashboard-page .haja-overdue-copy small,
+.dashboard-page .haja-shortcut > small,
+.dashboard-page .haja-ai-copy small,
+.dashboard-page .haja-module-heading p,
+.dashboard-page .haja-module-row-main span,
+.dashboard-page .haja-module-row-main small,
+.dashboard-page .haja-module-empty,
+.dashboard-page .haja-module-disclaimer,
+.dashboard-page .haja-ai-workspace > p,
+.dashboard-page .haja-ai-insight ul,
+.dashboard-page .haja-settings-panel p,
+.dashboard-page .haja-module-stats span,
+.dashboard-page .haja-module-row > b { color: var(--hajapro-text-muted) !important; }
+.dashboard-page .haja-overdue-icon,
+.dashboard-page .haja-shortcut-icon,
+.dashboard-page .haja-ai-icon,
+.dashboard-page .haja-module-row-icon,
+.dashboard-page .haja-ai-workspace-icon,
+.dashboard-page .haja-subpage-icon {
+  background: var(--hajapro-soft-mint) !important;
+  color: var(--hajapro-emerald) !important;
+}
+.dashboard-page .haja-shortcut,
+.dashboard-page .haja-ai-card {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+  border: 1px solid var(--hajapro-border) !important;
+  box-shadow: 0 5px 18px rgba(11, 51, 50, .04) !important;
+}
+.dashboard-page .haja-shortcut:hover,
+.dashboard-page .haja-ai-card:hover,
+.dashboard-page .haja-overdue-card:hover {
+  border-color: var(--hajapro-emerald) !important;
+  background: #F8FCFA !important;
+}
+.dashboard-page .haja-shortcut:nth-child(4) .haja-shortcut-icon,
+.dashboard-page .haja-ai-icon {
+  background: #FBF4E5 !important;
+  color: #9A6B12 !important;
+}
+.dashboard-page .haja-module-stats > div,
+.dashboard-page .haja-module-form,
+.dashboard-page .haja-module-row,
+.dashboard-page .haja-module-empty,
+.dashboard-page .haja-module-disclaimer,
+.dashboard-page .haja-ai-workspace,
+.dashboard-page .haja-ai-insight,
+.dashboard-page .haja-settings-signout {
+  border-color: var(--hajapro-border) !important;
+  box-shadow: none !important;
+}
+.dashboard-page .haja-module-form label { color: var(--hajapro-dark-teal) !important; }
+.dashboard-page .haja-module-form input,
+.dashboard-page .haja-module-form textarea,
+.dashboard-page .haja-module-form select,
+.dashboard-page .haja-stock-details input,
+.dashboard-page .haja-stock-details select,
+.dashboard-page .haja-order-status-form select,
+.dashboard-page .haja-language-settings button {
+  background: #FFFFFF !important;
+  color: var(--hajapro-dark-teal) !important;
+  border: 1px solid var(--hajapro-border) !important;
+}
+.dashboard-page .haja-module-form input::placeholder,
+.dashboard-page .haja-module-form textarea::placeholder { color: #718582 !important; }
+.dashboard-page .haja-module-form input:focus,
+.dashboard-page .haja-module-form textarea:focus,
+.dashboard-page .haja-module-form select:focus {
+  outline: 2px solid var(--hajapro-emerald) !important;
+  outline-offset: 1px;
+}
+.dashboard-page .haja-module-workspace .dashboard-primary-button,
+.dashboard-page .haja-order-status-form button,
+.dashboard-page .haja-payment-review button,
+.dashboard-page .haja-notification-read-button {
+  background: var(--hajapro-emerald) !important;
+  border-color: var(--hajapro-emerald) !important;
+  color: #FFFFFF !important;
+}
+.dashboard-page .haja-payment-review form:nth-child(2) button {
+  background: #FFFFFF !important;
+  border: 1px solid #B42318 !important;
+  color: #B42318 !important;
+}
+.dashboard-page .haja-stock-details summary,
+.dashboard-page .haja-module-eyebrow,
+.dashboard-page .haja-module-section-title { color: var(--hajapro-emerald) !important; }
+.dashboard-page .haja-report-bar { color: var(--hajapro-text-muted) !important; }
+.dashboard-page .haja-report-bar > div { background: var(--hajapro-soft-mint) !important; }
+.dashboard-page .haja-report-bar i { background: var(--hajapro-emerald) !important; }
+.dashboard-page .haja-settings-signout {
+  background: #FFFFFF !important;
+  color: #B42318 !important;
+  border-color: #F0C9C6 !important;
+}
+.dashboard-page .haja-bottom-nav {
+  background: rgba(255, 255, 255, .97) !important;
+  border-color: var(--hajapro-border) !important;
+}
+.dashboard-page .haja-bottom-nav button { color: var(--hajapro-text-muted) !important; }
+.dashboard-page .haja-bottom-nav button.is-active { color: var(--hajapro-emerald) !important; }
+.dashboard-page .haja-bottom-nav button.haja-add-button {
+  background: var(--hajapro-emerald) !important;
+  color: #FFFFFF !important;
+}
+
+
+/* Private customer and garment photo controls */
+.dashboard-photo-input {
+  min-height: 74px;
+  margin-top: 7px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px 10px;
+  border: 1px dashed var(--line);
+  background: #f8fbf9;
+  color: var(--green-dark);
+}
+.dashboard-photo-input input { min-width: 0; width: 100%; color: var(--ink); font-size: 12px; }
+.dashboard-photo-input small { grid-column: 2; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.dashboard-customer-photos { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 16px; }
+.dashboard-customer-photos figure { width: min(100%, 220px); margin: 0; }
+.dashboard-customer-photos img { width: 100%; height: 190px; object-fit: cover; border: 1px solid var(--line); background: #f8fbf9; }
+.dashboard-customer-photos figcaption { padding-top: 5px; color: var(--muted); font-size: 10px; font-weight: 700; }
+
+
+/* HAJAPRO settings and user-selectable dashboard appearance */
+.haja-settings-section { margin: 16px 0; padding: 14px; border: 1px solid #dce8e4; border-radius: 14px; background: #f8fbf9; }
+.haja-settings-section h2 { margin: 0 0 8px; font-size: 14px; }
+.haja-settings-section p { margin: 0 0 5px; }
+.haja-settings-account { overflow-wrap: anywhere; color: #0b3332 !important; font-weight: 750; }
+.haja-settings-section small { color: #526765; font-size: 11px; }
+.haja-settings-panel .haja-language-settings p { margin: 0 0 12px; font-size: 11px; }
+.haja-theme-dark { background: #101b1b !important; color: #e7f1ed !important; }
+.haja-theme-dark .haja-dashboard-content, .haja-theme-dark .haja-subpage { background: #101b1b !important; color: #e7f1ed !important; }
+.haja-theme-dark .haja-settings-section { background: #172725; border-color: #31504a; }
+.haja-theme-dark .haja-settings-section h2, .haja-theme-dark .haja-settings-account { color: #e7f1ed !important; }
+.haja-theme-dark .haja-settings-section small { color: #b5c9c1; }
+.haja-theme-dark .haja-language-settings { background: #172725; border-color: #31504a; }
+.haja-theme-dark .haja-language-settings h2 { color: #e7f1ed; }
+.haja-theme-dark .haja-language-settings p { color: #b5c9c1; }
+.haja-theme-dark .haja-language-settings button { background: #101b1b; color: #d9e8e1; border-color: #426057; }
+.haja-theme-dark .haja-language-settings button.is-selected { background: #075b48; color: #a1f2d5; border-color: #20c997; }
+.haja-theme-dark .haja-module-workspace, .haja-theme-dark .dashboard-content { color: #e7f1ed; }
+.haja-theme-dark .haja-module-row, .haja-theme-dark .haja-ai-insight { background: #172725; border-color: #31504a; color: #e7f1ed; }
+.haja-theme-dark .haja-module-row-main span, .haja-theme-dark .haja-module-row-main small { color: #b5c9c1; }

@@ -1,16 +1,16 @@
-import { AuthForm } from "@/components/auth-form";
+import { redirect } from "next/navigation";
 
-type Intent = "tailor" | "trading" | "customer";
+type Experience = "tailor" | "trading" | "customer";
 
 export default async function SignUpPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; sent?: string; type?: string }>;
+  searchParams: Promise<{ type?: string }>;
 }) {
-  const params = await searchParams;
-  const intent: Intent = params.type === "trading" || params.type === "customer"
-    ? params.type
-    : "tailor";
+  const { type } = await searchParams;
+  const experience: Experience =
+    type === "trading" || type === "customer" ? type : "tailor";
 
-  return <AuthForm mode="sign-up" intent={intent} error={params.error} sent={params.sent === "1"} />;
+  // Keep the experience chosen on the homepage through the account step.
+  redirect(`/settings?experience=${experience}`);
 }
