@@ -47,9 +47,22 @@ export default async function RetailerPage() {
       .eq("business_id", business.id),
   ]);
 
-  if (productsError || customerError) {
-    return <main className="setup-shell"><h1>Trading data unavailable</h1><p>We could not load all dashboard data. Refresh the page or contact your workspace administrator.</p></main>;
+  const { data: permissionRows, error: permissionError } = await supabase
+    .from("business_member_permissions")
+    .select("permission, allowed")
+    .eq("business_id", business.id)
+    .eq("user_id", user.id)
+    .in("permission", ["inventory.view_value", "reports.view", "reports.view_profit"]);
+
+  if (productsError || customerError || permissionError) {
+    return <main className="setup-shell"><h1>Trading data unavailable</h1><p>We could not load all authorized dashboard data. Refresh the page or contact your workspace administrator.</p></main>;
   }
+
+  const isOwner = membership.role === "owner";
+  const permissions = new Set((permissionRows ?? []).filter((row) => row.allowed).map((row) => row.permission));
+  const canViewInventoryValue = isOwner || permissions.has("inventory.view_value");
+  const canViewReports = isOwner || permissions.has("reports.view");
+  const canViewProfit = isOwner || permissions.has("reports.view_profit");
 
   return (
     <main className="workspace-page dashboard-page trading-page">
@@ -60,6 +73,9 @@ export default async function RetailerPage() {
         customerCount={customerCount ?? 0}
         todayPaymentCount={0}
         hasSalesSource={false}
+        canViewInventoryValue={canViewInventoryValue}
+        canViewReports={canViewReports}
+        canViewProfit={canViewProfit}
       />
     </main>
   );
