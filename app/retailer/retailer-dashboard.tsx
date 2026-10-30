@@ -13,12 +13,9 @@ type Product = {
 };
 type Props = {
   businessName: string;
-  businessId: string;
-  userEmail: string;
   role: "owner" | "manager" | "staff";
   products: Product[];
   customerCount: number;
-  todayPayments: number;
   todayPaymentCount: number;
   hasSalesSource: boolean;
 };
@@ -28,7 +25,7 @@ const money = (value: number) => new Intl.NumberFormat("en-NG", {
 }).format(value);
 
 export function RetailerDashboard({
-  businessName, role, products, customerCount, todayPayments,
+  businessName, role, products, customerCount,
   todayPaymentCount, hasSalesSource,
 }: Props) {
   const [showLowStock, setShowLowStock] = useState(false);
@@ -171,17 +168,16 @@ export function RetailerDashboard({
               <button type="button" onClick={() => setShowQuickAdd(false)} aria-label="Close"><X size={21} /></button>
             </div>
             {[
-              ["New Sale", ShoppingCart],
-              ["Add Stock", Boxes],
-              ["Add Product", Package],
-              ["Record Expense", CircleDollarSign],
-              ["New Customer", Users],
-            ].map(([label, Icon]) => {
-              const ActionIcon = Icon as typeof ShoppingCart;
-              return <button className="trading-quick-action" type="button" key={label as string} disabled>
-                <ActionIcon size={19} /><span>{label as string}</span><small>Setup pending</small>
-              </button>;
-            })}
+              { label: "New Sale", Icon: ShoppingCart },
+              { label: "Add Stock", Icon: Boxes },
+              { label: "Add Product", Icon: Package },
+              { label: "Record Expense", Icon: CircleDollarSign },
+              { label: "New Customer", Icon: Users },
+            ].map(({ label, Icon }) => (
+              <button className="trading-quick-action" type="button" key={label} disabled>
+                <Icon size={19} /><span>{label}</span><small>Setup pending</small>
+              </button>
+            ))}
             <p className="trading-sheet-note">These actions will be connected to their verified workflows after their module requirements are defined.</p>
           </section>
         </div>
