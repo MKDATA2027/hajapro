@@ -65,7 +65,7 @@ export default async function SetupPage({
     );
   }
 
-  if (businesses?.some(business => business.business_type === intent)) redirect("/workspace");
+  if (businesses?.some(business => business.business_type === intent)) redirect(intent === "trading" ? "/retailer" : "/tailor");
   if (businesses?.length) {
     return (
       <main className="setup-shell">
