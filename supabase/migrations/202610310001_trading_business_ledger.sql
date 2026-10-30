@@ -552,6 +552,162 @@ $$;
 revoke all on function public.create_trading_sale(uuid, uuid, jsonb, numeric, text, text, text) from public, anon;
 grant execute on function public.create_trading_sale(uuid, uuid, jsonb, numeric, text, text, text) to authenticated;
 
+-- Atomic stock purchase: purchase, stock increase, movement, cost snapshot and supplier payment.
+create or replace function public.create_trading_purchase(
+  p_business_id uuid,
+  p_supplier_id uuid,
+  p_items jsonb,
+  p_paid_amount numeric default 0,
+  p_payment_method text default 'cash',
+  p_reference text default null,
+  p_due_date date default null,
+  p_note text default null
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $purchase$
+declare
+  v_user_id uuid := (select auth.uid());
+  v_purchase_id uuid;
+  v_total numeric(12,2);
+  v_paid numeric(12,2) := coalesce(p_paid_amount, 0);
+  v_item record;
+  v_product public.products%rowtype;
+begin
+  if v_user_id is null then raise exception 'Authentication required'; end if;
+  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
+    raise exception 'At least one purchase item is required';
+  end if;
+  if v_paid < 0 then raise exception 'Payment cannot be negative'; end if;
+  if p_payment_method not in ('cash','bank_transfer','pos','other') then
+    raise exception 'Unsupported payment method';
+  end if;
+  if not exists (
+    select 1 from public.businesses b
+    where b.id = p_business_id and b.business_type = 'trading'
+  ) then raise exception 'Trading business not found'; end if;
+  if not public.has_business_permission(p_business_id, 'inventory.purchase') then
+    raise exception 'You do not have permission to add stock';
+  end if;
+  if not exists (
+    select 1 from public.suppliers s
+    where s.id = p_supplier_id and s.business_id = p_business_id
+      and s.archived_at is null
+  ) then raise exception 'Supplier does not belong to this business'; end if;
+
+  for v_item in
+    select distinct (x->>'product_id')::uuid as product_id
+    from jsonb_array_elements(p_items) x
+    order by 1
+  loop
+    select * into v_product from public.products p
+    where p.id = v_item.product_id and p.business_id = p_business_id
+      and p.archived_at is null
+    for update;
+    if not found then raise exception 'A selected product is unavailable'; end if;
+  end loop;
+
+  if exists (
+    select 1
+    from (
+      select (x->>'product_id')::uuid product_id,
+             sum((x->>'quantity')::numeric) quantity
+      from jsonb_array_elements(p_items) x
+      group by (x->>'product_id')::uuid
+    ) requested
+    left join public.products p
+      on p.id = requested.product_id and p.business_id = p_business_id
+    where p.id is null or requested.quantity <= 0
+  ) then raise exception 'Invalid purchase quantity'; end if;
+
+  if exists (
+    select 1 from jsonb_array_elements(p_items) x
+    where not (x ? 'product_id') or not (x ? 'quantity') or not (x ? 'unit_cost')
+       or (x->>'quantity')::numeric <= 0 or (x->>'unit_cost')::numeric < 0
+  ) then raise exception 'Invalid purchase item'; end if;
+
+  select round(sum((x->>'quantity')::numeric * (x->>'unit_cost')::numeric), 2)
+    into v_total
+  from jsonb_array_elements(p_items) x;
+  if v_paid > v_total then raise exception 'Payment exceeds purchase total'; end if;
+
+  insert into public.purchases (
+    business_id, supplier_id, total_amount, due_date, note, created_by
+  ) values (
+    p_business_id, p_supplier_id, v_total, p_due_date,
+    nullif(btrim(p_note), ''), v_user_id
+  ) returning id into v_purchase_id;
+
+  for v_item in
+    select (x->>'product_id')::uuid product_id,
+           sum((x->>'quantity')::numeric) quantity,
+           (x->>'unit_cost')::numeric unit_cost
+    from jsonb_array_elements(p_items) x
+    group by (x->>'product_id')::uuid, (x->>'unit_cost')::numeric
+  loop
+    select * into v_product from public.products
+    where id = v_item.product_id and business_id = p_business_id;
+
+    insert into public.purchase_items (
+      business_id, purchase_id, product_id, product_name_snapshot,
+      quantity, unit_cost, line_total
+    ) values (
+      p_business_id, v_purchase_id, v_item.product_id, v_product.name,
+      v_item.quantity, v_item.unit_cost,
+      round(v_item.quantity * v_item.unit_cost, 2)
+    );
+
+    update public.products
+    set stock_quantity = stock_quantity + v_item.quantity,
+        updated_at = now()
+    where id = v_item.product_id and business_id = p_business_id;
+
+    insert into public.product_costs (
+      product_id, business_id, current_unit_cost, updated_by, updated_at
+    ) values (
+      v_item.product_id, p_business_id, v_item.unit_cost, v_user_id, now()
+    )
+    on conflict (product_id) do update
+      set current_unit_cost = excluded.current_unit_cost,
+          updated_by = excluded.updated_by,
+          updated_at = excluded.updated_at
+      where public.product_costs.business_id = excluded.business_id;
+
+    insert into public.inventory_movements (
+      business_id, product_id, movement_type, quantity, note, created_by
+    ) values (
+      p_business_id, v_item.product_id, 'stock_in', v_item.quantity,
+      'Trading purchase ' || v_purchase_id::text, v_user_id
+    );
+  end loop;
+
+  if v_paid > 0 then
+    insert into public.supplier_payments (
+      business_id, supplier_id, purchase_id, amount, payment_method,
+      reference, note, recorded_by
+    ) values (
+      p_business_id, p_supplier_id, v_purchase_id, v_paid,
+      p_payment_method, nullif(btrim(p_reference), ''),
+      'Manually recorded at purchase checkout', v_user_id
+    );
+  end if;
+
+  insert into public.business_audit_logs (
+    business_id, actor_id, action, entity_type, entity_id, new_values
+  ) values (
+    p_business_id, v_user_id, 'purchase.received', 'purchase', v_purchase_id,
+    jsonb_build_object('total_amount', v_total, 'paid_amount', v_paid,
+                       'supplier_id', p_supplier_id)
+  );
+  return v_purchase_id;
+end;
+$purchase$;
+
+revoke all on function public.create_trading_purchase(uuid, uuid, jsonb, numeric, text, text, date, text) from public, anon;
+grant execute on function public.create_trading_purchase(uuid, uuid, jsonb, numeric, text, text, date, text) to authenticated;
+
 -- The sale RPC is the only authenticated write path for sales and their line items.
 revoke insert, update, delete on public.sales, public.sale_items from authenticated;
 revoke insert, update, delete on public.sale_payments from authenticated;
