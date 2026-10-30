@@ -113,6 +113,8 @@ export type Database = {
           business_id: string
           created_at: string
           created_by: string
+          customer_photo_path: string | null
+          garment_photo_path: string | null
           email: string | null
           full_name: string
           id: string
@@ -124,6 +126,8 @@ export type Database = {
           business_id: string
           created_at?: string
           created_by: string
+          customer_photo_path?: string | null
+          garment_photo_path?: string | null
           email?: string | null
           full_name: string
           id?: string
@@ -135,6 +139,8 @@ export type Database = {
           business_id?: string
           created_at?: string
           created_by?: string
+          customer_photo_path?: string | null
+          garment_photo_path?: string | null
           email?: string | null
           full_name?: string
           id?: string
