@@ -46,5 +46,5 @@ export async function createBusinessAction(formData: FormData) {
     console.error("[workspace-setup] create_business RPC failed", diagnostic);
     redirect(`/setup?type=${intent}&error=${classifyWorkspaceSaveError(error.code)}`);
   }
-  redirect("/workspace");
+  redirect(intent === "trading" ? "/retailer" : "/tailor");
 }
