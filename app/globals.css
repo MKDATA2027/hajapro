@@ -1282,3 +1282,24 @@ body, .setup-page, .workspace-page, .dashboard-page,
   background: var(--hajapro-emerald) !important;
   color: #FFFFFF !important;
 }
+
+
+/* Private customer and garment photo controls */
+.dashboard-photo-input {
+  min-height: 74px;
+  margin-top: 7px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px 10px;
+  border: 1px dashed var(--line);
+  background: #f8fbf9;
+  color: var(--green-dark);
+}
+.dashboard-photo-input input { min-width: 0; width: 100%; color: var(--ink); font-size: 12px; }
+.dashboard-photo-input small { grid-column: 2; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.dashboard-customer-photos { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 16px; }
+.dashboard-customer-photos figure { width: min(100%, 220px); margin: 0; }
+.dashboard-customer-photos img { width: 100%; height: 190px; object-fit: cover; border: 1px solid var(--line); background: #f8fbf9; }
+.dashboard-customer-photos figcaption { padding-top: 5px; color: var(--muted); font-size: 10px; font-weight: 700; }
