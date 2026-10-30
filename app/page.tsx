@@ -81,7 +81,7 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-          <div className="foundation-note"><span className="foundation-check">✓</span><p><strong>Available now:</strong> account registration, secure sign-in and private business workspace setup.</p></div>
+          <div className="foundation-note"><span className="foundation-check">✓</span><p><strong>Available now:</strong> Google Account sign-in and private business workspace setup.</p></div>
         </section>
 
         <section className="closing-band">
