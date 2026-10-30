@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   if (businessError) return NextResponse.redirect(new URL("/settings?error=workspace-check", appUrl));
 
   if (businesses?.some(row => row.business_type === intent)) {
-    return NextResponse.redirect(new URL("/workspace", appUrl));
+    return NextResponse.redirect(new URL(intent === "trading" ? "/retailer" : "/tailor", appUrl));
   }
   if (businesses?.length) {
     return NextResponse.redirect(new URL(`/setup?type=${intent}&error=workspace-type-conflict`, appUrl));
