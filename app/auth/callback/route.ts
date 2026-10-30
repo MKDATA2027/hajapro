@@ -20,24 +20,36 @@ export async function GET(request: NextRequest) {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) return NextResponse.redirect(new URL("/settings?error=google-sign-in", appUrl));
 
-  // Existing workspace membership takes precedence over the selected onboarding intent.
-  const { data: businesses, error: businessError } = await supabase
-    .from("businesses").select("id, business_type").limit(10);
-  if (businessError) return NextResponse.redirect(new URL("/settings?error=workspace-check", appUrl));
-  if (businesses?.length) {
-    if (businesses.some(row => row.business_type === "tailor" || row.business_type === "trading")) {
-      return NextResponse.redirect(new URL("/workspace", appUrl));
-    }
-  }
-
-  const intent: Intent = isIntent(requestedIntent) ? requestedIntent : "tailor";
-  if (intent === "customer") {
-    const { error } = await supabase.auth.updateUser({ data: { intent: "customer" } });
-    if (error) return NextResponse.redirect(new URL("/settings?error=account-setup", appUrl));
-    return NextResponse.redirect(new URL("/customer", appUrl));
-  }
+  // The user's explicit choice always wins. Never route a Customer selection
+  // into a business workspace merely because the account has a business.
+  const intent: Intent = isIntent(requestedIntent)
+    ? requestedIntent
+    : user.user_metadata?.intent === "trading" || user.user_metadata?.intent === "customer"
+      ? user.user_metadata.intent
+      : "tailor";
 
   const { error: metadataError } = await supabase.auth.updateUser({ data: { intent } });
   if (metadataError) return NextResponse.redirect(new URL("/settings?error=account-setup", appUrl));
+
+  if (intent === "customer") {
+    return NextResponse.redirect(new URL("/customer", appUrl));
+  }
+
+  const { data: businesses, error: businessError } = await supabase
+    .from("businesses")
+    .select("id, business_type")
+    .limit(10);
+  if (businessError) return NextResponse.redirect(new URL("/settings?error=workspace-check", appUrl));
+
+  if (businesses?.some(row => row.business_type === intent)) {
+    return NextResponse.redirect(new URL("/workspace", appUrl));
+  }
+
+  // A single business workspace is currently supported. Do not silently open
+  // a different experience when the account already belongs to another type.
+  if (businesses?.length) {
+    return NextResponse.redirect(new URL(`/setup?type=${intent}&error=workspace-type-conflict`, appUrl));
+  }
+
   return NextResponse.redirect(new URL(`/setup?type=${intent}`, appUrl));
 }
