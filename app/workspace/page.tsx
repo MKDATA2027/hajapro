@@ -50,6 +50,6 @@ export default async function WorkspacePage() {
     measurement_values: normalizeMeasurements(row.measurement_values),
     unit: row.unit === "cm" ? "cm" as const : "inches" as const,
   }));
-  return <main className="workspace-page dashboard-page"><DashboardHome businessType={business.business_type} businessId={business.id} customers={customers}
+  return <main className="workspace-page dashboard-page"><DashboardHome businessType={business.business_type} businessId={business.id} userEmail={user.email ?? ""} customers={customers}
     measurements={measurements} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} notifications={notificationRows ?? []}/></main>;
 }
