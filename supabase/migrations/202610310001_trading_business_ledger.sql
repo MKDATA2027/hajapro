@@ -381,7 +381,7 @@ create policy "Authorized members read audit log" on public.business_audit_logs
   for select to authenticated
   using (public.has_business_permission(business_id, 'reports.view'));
 revoke all on public.business_audit_logs from anon, authenticated;
-grant select, insert on public.business_audit_logs to authenticated;
+grant select on public.business_audit_logs to authenticated;
 
 -- A single database transaction creates a sale, records its snapshots, deducts stock,
 -- writes stock movements, and records any money received. Direct table writes are
@@ -494,17 +494,19 @@ begin
   loop
     select * into v_product from public.products
     where id = v_item.product_id and business_id = p_business_id;
-    select coalesce(pc.current_unit_cost, 0) into v_unit_cost
-    from (select 1) seed
-    left join public.product_costs pc
-      on pc.product_id = v_item.product_id and pc.business_id = p_business_id;
+    select pc.current_unit_cost into v_unit_cost
+    from public.product_costs pc
+    where pc.product_id = v_item.product_id and pc.business_id = p_business_id;
+    if not found then
+      raise exception 'Purchase cost is missing for product %', v_product.name;
+    end if;
 
     insert into public.sale_items (
       business_id, sale_id, product_id, product_name_snapshot,
       quantity, unit_price, unit_cost_snapshot, line_total
     ) values (
       p_business_id, v_sale_id, v_item.product_id, v_product.name,
-      v_item.quantity, v_item.unit_price, coalesce(v_unit_cost, 0),
+      v_item.quantity, v_item.unit_price, v_unit_cost,
       round(v_item.quantity * v_item.unit_price, 2)
     );
 
