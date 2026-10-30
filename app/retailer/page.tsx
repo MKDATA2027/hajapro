@@ -10,32 +10,43 @@ export default async function RetailerPage() {
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) redirect("/settings?experience=trading");
-
   if (user.user_metadata?.intent !== "trading") {
     redirect("/settings?experience=trading");
   }
 
-  const { data: businesses, error: businessError } = await supabase
-    .from("businesses")
-    .select("id, name, business_type")
-    .eq("business_type", "trading")
-    .order("created_at", { ascending: true })
-    .limit(1);
-  if (businessError) {
+  // Resolve the workspace through the signed-in user's membership.
+  // If an account belongs to multiple trading shops, never guess which data to show.
+  const { data: memberships, error: membershipError } = await supabase
+    .from("business_members")
+    .select("role, businesses!inner(id, name, business_type)")
+    .eq("user_id", user.id)
+    .eq("businesses.business_type", "trading")
+    .limit(2);
+
+  if (membershipError) {
     return <main className="setup-shell"><h1>Retailer dashboard unavailable</h1><p>We could not load your authorized trading workspace. Please try again later.</p></main>;
   }
-  const business = businesses?.[0];
-  if (!business) redirect("/setup?type=trading");
+  if (!memberships?.length) redirect("/setup?type=trading");
+  if (memberships.length > 1) {
+    return <main className="setup-shell"><h1>Choose your trading workspace</h1><p>This account belongs to more than one trading business. Select a workspace before viewing business data.</p></main>;
+  }
 
-  const [{ data: membership, error: membershipError }, { data: products, error: productsError }, { count: customerCount, error: customerError }] = await Promise.all([
-    supabase.from("business_members").select("role").eq("business_id", business.id).eq("user_id", user.id).maybeSingle(),
-    supabase.from("products").select("id, name, sku, unit_price, stock_quantity, low_stock_threshold").eq("business_id", business.id).order("name", { ascending: true }),
-    supabase.from("customers").select("id", { count: "exact", head: true }).eq("business_id", business.id),
+  const membership = memberships[0];
+  const business = membership.businesses as unknown as {
+    id: string; name: string; business_type: "trading" | "tailor";
+  };
+  if (business.business_type !== "trading") redirect("/settings?experience=trading");
+
+  const [{ data: products, error: productsError }, { count: customerCount, error: customerError }] = await Promise.all([
+    supabase.from("products")
+      .select("id, name, sku, unit_price, stock_quantity, low_stock_threshold")
+      .eq("business_id", business.id)
+      .order("name", { ascending: true }),
+    supabase.from("customers")
+      .select("id", { count: "exact", head: true })
+      .eq("business_id", business.id),
   ]);
 
-  if (membershipError || !membership) {
-    return <main className="setup-shell"><h1>Access restricted</h1><p>This account is not a member of the selected trading workspace.</p></main>;
-  }
   if (productsError || customerError) {
     return <main className="setup-shell"><h1>Trading data unavailable</h1><p>We could not load all dashboard data. Refresh the page or contact your workspace administrator.</p></main>;
   }
