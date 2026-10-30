@@ -56,7 +56,7 @@ export function RetailerDashboard({
           <span className="trading-live-dot">LIVE DATA</span>
         </div>
         <strong className="trading-sales-value">
-          {hasSalesSource ? naira(todayPayments) : "—"}
+          {"—"}
         </strong>
         <div className="trading-hero-bottom">
           <span>{hasSalesSource ? `${todayPaymentCount} transactions` : "Sales tracking data not connected yet"}</span>
