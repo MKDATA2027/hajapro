@@ -53,7 +53,7 @@ export function RetailerDashboard({
       <section className="trading-hero" aria-label="Sales today">
         <div className="trading-hero-top">
           <span>SALES TODAY</span>
-          <span className="trading-live-dot">LIVE DATA</span>
+          <span className="trading-live-dot">AWAITING DATA</span>
         </div>
         <strong className="trading-sales-value">
           {"—"}
