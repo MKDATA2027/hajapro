@@ -7,7 +7,7 @@ import { Camera, Plus, Search, Users } from "lucide-react";
 
 const initialState: CustomerFormState = {};
 export type CustomerRecord = {
-  id: string; full_name: string; phone: string | null; email: string | null; created_at: string;
+  id: string; full_name: string; phone: string | null; email: string | null; notes: string | null; created_at: string;
   customer_photo_url: string | null; garment_photo_url: string | null;
 };
 export type MeasurementRecord = { id: string; customer_id: string; label: string; measurement_values: Record<string, number>; unit: "inches" | "cm"; recorded_at: string; notes: string | null };
@@ -41,7 +41,7 @@ export function CustomersPanel({ businessId, initialCustomers, initialMeasuremen
     </form>}
     <div className="dashboard-customer-toolbar"><label className="dashboard-customer-search"><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={ha ? "Nemo kwastoma" : "Search customers"} aria-label={ha ? "Nemo kwastoma" : "Search customers"}/></label><span>{filtered.length} {ha ? "kwastoma" : filtered.length===1 ? "customer" : "customers"}</span></div>
     {filtered.length ? <div className="dashboard-customer-list">{filtered.map(customer=><article className="dashboard-customer-row" key={customer.id}>
-      <span className="dashboard-customer-avatar"><Users size={18}/></span><div className="dashboard-customer-details"><strong>{customer.full_name}</strong><span>{customer.phone||customer.email||(ha?"Ba a saka bayanin tuntuɓa ba":"No contact details added")}</span></div>
+      <span className="dashboard-customer-avatar"><Users size={18}/></span><div className="dashboard-customer-details"><strong>{customer.full_name}</strong><span>{customer.phone || (ha ? "Babu lambar waya" : "No phone number")} · {customer.email || (ha ? "Babu imel" : "No email")}</span>{customer.notes && <small className="dashboard-customer-notes">{customer.notes}</small>}</div>
       <span className="dashboard-customer-date">{new Date(customer.created_at).toLocaleDateString(ha?"ha-NG":"en-NG")}</span>
       <button className="dashboard-customer-measure-button" type="button" onClick={()=>setMeasurementCustomer(v=>v===customer.id?null:customer.id)}>{measurementCustomer===customer.id?(ha?"Rufe":"Close"):(ha?"Ma'auni":"Measurements")}</button>
       {measurementCustomer===customer.id&&<div className="dashboard-measurement-area">
