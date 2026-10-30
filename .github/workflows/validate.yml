@@ -5,6 +5,7 @@ on:
     branches:
       - feature/official-hajapro-logo
       - feature/google-auth-dashboard-integration
+      - work/hajapro-completion-20261030
   pull_request:
 
 permissions:
