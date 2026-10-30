@@ -2,6 +2,14 @@ import { redirect } from "next/navigation";
 import { DashboardHome } from "@/app/workspace/dashboard-home";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/database.types";
+
+function normalizeMeasurements(value: Json): Record<string, number> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value).filter((entry): entry is [string, number] => typeof entry[1] === "number"),
+  );
+}
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +45,11 @@ export default async function WorkspacePage() {
     return { id: customer.id, full_name: customer.full_name, phone: customer.phone, email: customer.email, created_at: customer.created_at,
       customer_photo_url: customerPhoto.data?.signedUrl ?? null, garment_photo_url: garmentPhoto.data?.signedUrl ?? null };
   }));
+  const measurements = (measurementRows ?? []).map(row => ({
+    ...row,
+    measurement_values: normalizeMeasurements(row.measurement_values),
+    unit: row.unit === "cm" ? "cm" as const : "inches" as const,
+  }));
   return <main className="workspace-page dashboard-page"><DashboardHome businessType={business.business_type} businessId={business.id} customers={customers}
-    measurements={measurementRows ?? []} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} notifications={notificationRows ?? []}/></main>;
+    measurements={measurements} orders={orderRows ?? []} products={productRows ?? []} payments={paymentRows ?? []} notifications={notificationRows ?? []}/></main>;
 }
