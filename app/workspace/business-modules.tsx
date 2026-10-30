@@ -21,7 +21,8 @@ const empty: ModuleActionState = {};
 
 function Feedback({state}:{state:ModuleActionState}) { return <>{state.error && <p className="dashboard-form-error" role="alert">{state.error}</p>}{state.success && <p className="dashboard-form-success" role="status">{state.success}</p>}</>; }
 
-export function BusinessModulePanel({language,module,initialCreateOrder=false,businessId,customers,orders,products,payments,notifications}:Props) {\n const t = (ha: string, en: string) => language === "ha" ? ha : en;
+export function BusinessModulePanel({language,module,initialCreateOrder=false,businessId,customers,orders,products,payments,notifications}:Props) {
+ const t = (ha: string, en: string) => language === "ha" ? ha : en;
  const [showOrder,setShowOrder]=useState(initialCreateOrder);
  const [showProduct,setShowProduct]=useState(false);
  const [orderState,orderAction,orderPending]=useActionState(createOrderAction,empty);
