@@ -360,3 +360,192 @@ grant select, insert, update on public.purchases, public.purchase_items, public.
 grant select, insert, update on public.expenses to authenticated;
 grant select, insert, update, delete on public.business_member_permissions to authenticated;
 grant usage, select on sequence public.sales_sale_number_seq, public.purchases_purchase_number_seq to authenticated;
+
+
+-- A single database transaction creates a sale, records its snapshots, deducts stock,
+-- writes stock movements, and records any money received. Direct table writes are
+-- intentionally revoked below so callers cannot bypass these invariants.
+create or replace function public.create_trading_sale(
+  p_business_id uuid,
+  p_customer_id uuid,
+  p_items jsonb,
+  p_payment_amount numeric default 0,
+  p_payment_method text default 'cash',
+  p_reference text default null,
+  p_note text default null
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_user_id uuid := (select auth.uid());
+  v_sale_id uuid;
+  v_subtotal numeric(12,2);
+  v_payment numeric(12,2) := coalesce(p_payment_amount, 0);
+  v_item record;
+  v_product public.products%rowtype;
+  v_unit_price numeric(12,2);
+  v_quantity numeric(12,2);
+  v_unit_cost numeric(12,2);
+begin
+  if v_user_id is null then raise exception 'Authentication required'; end if;
+  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
+    raise exception 'At least one sale item is required';
+  end if;
+  if v_payment < 0 then raise exception 'Payment cannot be negative'; end if;
+  if p_payment_method not in ('cash','bank_transfer','pos','other') then
+    raise exception 'Unsupported payment method';
+  end if;
+  if not exists (
+    select 1 from public.businesses b
+    where b.id = p_business_id and b.business_type = 'trading'
+  ) then raise exception 'Trading business not found'; end if;
+  if not public.has_business_permission(p_business_id, 'sales.create') then
+    raise exception 'You do not have permission to create sales';
+  end if;
+  if p_customer_id is not null and not exists (
+    select 1 from public.customers c
+    where c.id = p_customer_id and c.business_id = p_business_id
+  ) then raise exception 'Customer does not belong to this business'; end if;
+
+  -- Lock every selected product before validating stock to prevent overselling
+  -- when two cashiers check out simultaneously.
+  for v_item in
+    select distinct (x->>'product_id')::uuid as product_id
+    from jsonb_array_elements(p_items) x
+    order by 1
+  loop
+    select * into v_product
+    from public.products p
+    where p.id = v_item.product_id and p.business_id = p_business_id
+      and p.archived_at is null
+    for update;
+    if not found then raise exception 'A selected product is unavailable'; end if;
+  end loop;
+
+  if exists (
+    select 1
+    from (
+      select (x->>'product_id')::uuid product_id,
+             sum((x->>'quantity')::numeric) quantity
+      from jsonb_array_elements(p_items) x
+      group by (x->>'product_id')::uuid
+    ) requested
+    left join public.products p
+      on p.id = requested.product_id and p.business_id = p_business_id
+    where p.id is null
+       or requested.quantity <= 0
+       or requested.quantity > p.stock_quantity
+  ) then raise exception 'Insufficient stock or invalid quantity'; end if;
+
+  if exists (
+    select 1 from jsonb_array_elements(p_items) x
+    where not (x ? 'product_id') or not (x ? 'quantity') or not (x ? 'unit_price')
+       or (x->>'quantity')::numeric <= 0 or (x->>'unit_price')::numeric < 0
+  ) then raise exception 'Invalid sale item'; end if;
+
+  select round(sum((x->>'quantity')::numeric * (x->>'unit_price')::numeric), 2)
+    into v_subtotal
+  from jsonb_array_elements(p_items) x;
+  if v_payment > v_subtotal then raise exception 'Payment exceeds sale total'; end if;
+  if v_payment < v_subtotal and p_customer_id is null then
+    raise exception 'A named customer is required for credit or part payment';
+  end if;
+
+  insert into public.sales (
+    business_id, customer_id, status, subtotal, discount_amount, total_amount,
+    note, created_by
+  ) values (
+    p_business_id, p_customer_id,
+    case when v_payment = v_subtotal then 'completed'
+         when v_payment > 0 then 'part_paid' else 'credit' end,
+    v_subtotal, 0, v_subtotal, nullif(btrim(p_note), ''), v_user_id
+  ) returning id into v_sale_id;
+
+  for v_item in
+    select (x->>'product_id')::uuid product_id,
+           sum((x->>'quantity')::numeric) quantity,
+           (x->>'unit_price')::numeric unit_price
+    from jsonb_array_elements(p_items) x
+    group by (x->>'product_id')::uuid, (x->>'unit_price')::numeric
+  loop
+    select * into v_product from public.products
+    where id = v_item.product_id and business_id = p_business_id;
+    select coalesce(pc.current_unit_cost, 0) into v_unit_cost
+    from (select 1) seed
+    left join public.product_costs pc
+      on pc.product_id = v_item.product_id and pc.business_id = p_business_id;
+
+    insert into public.sale_items (
+      business_id, sale_id, product_id, product_name_snapshot,
+      quantity, unit_price, unit_cost_snapshot, line_total
+    ) values (
+      p_business_id, v_sale_id, v_item.product_id, v_product.name,
+      v_item.quantity, v_item.unit_price, coalesce(v_unit_cost, 0),
+      round(v_item.quantity * v_item.unit_price, 2)
+    );
+
+    update public.products
+    set stock_quantity = stock_quantity - v_item.quantity,
+        updated_at = now()
+    where id = v_item.product_id and business_id = p_business_id;
+
+    insert into public.inventory_movements (
+      business_id, product_id, movement_type, quantity, note, created_by
+    ) values (
+      p_business_id, v_item.product_id, 'stock_out', v_item.quantity,
+      'Trading sale ' || v_sale_id::text, v_user_id
+    );
+  end loop;
+
+  if v_payment > 0 then
+    insert into public.sale_payments (
+      business_id, sale_id, amount, payment_method, reference, note, recorded_by
+    ) values (
+      p_business_id, v_sale_id, v_payment, p_payment_method,
+      nullif(btrim(p_reference), ''), 'Manually recorded at checkout', v_user_id
+    );
+  end if;
+
+  insert into public.business_audit_logs (
+    business_id, actor_id, action, entity_type, entity_id, new_values
+  ) values (
+    p_business_id, v_user_id, 'sale.created', 'sale', v_sale_id,
+    jsonb_build_object('total_amount', v_subtotal, 'payment_amount', v_payment,
+                       'customer_id', p_customer_id)
+  );
+  return v_sale_id;
+end;
+$$;
+
+revoke all on function public.create_trading_sale(uuid, uuid, jsonb, numeric, text, text, text) from public, anon;
+grant execute on function public.create_trading_sale(uuid, uuid, jsonb, numeric, text, text, text) to authenticated;
+
+-- Audit trail for financial, stock and permission changes.
+create table if not exists public.business_audit_logs (
+  id uuid primary key default gen_random_uuid(),
+  business_id uuid not null references public.businesses(id) on delete cascade,
+  actor_id uuid not null references auth.users(id),
+  action text not null check (char_length(action) between 1 and 100),
+  entity_type text not null check (char_length(entity_type) between 1 and 80),
+  entity_id uuid,
+  old_values jsonb,
+  new_values jsonb,
+  created_at timestamptz not null default now()
+);
+create index if not exists business_audit_logs_business_created_idx
+  on public.business_audit_logs(business_id, created_at desc);
+alter table public.business_audit_logs enable row level security;
+create policy "Authorized members read audit log" on public.business_audit_logs
+  for select to authenticated
+  using (public.has_business_permission(business_id, 'reports.view'));
+revoke all on public.business_audit_logs from anon, authenticated;
+grant select on public.business_audit_logs to authenticated;
+grant insert on public.business_audit_logs to authenticated;
+
+-- The sale RPC is the only authenticated write path for sales and their line items.
+revoke insert, update, delete on public.sales, public.sale_items from authenticated;
+revoke insert, update, delete on public.sale_payments from authenticated;
+revoke insert, update, delete on public.inventory_movements from authenticated;
