@@ -44,12 +44,9 @@ export default async function RetailerPage() {
     <main className="workspace-page dashboard-page trading-page">
       <RetailerDashboard
         businessName={business.name}
-        businessId={business.id}
-        userEmail={user.email ?? ""}
         role={membership.role}
         products={products ?? []}
         customerCount={customerCount ?? 0}
-        todayPayments={0}
         todayPaymentCount={0}
         hasSalesSource={false}
       />
