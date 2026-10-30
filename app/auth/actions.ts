@@ -1,5 +1,4 @@
 "use server";
-
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -23,25 +22,15 @@ export async function signInWithGoogleAction(formData: FormData) {
   redirect(data.url);
 }
 
-/**
- * An already authenticated user can choose a different HajaPro experience
- * without repeating Google authentication. The selected intent is persisted
- * in Supabase user metadata and the callback's role routing is reused.
- */
 export async function selectExperienceAction(formData: FormData) {
   const parsed = intentSchema.safeParse(formData.get("intent"));
   if (!parsed.success) redirect("/settings?error=invalid-experience");
-
   if (!getSupabaseConfig()) redirect("/settings?error=not-configured");
   const supabase = await createSupabaseServerClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) redirect("/settings?error=session-error");
-
-  const { error } = await supabase.auth.updateUser({
-    data: { intent: parsed.data },
-  });
+  const { error } = await supabase.auth.updateUser({ data: { intent: parsed.data } });
   if (error) redirect("/settings?error=account-setup");
-
   if (parsed.data === "customer") redirect("/customer");
   redirect(`/setup?type=${parsed.data}`);
 }
