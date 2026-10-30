@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - feature/official-hajapro-logo
+      - feature/google-auth-dashboard-integration
   pull_request:
-    branches:
-      - main
 
 permissions:
   contents: read
