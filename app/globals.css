@@ -1497,3 +1497,41 @@ body, .setup-page, .workspace-page, .dashboard-page,
   .role-session { align-items: flex-start; }
   .role-session form { margin-left: 0; }
 }
+
+
+/* Single-choice business setup summary */
+.setup-selected-experience {
+  min-height: 76px;
+  margin: 23px 0 27px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #b9d9cc;
+  border-radius: 9px;
+  background: #f4faf7;
+  color: #0b3332;
+}
+.setup-selected-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: #e3f3eb;
+  color: #087f5b;
+}
+.setup-selected-experience > span:nth-child(2) {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.setup-selected-experience strong { font-size: 14px; }
+.setup-selected-experience small { color: #526765; font-size: 11px; }
+.setup-selected-experience > svg:last-child {
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: #087f5b;
+}
+.setup-form > .button { width: 100%; min-height: 54px; }
