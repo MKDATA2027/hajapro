@@ -9,7 +9,7 @@ export async function createSupabaseServerClient() {
 
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(config.url, config.publishableKey, {
+  return createServerClient<Database, "public">(config.url, config.publishableKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
