@@ -24,7 +24,7 @@ export default async function WorkspacePage() {
   if (!businesses?.length) redirect("/setup");
   const business = businesses[0];
   const [{ data: customerRows }, { data: measurementRows }, { data: orderRows }, { data: productRows }, { data: paymentRows }, { data: notificationRows }] = await Promise.all([
-    supabase.from("customers").select("id, full_name, phone, email, created_at").eq("business_id", business.id).order("created_at", { ascending: false }),
+    supabase.from("customers").select("id, full_name, phone, email, notes, created_at").eq("business_id", business.id).order("created_at", { ascending: false }),
     supabase.from("measurements").select("id, customer_id, label, measurement_values, unit, recorded_at, notes").eq("business_id", business.id).order("recorded_at", { ascending: false }),
     supabase.from("orders").select("id, title, status, total_amount, deposit_amount, due_date, created_at, customer_id").eq("business_id", business.id).order("created_at", { ascending: false }),
     supabase.from("products").select("id, name, sku, category, unit_price, stock_quantity, low_stock_threshold").eq("business_id", business.id).order("name", { ascending: true }),
@@ -42,7 +42,7 @@ export default async function WorkspacePage() {
       paths?.customer_photo_path ? supabase.storage.from("customer-media").createSignedUrl(paths.customer_photo_path, 3600) : Promise.resolve({ data: null }),
       paths?.garment_photo_path ? supabase.storage.from("customer-media").createSignedUrl(paths.garment_photo_path, 3600) : Promise.resolve({ data: null }),
     ]);
-    return { id: customer.id, full_name: customer.full_name, phone: customer.phone, email: customer.email, created_at: customer.created_at,
+    return { id: customer.id, full_name: customer.full_name, phone: customer.phone, email: customer.email, notes: customer.notes, created_at: customer.created_at,
       customer_photo_url: customerPhoto.data?.signedUrl ?? null, garment_photo_url: garmentPhoto.data?.signedUrl ?? null };
   }));
   const measurements = (measurementRows ?? []).map(row => ({
