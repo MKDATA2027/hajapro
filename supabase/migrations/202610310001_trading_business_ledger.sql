@@ -205,22 +205,25 @@ create or replace function public.has_business_permission(p_business_id uuid, p_
 returns boolean
 language sql
 stable
-security invoker
+security definer
 set search_path = ''
-as $$
-  select exists (
-    select 1 from public.business_members m
-    where m.business_id = p_business_id
-      and m.user_id = (select auth.uid())
-      and m.role = 'owner'
-  ) or exists (
-    select 1 from public.business_member_permissions p
-    where p.business_id = p_business_id
-      and p.user_id = (select auth.uid())
-      and p.permission = p_permission
-      and p.allowed = true
-  );
-$$;
+as $
+  select (select auth.uid()) is not null
+    and (
+      exists (
+        select 1 from public.business_members m
+        where m.business_id = p_business_id
+          and m.user_id = (select auth.uid())
+          and m.role = 'owner'
+      ) or exists (
+        select 1 from public.business_member_permissions p
+        where p.business_id = p_business_id
+          and p.user_id = (select auth.uid())
+          and p.permission = p_permission
+          and p.allowed = true
+      )
+    );
+$;
 revoke all on function public.has_business_permission(uuid, text) from public, anon;
 grant execute on function public.has_business_permission(uuid, text) to authenticated;
 
