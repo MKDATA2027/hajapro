@@ -38,7 +38,8 @@ export function BusinessModulePanel({language,module,initialCreateOrder=false,bu
  const outstanding = Math.max(0,revenue-paid);
  const overdue = orders.filter(o=>o.due_date && o.due_date < new Date().toISOString().slice(0,10) && !["completed","cancelled"].includes(o.status));
  const lowStock = products.filter(p=>Number(p.stock_quantity)<=Number(p.low_stock_threshold));
- const titlesEn: Record<string,string> = { orders: "Orders", products: "Products", payments: "Wallet · Payments", reports: "Reports", overdue: "Overdue work", ai: "HAJAPRO AI", notifications: "Notifications" };\n const heading = language === "ha" ? (titles[module] ?? module) : (titlesEn[module] ?? module);
+ const titlesEn: Record<string,string> = { orders: "Orders", products: "Products", payments: "Wallet · Payments", reports: "Reports", overdue: "Overdue work", ai: "HAJAPRO AI", notifications: "Notifications" };
+ const heading = language === "ha" ? (titles[module] ?? module) : (titlesEn[module] ?? module);
  return <section className="haja-module-workspace">
   <header className="haja-module-heading"><div><span className="haja-module-eyebrow">{t("HAJAPRO KASUWANCI", "HAJAPRO BUSINESS")}</span><h1>{heading}</h1><p>{module==="orders"?t("Ƙirƙira da bibiyar oda daga farko har ƙarshe.","Create and track orders from start to finish."):module==="products"?t("Sarrafa kayayyaki, farashi da stock.","Manage products, prices and stock."):module==="payments"?t("Duba kuɗin oda da bayanan biyan kuɗi.","Review order balances and payment records."):module==="reports"?t("Rahotanni daga bayanan da aka adana a kasuwancinka.","Reports based on your saved business data."):module==="overdue"?t("Oda da suka wuce ranar kammalawa.","Orders past their due date."):module==="ai"?t("Taimakon kasuwanci bisa bayanan da ke cikin wannan dashboard.","Business insights based on this dashboard data.") : t("Duba saƙonnin kasuwanci.","Review business notifications.")}</p></div></header>
   {module==="orders" && <>
