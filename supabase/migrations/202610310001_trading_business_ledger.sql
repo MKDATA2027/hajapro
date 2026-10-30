@@ -207,7 +207,7 @@ language sql
 stable
 security definer
 set search_path = ''
-as $
+as $function$
   select (select auth.uid()) is not null
     and (
       exists (
@@ -223,7 +223,7 @@ as $
           and p.allowed = true
       )
     );
-$;
+$function$;
 revoke all on function public.has_business_permission(uuid, text) from public, anon;
 grant execute on function public.has_business_permission(uuid, text) to authenticated;
 
@@ -462,10 +462,16 @@ begin
   ) then raise exception 'Insufficient stock or invalid quantity'; end if;
 
   if exists (
-    select 1 from jsonb_array_elements(p_items) x
+    select 1
+    from jsonb_array_elements(p_items) x
+    left join public.products p
+      on p.id = (x->>'product_id')::uuid and p.business_id = p_business_id
     where not (x ? 'product_id') or not (x ? 'quantity') or not (x ? 'unit_price')
-       or (x->>'quantity')::numeric <= 0 or (x->>'unit_price')::numeric < 0
-  ) then raise exception 'Invalid sale item'; end if;
+       or (x->>'quantity')::numeric <= 0
+       or (x->>'unit_price')::numeric < 0
+       or p.id is null
+       or (x->>'unit_price')::numeric <> p.unit_price
+  ) then raise exception 'Invalid item or unauthorized price override'; end if;
 
   select round(sum((x->>'quantity')::numeric * (x->>'unit_price')::numeric), 2)
     into v_subtotal
