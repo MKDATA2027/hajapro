@@ -1,10 +1,6 @@
-import { AuthForm } from "@/components/auth-form";
-
-export default async function SignInPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
-  const { error } = await searchParams;
-  return <AuthForm mode="sign-in" intent="tailor" error={error} />;
+import { redirect } from "next/navigation";
+export default async function SignInPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
+  const params = await searchParams;
+  const type = params.type === "trading" || params.type === "customer" ? params.type : "tailor";
+  redirect(`/settings?experience=${type}`);
 }
