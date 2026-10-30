@@ -54,11 +54,16 @@ export async function createCustomerAction(_previous: CustomerFormState, formDat
     return { error: garmentPhoto.error };
   }
 
-  const { error } = await supabase.from("customers").insert({
+  const customerRow: {
+    business_id: string; full_name: string; phone: string | null; email: string | null;
+    notes: string | null; created_by: string; customer_photo_path?: string | null; garment_photo_path?: string | null;
+  } = {
     business_id: membership.business_id, full_name: fullName, phone: phone || null,
     email: email || null, notes: notes || null, created_by: user.id,
-    customer_photo_path: customerPhoto.path ?? null, garment_photo_path: garmentPhoto.path ?? null,
-  });
+  };
+  if (customerPhoto.path) customerRow.customer_photo_path = customerPhoto.path;
+  if (garmentPhoto.path) customerRow.garment_photo_path = garmentPhoto.path;
+  const { error } = await supabase.from("customers").insert(customerRow);
   if (error) {
     const paths = [customerPhoto.path, garmentPhoto.path].filter((value): value is string => Boolean(value));
     if (paths.length) await supabase.storage.from(PHOTO_BUCKET).remove(paths);
