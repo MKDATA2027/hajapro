@@ -21,7 +21,7 @@ const setupErrorMessages: Record<string, string> = {
 export default async function SetupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; type?: string }>;
 }) {
   if (!getSupabaseConfig()) {
     return (
@@ -38,7 +38,8 @@ export default async function SetupPage({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/sign-in");
 
-  const { error } = await searchParams;
+  const { error, type } = await searchParams;
+  const selectedType = type === "trading" ? "trading" : "tailor";
   if (user.user_metadata?.intent === "customer") {
     return (
       <main className="setup-shell setup-customer">
@@ -79,12 +80,12 @@ export default async function SetupPage({
             <legend>Choose your workspace</legend>
             <div className="type-options">
               <label className="type-option">
-                <input type="radio" name="type" value="tailor" defaultChecked required />
+                <input type="radio" name="type" value="tailor" defaultChecked={selectedType === "tailor"} required />
                 <span className="type-icon"><Scissors size={20} /></span>
                 <span className="type-copy"><strong>Tailoring</strong><small>Orders, measurements and production</small></span>
               </label>
               <label className="type-option">
-                <input type="radio" name="type" value="trading" required />
+                <input type="radio" name="type" value="trading" defaultChecked={selectedType === "trading"} required />
                 <span className="type-icon"><ShoppingBasket size={20} /></span>
                 <span className="type-copy"><strong>Trading & retail</strong><small>Products, stock and sales</small></span>
               </label>
