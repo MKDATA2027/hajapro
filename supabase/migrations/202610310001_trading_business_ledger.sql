@@ -627,6 +627,12 @@ begin
     where not (x ? 'product_id') or not (x ? 'quantity') or not (x ? 'unit_cost')
        or (x->>'quantity')::numeric <= 0 or (x->>'unit_cost')::numeric < 0
   ) then raise exception 'Invalid purchase item'; end if;
+  if exists (
+    select (x->>'product_id')::uuid
+    from jsonb_array_elements(p_items) x
+    group by (x->>'product_id')::uuid
+    having count(distinct (x->>'unit_cost')::numeric) > 1
+  ) then raise exception 'A product must have one unit cost per purchase'; end if;
 
   select round(sum((x->>'quantity')::numeric * (x->>'unit_cost')::numeric), 2)
     into v_total
@@ -711,4 +717,3 @@ grant execute on function public.create_trading_purchase(uuid, uuid, jsonb, nume
 -- The sale RPC is the only authenticated write path for sales and their line items.
 revoke insert, update, delete on public.sales, public.sale_items from authenticated;
 revoke insert, update, delete on public.sale_payments from authenticated;
-revoke insert, update, delete on public.inventory_movements from authenticated;
