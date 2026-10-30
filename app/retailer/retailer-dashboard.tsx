@@ -18,6 +18,9 @@ type Props = {
   customerCount: number;
   todayPaymentCount: number;
   hasSalesSource: boolean;
+  canViewInventoryValue: boolean;
+  canViewReports: boolean;
+  canViewProfit: boolean;
 };
 
 const money = (value: number) => new Intl.NumberFormat("en-NG", {
@@ -27,6 +30,7 @@ const money = (value: number) => new Intl.NumberFormat("en-NG", {
 export function RetailerDashboard({
   businessName, role, products, customerCount,
   todayPaymentCount, hasSalesSource,
+  canViewInventoryValue, canViewReports, canViewProfit,
 }: Props) {
   const [showLowStock, setShowLowStock] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
@@ -36,8 +40,7 @@ export function RetailerDashboard({
   const inventoryRetailValue = products.reduce(
     (sum, p) => sum + Number(p.unit_price) * Number(p.stock_quantity), 0,
   );
-  const canViewReports = role === "owner" || role === "manager";
-  const naira = (value: number) => money(value);
+   const naira = (value: number) => money(value);
 
   return (
     <main className="trading-dashboard" aria-label="Trading business dashboard">
@@ -90,7 +93,7 @@ export function RetailerDashboard({
         <div className="trading-tile trading-inventory-tile">
           <span className="trading-tile-icon"><Boxes size={22} /></span>
           <strong>Inventory</strong>
-          <small>{products.length ? naira(inventoryRetailValue) + " retail value" : "No products yet"}</small>
+          <small>{!products.length ? "No products yet" : canViewInventoryValue ? naira(inventoryRetailValue) + " retail value" : `${products.reduce((sum, product) => sum + Number(product.stock_quantity), 0)} units in stock`}</small>
           {lowStock.length > 0 && <i className="trading-tile-alert-count">{lowStock.length}</i>}
         </div>
         <div className="trading-tile trading-customers-tile">
@@ -114,7 +117,7 @@ export function RetailerDashboard({
         {canViewReports ? (
           <div className="trading-mini-tile trading-reports-tile">
             <BarChart3 size={20} />
-            <span><strong>Reports</strong><small>Calculated profit —</small></span>
+            <span><strong>Reports</strong><small>{canViewProfit ? "Estimated profit —" : "Sales and activity reports"}</small></span>
             <ChevronRight size={16} />
           </div>
         ) : (
