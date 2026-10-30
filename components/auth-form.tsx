@@ -12,6 +12,7 @@ const errorMessages: Record<string, string> = {
   authentication: "We could not sign you in with those details.",
   registration: "We could not create the account. If you already registered, try signing in.",
   workspace: "We could not verify the selected workspace. Contact support.",
+  "role-mismatch": "This account belongs to a different HajaPro experience. Sign in using its original role.",
 };
 
 export function AuthForm({ mode, error, intent }: AuthFormProps) {
