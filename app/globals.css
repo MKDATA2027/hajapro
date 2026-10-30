@@ -239,3 +239,23 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .planned-strip p { flex-basis: calc(100% - 92px); }
   .setup-customer h1 { font-size: 36px; }
 }
+/* Isolated role experiences and account settings */
+.role-shell,.experience-shell,.verify-shell { min-height:100vh; padding:42px max(22px,8vw); background:var(--paper); }
+.role-shell > .wordmark,.verify-shell > .wordmark { display:inline-block; margin-bottom:70px; }
+.role-shell h1,.verify-card h1,.experience-content h1 { margin:0; font-family:var(--display); font-size:clamp(38px,5vw,58px); font-weight:400; }
+.role-lead,.experience-content > p:not(.eyebrow),.verify-card > p:not(.eyebrow) { max-width:650px; color:var(--muted); font-size:13px; line-height:1.8; }
+.role-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:38px 0; }
+.role-card { padding:24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; background:var(--white); border:1px solid var(--line); }
+.role-card h2 { margin:0; font-family:var(--display); font-size:27px; font-weight:400; }
+.role-card p { flex:1; min-height:48px; color:var(--muted); font-size:12px; line-height:1.7; }
+.role-auth-link { color:var(--green-dark); font-size:12px; font-weight:800; text-decoration:underline; text-underline-offset:3px; }
+.experience-header { height:64px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+.experience-content { width:min(100%,720px); margin:12vh auto 0; padding:42px; background:var(--white); border:1px solid var(--line); }
+.experience-content > p:not(.eyebrow) { margin:20px 0 30px; }
+.experience-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin:26px 0; }
+.experience-actions form { display:inline-flex; }
+.signed-in-note { width:100%; color:var(--muted); font-size:12px; }
+.verify-card { width:min(100%,460px); margin:0 auto; padding:35px; background:var(--white); border:1px solid var(--line); }
+.verify-card > p:not(.eyebrow) { margin:16px 0 24px; }
+.verify-card .auth-fields input[name="token"] { font-size:25px; letter-spacing:9px; text-align:center; }
+@media(max-width:800px) { .role-grid { grid-template-columns:1fr; } .role-shell > .wordmark,.verify-shell > .wordmark { margin-bottom:45px; } .experience-content { margin-top:7vh; padding:25px; } .verify-card { padding:25px 20px; } }
