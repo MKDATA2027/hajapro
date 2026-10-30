@@ -33,6 +33,12 @@ export async function signInAction(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword(credentials.data);
   if (error) redirect(`/sign-in?type=${intent.data}&error=authentication`);
+  const { data: { user } } = await supabase.auth.getUser();
+  const accountIntent = user?.user_metadata?.intent;
+  if (accountIntent && accountIntent !== intent.data) {
+    await supabase.auth.signOut();
+    redirect(`/sign-in?type=${intent.data}&error=role-mismatch`);
+  }
 
   if (intent.data !== "customer") {
     const businessType = intent.data === "trading" ? "trading" : "tailor";
