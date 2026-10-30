@@ -13,8 +13,8 @@ import {
 type ModuleKey = "overview" | "customers" | "orders" | "products" | "reports" | "payments" | "overdue" | "notifications" | "ai" | "settings";
 
 
-export function DashboardHome({ businessType, businessId, customers, measurements, orders, products, payments, notifications }: {
-  businessType: string; businessId: string;
+export function DashboardHome({ businessType, businessId, userEmail, customers, measurements, orders, products, payments, notifications }: {
+  businessType: string; businessId: string; userEmail: string;
   customers: CustomerRecord[]; measurements: MeasurementRecord[];
   orders: { id: string; title: string; status: string; total_amount: number | string; deposit_amount: number | string; due_date: string | null; created_at: string; customer_id: string | null }[];
   products: { id: string; name: string; sku: string | null; category: string | null; unit_price: number | string; stock_quantity: number | string; low_stock_threshold: number | string }[];
@@ -23,25 +23,35 @@ export function DashboardHome({ businessType, businessId, customers, measurement
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const [language, setLanguage] = useState<"ha" | "en">("ha");
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   useEffect(() => {
     const applyLanguage = (value: unknown) => {
       if (value === "ha" || value === "en") setLanguage(value);
     };
     applyLanguage(window.localStorage.getItem("hajapro-language"));
+    const savedTheme = window.localStorage.getItem("hajapro-theme");
+    if (savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
     const onStorage = (event: StorageEvent) => {
       if (event.key === "hajapro-language") applyLanguage(event.newValue);
+    };
+    const onThemeChange = (event: Event) => {
+      const value = (event as CustomEvent<unknown>).detail;
+      if (value === "light" || value === "dark") setTheme(value);
     };
     const onLanguageChange = (event: Event) => {
       applyLanguage((event as CustomEvent<unknown>).detail);
     };
     window.addEventListener("storage", onStorage);
     window.addEventListener("hajapro-language-change", onLanguageChange);
+    window.addEventListener("hajapro-theme-change", onThemeChange);
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener("hajapro-language-change", onLanguageChange);
+      window.removeEventListener("hajapro-theme-change", onThemeChange);
     };
   }, []);
   const changeLanguage = (value: "ha" | "en") => { window.localStorage.setItem("hajapro-language", value); setLanguage(value); window.dispatchEvent(new CustomEvent("hajapro-language-change", { detail: value })); };
+  const changeTheme = (value: "light" | "dark") => { window.localStorage.setItem("hajapro-theme", value); setTheme(value); window.dispatchEvent(new CustomEvent("hajapro-theme-change", { detail: value })); };
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
   const currentDate = new Date();
@@ -50,7 +60,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
   const go = (module: ModuleKey) => { setActiveModule(module); setQuickCreateOrder(false); };
 
   return (
-    <div className="haja-dashboard" lang={language}>
+    <div className={`haja-dashboard ${theme === "dark" ? "haja-theme-dark" : "haja-theme-light"}`} lang={language}>
       <header className="haja-header">
         <div className="haja-brand">
           <Image src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={58} height={58} priority unoptimized className="haja-brand-logo" />
@@ -111,8 +121,23 @@ export function DashboardHome({ businessType, businessId, customers, measurement
       ) : activeModule === "settings" ? (
           <main className="haja-subpage haja-settings-panel">
             <h1>{language === "ha" ? "Saituna" : "Settings"}</h1>
-            <p>{language === "ha" ? "Sarrafa harshen app da saitunan asusunka." : "Manage your app language and account settings."}</p>
-            <section className="haja-language-settings" aria-label={language === "ha" ? "Harshen manhaja" : "App language"}><h2>{language === "ha" ? "Harshe" : "Language"}</h2><div><button type="button" className={language === "ha" ? "is-selected" : ""} onClick={() => changeLanguage("ha")}>Hausa</button><button type="button" className={language === "en" ? "is-selected" : ""} onClick={() => changeLanguage("en")}>English</button></div></section>
+            <p>{language === "ha" ? "Sarrafa harshen manhaja, kamanni da asusunka." : "Manage your app language, appearance and account."}</p>
+            <section className="haja-settings-section" aria-label={language === "ha" ? "Asusu" : "Account"}>
+              <h2>{language === "ha" ? "Asusu" : "Account"}</h2>
+              <p className="haja-settings-account">{userEmail}</p>
+              <small>{language === "ha" ? "An shiga ta Google" : "Signed in with Google"}</small>
+            </section>
+            <section className="haja-language-settings" aria-label={language === "ha" ? "Harshen manhaja" : "App language"}>
+              <h2>{language === "ha" ? "Harshen manhaja" : "App language"}</h2>
+              <p>{language === "ha" ? "Zaɓi harshen da za a yi amfani da shi a dukkan dashboard." : "Choose the language used throughout the dashboard."}</p>
+              <div><button type="button" className={language === "ha" ? "is-selected" : ""} aria-pressed={language === "ha"} onClick={() => changeLanguage("ha")}>Hausa</button><button type="button" className={language === "en" ? "is-selected" : ""} aria-pressed={language === "en"} onClick={() => changeLanguage("en")}>English</button></div>
+            </section>
+            <section className="haja-language-settings" aria-label={language === "ha" ? "Kamanin manhaja" : "App appearance"}>
+              <h2>{language === "ha" ? "Kamanin manhaja" : "App appearance"}</h2>
+              <p>{language === "ha" ? "Zaɓi haske ko duhu." : "Choose light or dark appearance."}</p>
+              <div><button type="button" className={theme === "light" ? "is-selected" : ""} aria-pressed={theme === "light"} onClick={() => changeTheme("light")}>{language === "ha" ? "Haske" : "Light"}</button><button type="button" className={theme === "dark" ? "is-selected" : ""} aria-pressed={theme === "dark"} onClick={() => changeTheme("dark")}>{language === "ha" ? "Duhu" : "Dark"}</button></div>
+            </section>
+            <section className="haja-settings-section"><h2>{language === "ha" ? "Game da HAJAPRO" : "About HAJAPRO"}</h2><p>{language === "ha" ? "HAJAPRO — samfurin MK Company." : "HAJAPRO — a product of MK Company."}</p></section>
             <form action={signOutAction}>
               <button className="haja-settings-signout" type="submit"><LogOut size={19} /> {language === "ha" ? "Fita daga asusu" : "Sign out"}</button>
             </form>
