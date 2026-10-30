@@ -23,17 +23,34 @@ export function DashboardHome({ businessType, businessId, customers, measurement
 }) {
   const [activeModule, setActiveModule] = useState<ModuleKey>("overview");
   const [language, setLanguage] = useState<"ha" | "en">("ha");
-  useEffect(() => { const saved = window.localStorage.getItem("hajapro-language"); if (saved === "ha" || saved === "en") setLanguage(saved); }, []);
+  useEffect(() => {
+    const applyLanguage = (value: unknown) => {
+      if (value === "ha" || value === "en") setLanguage(value);
+    };
+    applyLanguage(window.localStorage.getItem("hajapro-language"));
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === "hajapro-language") applyLanguage(event.newValue);
+    };
+    const onLanguageChange = (event: Event) => {
+      applyLanguage((event as CustomEvent<unknown>).detail);
+    };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("hajapro-language-change", onLanguageChange);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("hajapro-language-change", onLanguageChange);
+    };
+  }, []);
   const changeLanguage = (value: "ha" | "en") => { window.localStorage.setItem("hajapro-language", value); setLanguage(value); window.dispatchEvent(new CustomEvent("hajapro-language-change", { detail: value })); };
   const [quickCreateOrder, setQuickCreateOrder] = useState(false);
   const isTailor = businessType === "tailor";
   const currentDate = new Date();
   const currentMonthIncome = payments.filter((payment) => { const paidDate = new Date(payment.verified_at ?? payment.created_at); return payment.status === "verified" && paidDate.getFullYear() === currentDate.getFullYear() && paidDate.getMonth() === currentDate.getMonth(); }).reduce((sum, payment) => sum + Number(payment.amount), 0);
-  const formatMoney = (amount: number) => new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 2 }).format(amount);
+  const formatMoney = (amount: number) => new Intl.NumberFormat(language === "ha" ? "ha-NG" : "en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 2 }).format(amount);
   const go = (module: ModuleKey) => { setActiveModule(module); setQuickCreateOrder(false); };
 
   return (
-    <div className="haja-dashboard">
+    <div className="haja-dashboard" lang={language}>
       <header className="haja-header">
         <div className="haja-brand">
           <Image src="/branding/hajapro-master-logo.jpg" alt="HAJAPRO — Product of MK Company" width={58} height={58} priority unoptimized className="haja-brand-logo" />
@@ -51,7 +68,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
               <span className="haja-income-note">{currentMonthIncome > 0 ? (language === "ha" ? "Kuɗin da aka tabbatar wannan watan" : "Verified payments this month") : (language === "ha" ? "Babu biyan kuɗi da aka tabbatar wannan watan" : "No verified payments this month")}</span>
               <span className="haja-payment-label">{/* Language-aware label defaulting to Hausa */}{language === "ha" ? "Biyan Kuɗi" : "Payment"}</span>
             </span>
-            <span className="haja-wallet-group"><span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span><span className="haja-wallet-label">Wallet</span></span>
+            <span className="haja-wallet-group"><span className="haja-wallet-art"><Wallet size={53} strokeWidth={1.8} /></span><span className="haja-wallet-label">{language === "ha" ? "Aljihun kuɗi" : "Wallet"}</span></span>
           </button>
 
           <button className="haja-overdue-card" type="button" onClick={() => go("overdue")}>
@@ -106,7 +123,7 @@ export function DashboardHome({ businessType, businessId, customers, measurement
         </div>
       )}
 
-      <nav className="haja-bottom-nav" aria-label="Babban menu">
+      <nav className="haja-bottom-nav" aria-label={language === "ha" ? "Babban menu" : "Main menu"}>
         <button className={activeModule === "overview" ? "is-active" : ""} type="button" onClick={() => go("overview")}><Home size={25} fill={activeModule === "overview" ? "currentColor" : "none"} /><span>{language === "ha" ? "Gida" : "Home"}</span></button>
         <button className={activeModule === "orders" ? "is-active" : ""} type="button" onClick={() => go("orders")}><ClipboardList size={25} /><span>{language === "ha" ? "Umarni" : "Orders"}</span></button>
         <button className="haja-add-button" type="button" onClick={() => { setQuickCreateOrder(true); setActiveModule("orders"); }} aria-label={language === "ha" ? "Ƙara sabon umarni" : "Add new order"}><Plus size={36} strokeWidth={2.7} /></button>
