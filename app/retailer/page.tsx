@@ -47,22 +47,15 @@ export default async function RetailerPage() {
       .eq("business_id", business.id),
   ]);
 
-  const { data: permissionRows, error: permissionError } = await supabase
-    .from("business_member_permissions")
-    .select("permission, allowed")
-    .eq("business_id", business.id)
-    .eq("user_id", user.id)
-    .in("permission", ["inventory.view_value", "reports.view", "reports.view_profit"]);
-
-  if (productsError || customerError || permissionError) {
+  if (productsError || customerError) {
     return <main className="setup-shell"><h1>Trading data unavailable</h1><p>We could not load all authorized dashboard data. Refresh the page or contact your workspace administrator.</p></main>;
   }
 
-  const isOwner = membership.role === "owner";
-  const permissions = new Set((permissionRows ?? []).filter((row) => row.allowed).map((row) => row.permission));
-  const canViewInventoryValue = isOwner || permissions.has("inventory.view_value");
-  const canViewReports = isOwner || permissions.has("reports.view");
-  const canViewProfit = isOwner || permissions.has("reports.view_profit");
+  // Until the hosted migration is applied and generated DB types are refreshed,
+  // only owners see sensitive dashboard figures. Staff permissions remain default-deny.
+  const canViewInventoryValue = membership.role === "owner";
+  const canViewReports = membership.role === "owner";
+  const canViewProfit = membership.role === "owner";
 
   return (
     <main className="workspace-page dashboard-page trading-page">
