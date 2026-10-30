@@ -21,16 +21,30 @@ export async function createBusinessAction(formData: FormData) {
     redirect("/setup?error=session-error");
   }
   if (!user) redirect("/sign-in");
-  if (user.user_metadata?.intent === "customer") redirect("/setup?error=customer-only");
+  const intent = user.user_metadata?.intent;
+  if (intent === "customer") redirect("/customer");
+  if (intent !== "tailor" && intent !== "trading") redirect("/settings?error=invalid-experience");
+  if (parsed.data.type !== intent) redirect(`/setup?type=${intent}&error=experience-mismatch`);
+
+  const { data: businesses, error: lookupError } = await supabase
+    .from("businesses")
+    .select("id, business_type")
+    .limit(10);
+  if (lookupError) {
+    console.error("[workspace-setup] workspace lookup failed", safeSupabaseDiagnostic(lookupError));
+    redirect("/setup?error=workspace-check");
+  }
+  if (businesses?.some(row => row.business_type === intent)) redirect("/workspace");
+  if (businesses?.length) redirect(`/setup?type=${intent}&error=workspace-type-conflict`);
 
   const { error } = await supabase.rpc("create_business", {
     p_name: parsed.data.name,
-    p_type: parsed.data.type,
+    p_type: intent,
   });
   if (error) {
     const diagnostic = safeSupabaseDiagnostic(error, [parsed.data.name]);
     console.error("[workspace-setup] create_business RPC failed", diagnostic);
-    redirect(`/setup?error=${classifyWorkspaceSaveError(error.code)}`);
+    redirect(`/setup?type=${intent}&error=${classifyWorkspaceSaveError(error.code)}`);
   }
   redirect("/workspace");
 }
