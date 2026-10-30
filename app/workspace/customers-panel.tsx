@@ -29,7 +29,7 @@ export function CustomersPanel({ businessId, initialCustomers, initialMeasuremen
       <button className="dashboard-primary-button" type="button" onClick={() => setShowForm(v => !v)}><Plus size={16}/>{showForm ? (ha ? "Rufe fom" : "Close form") : (ha ? "Ƙara kwastoma" : "Add customer")}</button>
     </div>
     {showForm && <form className="dashboard-customer-form" action={formAction} encType="multipart/form-data">
-      <input type="hidden" name="business_id" value={businessId}/><h2>{ha ? "Sabon kwastoma" : "New customer"}</h2>
+      <input type="hidden" name="business_id" value={businessId}/><input type="hidden" name="language" value={language}/><h2>{ha ? "Sabon kwastoma" : "New customer"}</h2>
       <label>{ha ? "Cikakken suna" : "Full name"}<input name="full_name" required minLength={2} maxLength={120} placeholder={ha ? "Cikakken sunan kwastoma" : "Customer full name"}/></label>
       <div className="dashboard-form-two"><label>{ha ? "Lambar waya" : "Phone number"}<input name="phone" maxLength={40} type="tel" placeholder={ha ? "Lambar waya" : "Phone number"}/></label>
         <label>{ha ? "Adireshin imel" : "Email address"}<input name="email" maxLength={254} type="email" placeholder="name@example.com"/></label></div>
@@ -46,7 +46,7 @@ export function CustomersPanel({ businessId, initialCustomers, initialMeasuremen
       <button className="dashboard-customer-measure-button" type="button" onClick={()=>setMeasurementCustomer(v=>v===customer.id?null:customer.id)}>{measurementCustomer===customer.id?(ha?"Rufe":"Close"):(ha?"Ma'auni":"Measurements")}</button>
       {measurementCustomer===customer.id&&<div className="dashboard-measurement-area">
         <div className="dashboard-customer-photos">{customer.customer_photo_url&&<figure><Image src={customer.customer_photo_url} alt={ha?"Hoton kwastoma":"Customer photo"} width={240} height={240} unoptimized/><figcaption>{ha?"Hoton kwastoma":"Customer photo"}</figcaption></figure>}{customer.garment_photo_url&&<figure><Image src={customer.garment_photo_url} alt={ha?"Hoton kaya":"Garment photo"} width={240} height={240} unoptimized/><figcaption>{ha?"Hoton kaya":"Garment photo"}</figcaption></figure>}</div>
-        <form className="dashboard-customer-form" action={measurementAction}><h2>{ha?"Sabon ma'auni":"New measurement set"}</h2><input type="hidden" name="customer_id" value={customer.id}/>
+        <form className="dashboard-customer-form" action={measurementAction}><input type="hidden" name="language" value={language}/><h2>{ha?"Sabon ma'auni":"New measurement set"}</h2><input type="hidden" name="customer_id" value={customer.id}/>
           <label>{ha?"Sunan ma'auni":"Set name"}<input name="label" required minLength={2} maxLength={100} placeholder={ha?"Misali: Ma'aunin farko":"e.g. First fitting"}/></label>
           <label>{ha?"Nau'in ma'auni":"Unit"}<select name="unit" defaultValue="inches"><option value="inches">{ha?"Inci":"Inches"}</option><option value="cm">{ha?"Santimita":"Centimetres"}</option></select></label>
           <div className="dashboard-form-two">{(["chest","waist","hip","shoulder","sleeve","length"] as const).map(field=><label key={field}>{({chest:ha?"Kirji":"Chest",waist:ha?"Kugu":"Waist",hip:ha?"Ƙugu":"Hip",shoulder:ha?"Faɗin kafaɗa":"Shoulder",sleeve:ha?"Hannun riga":"Sleeve",length:ha?"Tsawo":"Length"})[field]}<input name={field} type="number" min="0.1" max="1000" step="0.1" placeholder={ha?"Na zaɓi":"Optional"}/></label>)}</div>
