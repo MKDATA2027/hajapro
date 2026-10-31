@@ -177,6 +177,23 @@ create table if not exists public.expenses (
 );
 create index if not exists expenses_business_date_idx on public.expenses(business_id, expense_date desc);
 
+-- Immutable business audit trail. Rows are written by trusted transactional functions.
+create table if not exists public.business_audit_logs (
+  id uuid primary key default gen_random_uuid(),
+  business_id uuid not null references public.businesses(id) on delete cascade,
+  actor_id uuid not null references auth.users(id),
+  action text not null check (char_length(btrim(action)) between 2 and 100),
+  entity_type text not null check (char_length(btrim(entity_type)) between 2 and 80),
+  entity_id uuid,
+  old_values jsonb,
+  new_values jsonb,
+  created_at timestamptz not null default now()
+);
+create index if not exists business_audit_logs_business_created_idx
+  on public.business_audit_logs(business_id, created_at desc);
+create index if not exists business_audit_logs_entity_idx
+  on public.business_audit_logs(business_id, entity_type, entity_id);
+
 -- Permissions are explicit and default-deny for non-owners. Owners always retain full access.
 create table if not exists public.business_member_permissions (
   business_id uuid not null references public.businesses(id) on delete cascade,
@@ -237,6 +254,7 @@ alter table public.purchase_items enable row level security;
 alter table public.supplier_payments enable row level security;
 alter table public.expenses enable row level security;
 alter table public.business_member_permissions enable row level security;
+alter table public.business_audit_logs enable row level security;
 
 create policy "Permitted members read product costs" on public.product_costs
   for select to authenticated using (public.has_business_permission(business_id, 'products.view_cost'));
@@ -334,6 +352,14 @@ create policy "Permitted members update expenses" on public.expenses
   using (public.has_business_permission(business_id, 'expenses.manage'))
   with check (public.has_business_permission(business_id, 'expenses.manage'));
 
+create policy "Owners and report-permitted members read business audit logs"
+  on public.business_audit_logs
+  for select to authenticated
+  using (
+    public.has_business_permission(business_id, 'reports.view')
+    or public.has_business_permission(business_id, 'reports.view_profit')
+  );
+
 create policy "Members read own permissions" on public.business_member_permissions
   for select to authenticated using (
     user_id = (select auth.uid())
@@ -359,6 +385,7 @@ grant select, insert, update on public.sales, public.sale_items, public.sale_pay
 grant select, insert, update on public.purchases, public.purchase_items, public.supplier_payments to authenticated;
 grant select, insert, update on public.expenses to authenticated;
 grant select, insert, update, delete on public.business_member_permissions to authenticated;
+grant select on public.business_audit_logs to authenticated;
 grant usage, select on sequence public.sales_sale_number_seq, public.purchases_purchase_number_seq to authenticated;
 
 
