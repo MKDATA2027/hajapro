@@ -721,6 +721,172 @@ $purchase$;
 revoke all on function public.create_trading_purchase(uuid, uuid, jsonb, numeric, text, text, date, text) from public, anon;
 grant execute on function public.create_trading_purchase(uuid, uuid, jsonb, numeric, text, text, date, text) to authenticated;
 
+
+-- Tighten legacy shared-table policies for Trading while preserving Tailor behavior.
+-- Trading writes must use permission-checked workflows; Tailor retains its existing
+-- member/owner/manager policies until its own module authorization is migrated.
+drop policy if exists "Members create business products" on public.products;
+drop policy if exists "Members update business products" on public.products;
+drop policy if exists "Owners managers delete products" on public.products;
+create policy "Tailor members or permitted trading users create products"
+  on public.products for insert to authenticated
+  with check (
+    exists (
+      select 1 from public.businesses b
+      where b.id = products.business_id and (
+        b.business_type = 'tailor'
+        or public.has_business_permission(products.business_id, 'products.manage')
+      )
+    )
+    and created_by = (select auth.uid())
+  );
+create policy "Tailor members or permitted trading users update products"
+  on public.products for update to authenticated
+  using (
+    exists (
+      select 1 from public.businesses b
+      where b.id = products.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = products.business_id
+            and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(products.business_id, 'products.manage'))
+      )
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.businesses b
+      where b.id = products.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = products.business_id
+            and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(products.business_id, 'products.manage'))
+      )
+    )
+  );
+create policy "Tailor managers or permitted trading users delete products"
+  on public.products for delete to authenticated
+  using (
+    exists (
+      select 1 from public.businesses b
+      where b.id = products.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = products.business_id
+            and m.user_id = (select auth.uid())
+            and m.role in ('owner','manager')
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(products.business_id, 'products.manage'))
+      )
+    )
+  );
+
+drop policy if exists "Members create inventory movements" on public.inventory_movements;
+create policy "Tailor members create inventory movements"
+  on public.inventory_movements for insert to authenticated
+  with check (
+    created_by = (select auth.uid())
+    and exists (
+      select 1 from public.businesses b
+      join public.business_members m on m.business_id = b.id
+      where b.id = inventory_movements.business_id
+        and b.business_type = 'tailor'
+        and m.user_id = (select auth.uid())
+    )
+  );
+drop policy if exists "Members read inventory movements" on public.inventory_movements;
+create policy "Tailor members or permitted trading users read inventory movements"
+  on public.inventory_movements for select to authenticated
+  using (
+    exists (
+      select 1 from public.businesses b
+      where b.id = inventory_movements.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = b.id and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(inventory_movements.business_id, 'inventory.view'))
+      )
+    )
+  );
+
+drop policy if exists "Business members can add customers" on public.customers;
+drop policy if exists "Business members can update customers" on public.customers;
+drop policy if exists "Business owners and managers can delete customers" on public.customers;
+create policy "Tailor members or permitted trading users add customers"
+  on public.customers for insert to authenticated
+  with check (
+    created_by = (select auth.uid())
+    and exists (
+      select 1 from public.businesses b
+      where b.id = customers.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = b.id and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(customers.business_id, 'customers.manage'))
+      )
+    )
+  );
+create policy "Tailor members or permitted trading users update customers"
+  on public.customers for update to authenticated
+  using (
+    exists (
+      select 1 from public.businesses b
+      where b.id = customers.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = b.id and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(customers.business_id, 'customers.manage'))
+      )
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.businesses b
+      where b.id = customers.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = b.id and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(customers.business_id, 'customers.manage'))
+      )
+    )
+  );
+create policy "Tailor managers or permitted trading users delete customers"
+  on public.customers for delete to authenticated
+  using (
+    exists (
+      select 1 from public.businesses b
+      where b.id = customers.business_id and (
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = b.id and m.user_id = (select auth.uid())
+            and m.role in ('owner','manager')
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(customers.business_id, 'customers.manage'))
+      )
+    )
+  );
+
+-- Do not let clients bypass the atomic checkout and purchase routines.
+revoke insert, update, delete on public.sales, public.sale_items,
+  public.sale_payments, public.purchases, public.purchase_items,
+  public.supplier_payments from authenticated;
+
 -- The sale RPC is the only authenticated write path for sales and their line items.
 revoke insert, update, delete on public.sales, public.sale_items from authenticated;
 revoke insert, update, delete on public.sale_payments from authenticated;
