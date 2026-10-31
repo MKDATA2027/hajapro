@@ -731,14 +731,18 @@ drop policy if exists "Owners managers delete products" on public.products;
 create policy "Tailor members or permitted trading users create products"
   on public.products for insert to authenticated
   with check (
-    exists (
+    created_by = (select auth.uid())
+    and exists (
       select 1 from public.businesses b
       where b.id = products.business_id and (
-        b.business_type = 'tailor'
-        or public.has_business_permission(products.business_id, 'products.manage')
+        (b.business_type = 'tailor' and exists (
+          select 1 from public.business_members m
+          where m.business_id = b.id and m.user_id = (select auth.uid())
+        ))
+        or (b.business_type = 'trading'
+          and public.has_business_permission(products.business_id, 'products.manage'))
       )
     )
-    and created_by = (select auth.uid())
   );
 create policy "Tailor members or permitted trading users update products"
   on public.products for update to authenticated
