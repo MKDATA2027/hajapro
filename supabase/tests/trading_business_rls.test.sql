@@ -1,7 +1,7 @@
 create extension if not exists pgtap with schema extensions;
 
 begin;
-select extensions.plan(9);
+select extensions.plan(10);
 
 insert into auth.users (
   id, aud, role, email, encrypted_password, confirmed_at,
@@ -77,6 +77,15 @@ select extensions.is(
   (select count(*)::integer from public.businesses where id='72000000-0000-4000-8000-000000000002'),
   0,
   'trading cashier cannot read a different Tailor business'
+);
+
+reset role;
+set local role authenticated;
+select pg_catalog.set_config('request.jwt.claim.sub','71000000-0000-4000-8000-000000000003',true);
+select extensions.lives_ok(
+  $ insert into public.products (business_id,name,unit_price,stock_quantity,created_by)
+     values ('72000000-0000-4000-8000-000000000002','Tailor legacy product',25,2,'71000000-0000-4000-8000-000000000003') $,
+  'Tailor owner retains the existing ability to add products'
 );
 
 select * from extensions.finish();
