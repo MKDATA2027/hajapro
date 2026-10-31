@@ -37,9 +37,6 @@ export function RetailerDashboard({
   const lowStock = products.filter((p) =>
     Number(p.stock_quantity) <= Number(p.low_stock_threshold),
   );
-  const inventoryRetailValue = products.reduce(
-    (sum, p) => sum + Number(p.unit_price) * Number(p.stock_quantity), 0,
-  );
    const naira = (value: number) => money(value);
 
   return (
@@ -50,7 +47,7 @@ export function RetailerDashboard({
           <strong>MK BUSINESS MANAGER <span>KASUWANCI</span></strong>
           <small>{businessName}</small>
         </div>
-        <span className="trading-role">{role === "owner" ? "MAI SHAGO" : role === "manager" ? "MANJA" : "MAI SAYA"}</span>
+        <span className="trading-role">{role === "owner" ? "MAI SHAGO" : role === "manager" ? "MANAJA" : "MAI SAYA"}</span>
       </header>
 
       <section className="trading-hero" aria-label="Sayarwa ta yau">
@@ -62,7 +59,7 @@ export function RetailerDashboard({
           {"—"}
         </strong>
         <div className="trading-hero-bottom">
-          <span>{hasSalesSource ? `${todayPaymentCount} transactions` : "Ba a haɗa bayanan sayarwa ba tukuna"}</span>
+          <span>{hasSalesSource ? `${todayPaymentCount} ma’amaloli` : "Ba a haɗa bayanan sayarwa ba tukuna"}</span>
           <span className="trading-hero-compare">{hasSalesSource ? "Idan aka kwatanta da jiya" : "Babu ƙididdigar zato"}</span>
         </div>
       </section>
@@ -74,7 +71,7 @@ export function RetailerDashboard({
         aria-label={`Buɗe kayan da suka kusa ƙarewa. ${lowStock.length} kaya`}
       >
         <AlertTriangle size={18} />
-        <strong>{lowStock.length} {lowStock.length === 1 ? "kaya ne" : "kaya ne"} low in stock</strong>
+        <strong>{lowStock.length ? `${lowStock.length} kaya sun kusa ƙarewa` : "Komai yana da kyau"}</strong>
         <span>Duba jerin</span>
         <ChevronRight size={17} />
       </button>
@@ -83,33 +80,33 @@ export function RetailerDashboard({
         <div className="trading-tile trading-sales-tile">
           <span className="trading-tile-icon"><ShoppingCart size={22} /></span>
           <strong>Sayarwa</strong>
-          <small>{hasSalesSource ? `${todayPaymentCount} today` : "Sales records"}</small>
+          <small>{hasSalesSource ? `${todayPaymentCount} yau` : "Bayanan sayarwa"}</small>
         </div>
         <div className="trading-tile trading-products-tile">
           <span className="trading-tile-icon"><Package size={22} /></span>
           <strong>Kayayyaki</strong>
-          <small>{products.length} products</small>
+          <small>{products.length} kayayyaki</small>
         </div>
         <div className="trading-tile trading-inventory-tile">
           <span className="trading-tile-icon"><Boxes size={22} /></span>
           <strong>Kayan ajiya</strong>
-          <small>{!products.length ? "Babu kaya tukuna" : canViewInventoryValue ? naira(inventoryRetailValue) + " darajar sayarwa" : `${products.reduce((sum, product) => sum + Number(product.stock_quantity), 0)} units in stock`}</small>
+          <small>{!products.length ? "Babu kaya tukuna" : canViewInventoryValue ? "Darajar saye ba ta samuwa tukuna" : `${products.reduce((sum, product) => sum + Number(product.stock_quantity), 0)} raka’a a ajiya`}</small>
           {lowStock.length > 0 && <i className="trading-tile-alert-count">{lowStock.length}</i>}
         </div>
         <div className="trading-tile trading-customers-tile">
           <span className="trading-tile-icon"><Users size={22} /></span>
           <strong>Kwastomomi</strong>
-          <small>{customerCount} customers · debt —</small>
+          <small>{customerCount} kwastomomi · bashin —</small>
         </div>
         <div className="trading-tile trading-suppliers-tile">
           <span className="trading-tile-icon"><Truck size={22} /></span>
           <strong>Masu kawo kaya</strong>
-          <small>Supplier records · payable —</small>
+          <small>Bayanan masu kawo kaya · bashin —</small>
         </div>
         <div className="trading-tile trading-expenses-tile">
           <span className="trading-tile-icon"><Wallet size={22} /></span>
           <strong>Kuɗin gudanarwa</strong>
-          <small>Expense records</small>
+          <small>Bayanan kuɗin gudanarwa</small>
         </div>
       </section>
 
@@ -121,25 +118,25 @@ export function RetailerDashboard({
             <ChevronRight size={16} />
           </div>
         ) : (
-          <div className="trading-mini-tile trading-reports-tile is-restricted" aria-label="Reports restricted">
+          <div className="trading-mini-tile trading-reports-tile is-restricted" aria-label="An takaita rahotanni">
             <BarChart3 size={20} />
-            <span><strong>Rahotanni</strong><small>Owner permission required</small></span>
+            <span><strong>Rahotanni</strong><small>Ana buƙatar izinin mai shago</small></span>
             <span className="trading-lock">LOCKED</span>
           </div>
         )}
         <div className="trading-mini-tile trading-ai-tile">
           <Bot size={21} />
-          <span><strong>Mataimakin AI</strong><small>Business support</small></span>
+          <span><strong>Mataimakin AI</strong><small>Taimakon kasuwanci</small></span>
           <ChevronRight size={16} />
         </div>
       </section>
 
       <nav className="trading-bottom-nav" aria-label="Babban menu">
         <button type="button" className="is-active"><Home size={19} /><span>Gida</span></button>
-        <button type="button" disabled aria-label="Sales navigation will be connected with the sales workflow"><ClipboardList size={19} /><span>Sayarwa</span></button>
+        <button type="button" disabled aria-label="Za a haɗa menu da tsarin sayarwa"><ClipboardList size={19} /><span>Sayarwa</span></button>
         <button type="button" className="trading-nav-add" onClick={() => setShowQuickAdd(true)} aria-label="Ayyukan gaggawa"><Plus size={25} /></button>
-        <button type="button" disabled aria-label="Products navigation will be connected with the product workflow"><Package size={19} /><span>Kayayyaki</span></button>
-        <button type="button" disabled aria-label="More navigation will be connected after module flows are specified"><span className="trading-more-dots">•••</span><span>Kari</span></button>
+        <button type="button" disabled aria-label="Za a haɗa menu da tsarin kayayyaki"><Package size={19} /><span>Kayayyaki</span></button>
+        <button type="button" disabled aria-label="Ƙarin sassa"><span className="trading-more-dots">•••</span><span>Kari</span></button>
       </nav>
 
       {showLowStock && (
@@ -158,7 +155,7 @@ export function RetailerDashboard({
                   </li>
                 ))}
               </ul>
-            ) : <p className="trading-empty-state">All products are above their low-stock thresholds.</p>}
+            ) : <p className="trading-empty-state">Dukkan kayayyaki suna da isasshen adadi a ajiya.</p>}
           </section>
         </div>
       )}
@@ -172,8 +169,8 @@ export function RetailerDashboard({
             </div>
             {[
               { label: "Sabuwar sayarwa", Icon: ShoppingCart },
-              { label: "Ƙara kaya", Icon: Boxes },
-              { label: "Ƙara kaya", Icon: Package },
+              { label: "Ƙara kaya a ajiya", Icon: Boxes },
+              { label: "Ƙara sabon kaya", Icon: Package },
               { label: "Rubuta kuɗin gudanarwa", Icon: CircleDollarSign },
               { label: "Sabon kwastoma", Icon: Users },
             ].map(({ label, Icon }) => (
@@ -181,7 +178,7 @@ export function RetailerDashboard({
                 <Icon size={19} /><span>{label}</span><small>Setup pending</small>
               </button>
             ))}
-            <p className="trading-sheet-note">These actions will be connected to their verified workflows after their module requirements are defined.</p>
+            <p className="trading-sheet-note">Za a haɗa waɗannan ayyuka da ingantattun hanyoyinsu bayan an kammala sassan su.</p>
           </section>
         </div>
       )}
