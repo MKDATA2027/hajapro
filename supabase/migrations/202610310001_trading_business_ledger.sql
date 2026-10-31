@@ -389,27 +389,7 @@ grant select on public.business_audit_logs to authenticated;
 grant usage, select on sequence public.sales_sale_number_seq, public.purchases_purchase_number_seq to authenticated;
 
 
--- Audit trail for financial, stock and permission changes.
-create table if not exists public.business_audit_logs (
-  id uuid primary key default gen_random_uuid(),
-  business_id uuid not null references public.businesses(id) on delete cascade,
-  actor_id uuid not null references auth.users(id),
-  action text not null check (char_length(action) between 1 and 100),
-  entity_type text not null check (char_length(entity_type) between 1 and 80),
-  entity_id uuid,
-  old_values jsonb,
-  new_values jsonb,
-  created_at timestamptz not null default now()
-);
-create index if not exists business_audit_logs_business_created_idx
-  on public.business_audit_logs(business_id, created_at desc);
-alter table public.business_audit_logs enable row level security;
-create policy "Authorized members read audit log" on public.business_audit_logs
-  for select to authenticated
-  using (public.has_business_permission(business_id, 'reports.view'));
-revoke all on public.business_audit_logs from anon, authenticated;
-grant select on public.business_audit_logs to authenticated;
-
+-- Audit table and read policy are defined once above.
 -- A single database transaction creates a sale, records its snapshots, deducts stock,
 -- writes stock movements, and records any money received. Direct table writes are
 -- intentionally revoked below so callers cannot bypass these invariants.
